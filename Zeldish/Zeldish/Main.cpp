@@ -7,7 +7,7 @@ int main()
 	window.setFramerateLimit(60);
 
 	System zeldish;
-
+	zeldish.Initialize(&window);
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -18,7 +18,7 @@ int main()
 		}
 
 		window.clear();
-		window.draw(zeldish);
+		zeldish.Update(1.0f);
 		window.display();
 	}
 

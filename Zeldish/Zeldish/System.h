@@ -2,7 +2,7 @@
 #define SYSTEM_H
 
 #include "SFML\Graphics.hpp"
-
+	
 class System : public sf::Drawable
 {
 private:	//Variables

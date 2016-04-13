@@ -15,6 +15,13 @@ System::~System()
 	this->Circle = NULL;
 }
 
+int System::Initialize(sf::RenderWindow * window)
+{
+	int result = 0;
+	this->window = window;
+	return result;
+}
+
 int System::HandleInput()
 {
 	return 0;
@@ -26,6 +33,7 @@ int System::Update(float dT)
 
 	//Update Content
 
+	//Render
 	return result;
 }
 
