@@ -1,13 +1,12 @@
-#include <SFML/Graphics.hpp>
 #include "lua.hpp"
 #include <iostream>
+#include "System.h"
 
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	window.setFramerateLimit(60);
 
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
@@ -38,6 +37,9 @@ int main()
 	lua_close(L);
 
 
+	System zeldish;
+	zeldish.Initialize(&window);
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -48,7 +50,7 @@ int main()
 		}
 
 		window.clear();
-		window.draw(shape);
+		zeldish.Update(1.0f);
 		window.display();
 	}
 
