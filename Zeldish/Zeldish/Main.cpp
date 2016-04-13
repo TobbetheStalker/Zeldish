@@ -19,6 +19,7 @@ int main()
 		}
 
 		window.clear();
+		zeldish.HandleInput();
 		zeldish.Update(1.0f);
 		window.display();
 	}

@@ -34,6 +34,10 @@ int System::Initialize(sf::RenderWindow * window)
 
 int System::HandleInput()
 {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+		this->window->close();
+	}
+
 	return 0;
 }
 
@@ -51,6 +55,7 @@ int System::Update(float dT)
 
 	std::cout << std::endl;
 
+	
 	//Render
 	window->draw(*this->Circle);
 	return result;
