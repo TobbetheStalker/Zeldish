@@ -1,9 +1,9 @@
 
 --create menu
-local menu
+menu = Menu.New()
 
 function InitMenu ()
-	menu = Menu.New()
+	
 	--Initialize menu
 	menu.Initialize()
 end

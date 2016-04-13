@@ -21,6 +21,8 @@ int System::Initialize()
 	this->luaState = luaL_newstate();
 	luaL_openlibs(this->luaState);
 
+	RegisterMenu(this->luaState);
+
 	int error = luaL_loadfile(this->luaState, "LuaUpdate.lua")
 		|| lua_pcall(this->luaState, 0, 0, 0);
 	if (error) {
@@ -33,6 +35,8 @@ int System::Initialize()
 	if (!error) {
 		std::cout << "[C++] " << "We managed to initialize everything!" << std::endl;
 	}
+	else
+		std::cerr << lua_tostring(this->luaState, -1) << "\n";
 
 	return result;
 }

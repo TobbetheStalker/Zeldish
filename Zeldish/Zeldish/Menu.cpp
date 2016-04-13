@@ -96,7 +96,7 @@ int menu_create(lua_State* ls)
 
 	std::cout << "[C++] Created Menu\n";
 
-	return 0;
+	return 1;
 }
 
 void RegisterMenu(lua_State * ls)
