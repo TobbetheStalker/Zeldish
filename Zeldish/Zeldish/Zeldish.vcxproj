@@ -170,6 +170,7 @@
     <ClInclude Include="WindowLib.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LuaUpdate.lua" />
     <None Include="test.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

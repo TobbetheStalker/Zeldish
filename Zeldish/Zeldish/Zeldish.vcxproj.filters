@@ -36,11 +36,14 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WindowLib.h">
-      <Filter>Resource Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="test.lua">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="LuaUpdate.lua">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
