@@ -34,6 +34,7 @@ int System::Update(float dT)
 	//Update Content
 
 	//Render
+	window->draw(*this->Circle);
 	return result;
 }
 
