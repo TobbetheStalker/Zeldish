@@ -14,10 +14,9 @@ System::~System()
 	this->Circle = NULL;
 }
 
-int System::Initialize(sf::RenderWindow * window)
+int System::Initialize()
 {
 	int result = 0;
-	this->window = window;
 
 	this->luaState = luaL_newstate();
 	luaL_openlibs(this->luaState);
@@ -29,13 +28,14 @@ int System::Initialize(sf::RenderWindow * window)
 		lua_pop(this->luaState, 1);
 	}
 
+
 	return result;
 }
 
 int System::HandleInput()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-		this->window->close();
+		window->close();
 	}
 
 	return 0;

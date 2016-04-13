@@ -1,27 +1,29 @@
 #include "System.h"
+#include "WindowLib.h"
 
+sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(600, 600), "SFML works!");
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	window.setFramerateLimit(60);
+	window->setFramerateLimit(60);
+	sf::Clock gameTimer;
 
 	System zeldish;
-	zeldish.Initialize(&window);
+	zeldish.Initialize();
 
-	while (window.isOpen())
+	while (window->isOpen())
 	{
 		sf::Event event;
-		while (window.pollEvent(event))
+		while (window->pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
-				window.close();
+				window->close();
 		}
 
-		window.clear();
+		window->clear();
 		zeldish.HandleInput();
 		zeldish.Update(1.0f);
-		window.display();
+		window->display();
 	}
 
 	return 0;

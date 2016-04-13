@@ -4,18 +4,18 @@
 #include <iostream>
 #include "lua.hpp"
 #include "SFML\Graphics.hpp"
+#include "Menu.h"
 
 class System : public sf::Drawable
 {
 private:	//Variables
 	sf::CircleShape *Circle;
-	sf::RenderWindow* window;
 	lua_State* luaState;
 public:
 	System();
 	virtual ~System();
 	
-	int Initialize(sf::RenderWindow* window);
+	int Initialize();
 	int HandleInput();
 	int Update(float dT);
 

@@ -160,10 +160,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="System.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="WindowLib.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.lua" />
