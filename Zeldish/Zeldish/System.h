@@ -12,7 +12,7 @@ public:
 	virtual ~System();
 
 	int HandleInput();
-	int Update();
+	int Update(float dT);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 private:	//Functions

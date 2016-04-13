@@ -20,9 +20,13 @@ int System::HandleInput()
 	return 0;
 }
 
-int System::Update()
+int System::Update(float dT)
 {
-	return 0;
+	int result = 0;
+
+	//Update Content
+
+	return result;
 }
 
 void System::draw(sf::RenderTarget & target, sf::RenderStates states) const
