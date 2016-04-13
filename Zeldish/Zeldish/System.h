@@ -5,6 +5,8 @@
 
 class System : public sf::Drawable
 {
+private:	//Variables
+	sf::CircleShape *Circle;
 public:
 	System();
 	virtual ~System();
@@ -13,6 +15,8 @@ public:
 	int Update();
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+private:	//Functions
+
 };
 
 #endif
