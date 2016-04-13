@@ -1,12 +1,13 @@
 #include "System.h"
 #include "WindowLib.h"
 
-sf::RenderWindow* window = new sf::RenderWindow(sf::VideoMode(600, 600), "SFML works!");
-
 int main()
 {
-	window->setFramerateLimit(60);
+	sf::RenderWindow tWindow(sf::VideoMode(600, 600), "SFML works!");
+	window = &tWindow;
+
 	sf::Clock gameTimer;
+
 
 	System zeldish;
 	zeldish.Initialize();
@@ -25,6 +26,6 @@ int main()
 		zeldish.Update(1.0f);
 		window->display();
 	}
-
+	window = nullptr;
 	return 0;
 }

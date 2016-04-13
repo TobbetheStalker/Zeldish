@@ -1,9 +1,6 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
-#include <iostream>
-#include "lua.hpp"
-#include "SFML\Graphics.hpp"
 #include "Menu.h"
 
 class System : public sf::Drawable
