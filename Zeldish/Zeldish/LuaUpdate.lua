@@ -9,7 +9,8 @@ end
 function Update()
 	if Input.IsPressed(73) == 1 then
 		menu:Select(-1)
-	elseif Input.IsPressed(74) == 1 then
+	end
+	if Input.IsPressed(74) == 1 then
 		menu:Select(1)
 	end
 
