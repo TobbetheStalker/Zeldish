@@ -113,10 +113,7 @@ int menu_draw(lua_State* ls)
 
 int menu_create(lua_State* ls)
 {
-<<<<<<< HEAD
 	// Menu is a C++ class defined somewhere...
-=======
->>>>>>> Menu_V1
 	Menu** menu = reinterpret_cast<Menu**>(lua_newuserdata(ls, sizeof(Menu*)));
 	*menu = new Menu();
 
