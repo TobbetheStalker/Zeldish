@@ -37,11 +37,19 @@ bool TileMap::load(const std::string & tileSet, sf::Vector2u tileSize, const int
 			//Get the pointer to the current tile's quad
 			sf::Vertex* quad = &this->vertices[(i + j *width) *4];
 
-			//defines its 4 cornners
-			quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);	//Uper Left
-			quad[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);	//Uper Right
-			quad[2].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);	//Lower right
-			quad[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);	//Lower Left
+			int dX, dY;
+			dX = window->getSize().x / width;
+			dY = window->getSize().y / height;
+
+			//defines its 4 corners
+			quad[0].position = sf::Vector2f(i * dX, j * dY);	//Uper Left
+			quad[1].position = sf::Vector2f((i + 1) * dX, j * dY);	//Uper Right
+			quad[2].position = sf::Vector2f((i + 1) * dX, (j + 1) * dY);	//Lower right
+			quad[3].position = sf::Vector2f(i * dX, (j + 1) * dY);	//Lower Left//defines its 4 corners
+			//quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);	//Uper Left
+			//quad[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);	//Uper Right
+			//quad[2].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);	//Lower right
+			//quad[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);	//Lower Left
 
 			//define its 4 texture coords
 			quad[0].texCoords = sf::Vector2f(tu * tileSize.x, tv * tileSize.y);	//Uper Left
@@ -107,7 +115,7 @@ int tileMap_load(lua_State* ls)
 	unsigned int width = lua_tointeger(ls, 5);
 	unsigned int height = lua_tointeger(ls, 6);
 	
-	const int size = 3600;
+	const int size = 32 * 32;
 	int tiles[size];
 	int count = 0;
 	lua_pushnil(ls);

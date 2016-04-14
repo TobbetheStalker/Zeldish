@@ -23,7 +23,7 @@ int Menu::Initialize()
 {
 	this->menuFont.loadFromFile("../Zeldish/Resources/Fonts/Arimo-Regular.ttf");
 	
-	const float TEXT_SIZE = 50.0f;
+	const float TEXT_SIZE = 40.0f;
 	const float TEXT_SPACE = 10.0f;
 
 	for (int i = 0; i < OPTION_COUNT; i++) {
@@ -42,7 +42,7 @@ int Menu::Initialize()
 	this->optionSprite.setTexture(this->optionTexture);
 	this->optionSprite.setScale(sf::Vector2f(1, 1));
 
-	this->rect.setSize(sf::Vector2f(600.0f, 600.0f));
+	this->rect.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
 	this->rect.setTexture(&optionTexture);
 	
 	return 0;
@@ -50,26 +50,12 @@ int Menu::Initialize()
 
 void Menu::ChangeSelected(int direction)
 {
-	if (direction < 0 && this->selected > 0) {
-		this->selected--;
-	}
-	else if(direction > 0 && this->selected < OPTION_COUNT - 1) {
-		this->selected++;
-	}
 
-	if (this->selected == 0) {
-		this->optionTexts[0].setColor(sf::Color::White);
-		this->optionTexts[1].setColor(sf::Color::Red);
-	}
-	else if (this->selected == 1) {
-		this->optionTexts[0].setColor(sf::Color::Red);
-		this->optionTexts[1].setColor(sf::Color::White);
-		this->optionTexts[2].setColor(sf::Color::Red);
-	}
-	else {
-		this->optionTexts[1].setColor(sf::Color::Red);
-		this->optionTexts[2].setColor(sf::Color::White);
-	}
+	this->optionTexts[this->selected].setColor(sf::Color::Red);
+	this->selected = (this->selected + direction) % OPTION_COUNT;
+	if (this->selected < 0)
+		this->selected = OPTION_COUNT - 1;
+	this->optionTexts[this->selected].setColor(sf::Color::White);
 }
 
 int Menu::GetSelected()

@@ -149,7 +149,7 @@ static const struct {
 int main()
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	sf::RenderWindow tWindow(sf::VideoMode(600, 600), "SFML works!");
+	sf::RenderWindow tWindow(sf::VideoMode(640, 640), "SFML works!");
 	tWindow.setIcon(game_icon.width, game_icon.height, game_icon.pixel_data);
 	window = &tWindow;
 
