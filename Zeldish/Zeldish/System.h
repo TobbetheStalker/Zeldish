@@ -2,6 +2,7 @@
 #define SYSTEM_H
 
 #include "Menu.h"
+#include "InputChecker.h"
 
 class System : public sf::Drawable
 {
