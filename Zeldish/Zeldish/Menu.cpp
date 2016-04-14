@@ -16,9 +16,7 @@ Menu::~Menu()
 
 void Menu::Shutdown()
 {
-	for (int i = 0; i < OPTION_COUNT; i++)
-	{
-	}
+
 }
 
 int Menu::Initialize()
@@ -103,8 +101,8 @@ int menu_create(lua_State* ls)
 
 int menu_destroy(lua_State* ls)
 {
-	Menu* monster = checkMenu(ls, 1);
-	delete monster;
+	Menu* menu = checkMenu(ls, 1);
+	delete menu;
 
 	std::cout << "[C++] Deleted monster\n";
 
