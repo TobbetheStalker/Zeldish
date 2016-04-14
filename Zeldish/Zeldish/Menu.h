@@ -39,7 +39,6 @@ int menu_destroy(lua_State* ls);
 
 int menu_changeselected(lua_State* ls);
 
-
 void RegisterMenu(lua_State * ls);
 
 #endif

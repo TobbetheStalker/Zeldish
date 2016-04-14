@@ -3,6 +3,7 @@
 
 #include "Menu.h"
 #include "InputChecker.h"
+#include "TileMap.h"
 
 class System : public sf::Drawable
 {
