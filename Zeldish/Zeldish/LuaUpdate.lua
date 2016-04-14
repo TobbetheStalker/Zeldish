@@ -62,9 +62,5 @@ function MapOne()
 
 	map[34] = 13;
 
-	for j = 1, 1800 do
-		map[j] = 7 
-	end
-
 	return map
 end
