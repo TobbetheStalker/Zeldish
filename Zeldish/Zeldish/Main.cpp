@@ -167,7 +167,7 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window->close();
 		}
-
+		
 		window->clear();
 		zeldish.HandleInput();
 		zeldish.Update(1.0f);

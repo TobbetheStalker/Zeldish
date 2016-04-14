@@ -88,7 +88,7 @@ int menu_draw(lua_State* ls)
 
 int menu_create(lua_State* ls)
 {
-	// Monster is a C++ class defined somewhere...
+	// Menu is a C++ class defined somewhere...
 	Menu** menu = reinterpret_cast<Menu**>(lua_newuserdata(ls, sizeof(Menu*)));
 	*menu = new Menu();
 
@@ -103,6 +103,7 @@ int menu_create(lua_State* ls)
 int menu_destroy(lua_State* ls)
 {
 	Menu* menu = checkMenu(ls, 1);
+	menu->Shutdown();
 	delete menu;
 
 	std::cout << "[C++] Deleted monster\n";
