@@ -72,6 +72,11 @@ void Menu::ChangeSelected(int direction)
 	}
 }
 
+int Menu::GetSelected()
+{
+	return this->selected;
+}
+
 void Menu::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	
@@ -146,6 +151,15 @@ int menu_changeselected(lua_State* ls)
 	return 0;
 }
 
+int menu_getSelected(lua_State* ls)
+{
+	Menu* menu = checkMenu(ls, 1);
+
+	int result = menu->GetSelected();
+	lua_pushinteger(ls, result);
+	return 1;
+}
+
 void RegisterMenu(lua_State * ls)
 {
 	// Create a luaL metatable. This metatable is not 
@@ -163,6 +177,7 @@ void RegisterMenu(lua_State * ls)
 		{ "Initialize",		menu_initialize },
 		{ "Select",			menu_changeselected },
 		{ "Draw",			menu_draw },
+		{ "GetSelected",	menu_getSelected },
 		/*{ "Print",			menu_print },
 		{ "Jump",			menu_jump },
 		{ "SetPosition",	menu_setPosition },*/

@@ -15,6 +15,8 @@ function Update()
 		menu:Select(1)
 	end
 
+	selection = menu:getSelected()
+
 	DrawMenu()
 	DrawTileMap()
 end
