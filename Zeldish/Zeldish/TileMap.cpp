@@ -70,3 +70,120 @@ void TileMap::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	target.draw(this->vertices, states);
 
 }
+
+TileMap* checkTileMap(lua_State* ls, int n)
+{
+	TileMap* tileMapPtr = nullptr;
+
+	void* ptr = luaL_testudata(ls, n, "MetaTileMap");
+
+	if (ptr != nullptr) {
+		tileMapPtr = *(TileMap**)ptr;
+	}
+
+	return tileMapPtr;
+}
+
+int tileMap_create(lua_State* ls)
+{
+	TileMap** tileMap = reinterpret_cast<TileMap**>(lua_newuserdata(ls, sizeof(TileMap*)));
+
+	*tileMap = new TileMap();
+
+	luaL_getmetatable(ls, "MetaTileMap");
+	lua_setmetatable(ls, -2);
+
+	std::cout << "[C++] Created TileMap\n";
+
+	return 1;
+}
+
+int tileMap_load(lua_State* ls)
+{
+	TileMap* tileMapPtr = checkTileMap(ls, 1);
+	std::string tileSet = lua_tostring(ls, 2);
+	sf::Vector2u tileSize = sf::Vector2u(lua_tonumber(ls, 3), lua_tonumber(ls, 4));
+	
+	unsigned int width = lua_tointeger(ls, 5);
+	unsigned int height = lua_tointeger(ls, 6);
+	
+	const int size = 3600;
+	int* tiles[size];
+
+	for (int i = 0; i < 3600; i++) {
+		*tiles[i] = lua_tointeger(ls,7+i);
+	}
+
+
+	if (tileMapPtr->load(tileSet, tileSize, *tiles, width, height)){
+		std::cout << "[C++] Loaded the tileMap\n";
+	}
+	else {
+		std::cout << "[C++] Could not load the tileMap\n";
+	}
+
+	return 0;
+}
+
+int tileMap_draw(lua_State* ls)
+{
+	TileMap* tileMap = checkTileMap(ls, 1);
+	window->draw(*tileMap);
+
+	return 0;
+}
+
+void RegisterTileMap(lua_State* ls)
+{
+	// Create a luaL metatable. This metatable is not 
+	// exposed to Lua. The "luaL_Foo" label is used by luaL
+	// internally to identity things.
+	luaL_newmetatable(ls, "MetaTileMap");
+	// The Lua stack at this point looks like this:
+	//     
+	//     1| metatable "Metamenu"   |-1
+
+
+	luaL_Reg sTileMapRegs[] =
+	{
+		{ "New",			tileMap_create },
+		{ "Load",			tileMap_load },
+		{ "Draw",			tileMap_draw },
+		{ NULL, NULL }
+	};
+
+	// Register the C functions _into_ the metatable we just created.
+	luaL_setfuncs(ls, sTileMapRegs, 0);
+
+	lua_pushvalue(ls, -1);
+
+	// The Lua stack at this point looks like this:
+	//     
+	//     2| metatable "Metamenu"   |-1
+	//     1| metatable "Metamenu"   |-2
+
+	// Set the "__index" field of the metatable to point to itself
+	// This pops the stack
+	lua_setfield(ls, -1, "__index");
+
+	// The Lua stack at this point looks like this:
+	//     
+	//     1| metatable "Metamenu"   |-1
+
+	// The luaL_Foo metatable now has the following fields
+	//     - __gc
+	//     - __index
+	//     - add
+	//     - print
+	//     - new
+
+	// Now we use setglobal to officially expose the luaL_Foo metatable 
+	// to Lua. And we use the name "menu".
+	//
+	// This allows Lua scripts to _override_ the metatable of menu.
+	// For high security code this may not be called for but 
+	// we'll do this to get greater flexibility.
+	lua_setglobal(ls, "TileMap");
+}
+
+

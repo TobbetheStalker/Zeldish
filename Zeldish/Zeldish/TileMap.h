@@ -1,8 +1,10 @@
 #ifndef TILEMAP_H
 #define TILEMAP_H
 
+#include <iostream>
 #include "SFML\Graphics.hpp"
 #include "lua.hpp"
+#include "WindowLib.h"
 
 class TileMap : public sf::Drawable, sf::Transformable {
 
@@ -18,6 +20,14 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 };
+
+int tileMap_create(lua_State* ls);
+
+int tileMap_load(lua_State* ls);
+
+int tileMap_draw(lua_State* ls);
+
+void RegisterTileMap(lua_State* ls);
 
 
 #endif
