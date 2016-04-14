@@ -33,6 +33,9 @@
     <ClCompile Include="WindowLib.cpp">
       <Filter>Source Files\Libs</Filter>
     </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -46,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="MenuLib.h">
       <Filter>Header Files\Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

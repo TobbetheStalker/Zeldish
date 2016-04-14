@@ -34,8 +34,6 @@ int menu_draw(lua_State* ls);
 
 int menu_create(lua_State* ls);
 
-
-
 void RegisterMenu(lua_State * ls);
 
 #endif
