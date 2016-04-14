@@ -11,6 +11,7 @@ Menu::Menu()
 
 Menu::~Menu()
 {
+
 }
 
 void Menu::Shutdown()
@@ -49,6 +50,7 @@ int Menu::Initialize()
 
 void Menu::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
+	
 	target.draw(this->rect, states);
 	for (int i = 0; i < OPTION_COUNT; i++) {
 		target.draw(optionTexts[i], states);
@@ -99,6 +101,16 @@ int menu_create(lua_State* ls)
 	return 1;
 }
 
+int menu_destroy(lua_State* ls)
+{
+	Menu* monster = checkMenu(ls, 1);
+	delete monster;
+
+	std::cout << "[C++] Deleted monster\n";
+
+	return 0;
+}
+
 void RegisterMenu(lua_State * ls)
 {
 	// Create a luaL metatable. This metatable is not 
@@ -117,8 +129,8 @@ void RegisterMenu(lua_State * ls)
 		{ "Draw",			menu_draw },
 		/*{ "Print",			menu_print },
 		{ "Jump",			menu_jump },
-		{ "SetPosition",	menu_setPosition },
-		{ "__gc",			menu_destroy },*/
+		{ "SetPosition",	menu_setPosition },*/
+		{ "__gc",			menu_destroy },
 		{ NULL, NULL }
 	};
 
