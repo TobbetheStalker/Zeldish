@@ -17,13 +17,14 @@ private:
 	sf::Sprite optionSprite;
 	sf::RectangleShape rect;
 	sf::Text optionTexts[OPTION_COUNT];
+	int selected;
 
 public:
 	Menu();
 	~Menu();
 	void Shutdown();
 	int Initialize();
-
+	void ChangeSelected(int direction);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
@@ -34,7 +35,7 @@ int menu_draw(lua_State* ls);
 
 int menu_create(lua_State* ls);
 
-
+int menu_changeselected(lua_State* ls);
 
 void RegisterMenu(lua_State * ls);
 

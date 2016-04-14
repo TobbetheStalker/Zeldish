@@ -5,7 +5,7 @@
 Menu::Menu()
 {
 	this->menuFont = sf::Font();
-
+	this->selected = 0;
 }
 
 
@@ -33,6 +33,7 @@ int Menu::Initialize()
 		this->optionTexts[i].setColor(sf::Color::Red);
 
 	}
+	this->optionTexts[0].setColor(sf::Color::White);
 	this->optionTexts[0].setString("Start");
 	this->optionTexts[1].setString("Level Editor");
 	this->optionTexts[2].setString("Quit");
@@ -45,6 +46,30 @@ int Menu::Initialize()
 	this->rect.setTexture(&optionTexture);
 	
 	return 0;
+}
+
+void Menu::ChangeSelected(int direction)
+{
+	if (direction < 0 && this->selected > 0) {
+		this->selected--;
+	}
+	else if(direction > 0 && this->selected < OPTION_COUNT - 1) {
+		this->selected++;
+	}
+
+	if (this->selected == 0) {
+		this->optionTexts[0].setColor(sf::Color::White);
+		this->optionTexts[1].setColor(sf::Color::Red);
+	}
+	else if (this->selected == 1) {
+		this->optionTexts[0].setColor(sf::Color::Red);
+		this->optionTexts[1].setColor(sf::Color::White);
+		this->optionTexts[2].setColor(sf::Color::Red);
+	}
+	else {
+		this->optionTexts[1].setColor(sf::Color::Red);
+		this->optionTexts[2].setColor(sf::Color::White);
+	}
 }
 
 void Menu::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -73,7 +98,7 @@ int menu_initialize(lua_State* ls)
 	Menu* menu = checkMenu(ls, 1);
 	
 	menu->Initialize();
-	std::cout << "[C++] initialized Menu\n";
+	std::cout << "[C++] initializing Menu\n";
 
 	return 0;
 }
@@ -87,7 +112,6 @@ int menu_draw(lua_State* ls)
 
 int menu_create(lua_State* ls)
 {
-	// Monster is a C++ class defined somewhere...
 	Menu** menu = reinterpret_cast<Menu**>(lua_newuserdata(ls, sizeof(Menu*)));
 	*menu = new Menu();
 
@@ -97,6 +121,16 @@ int menu_create(lua_State* ls)
 	std::cout << "[C++] Created Menu\n";
 
 	return 1;
+}
+
+int menu_changeselected(lua_State* ls) 
+{
+	Menu* menu = checkMenu(ls, 1);
+	menu->ChangeSelected(lua_tointeger(ls, 2));
+
+	std::cout << "[C++] Moved Menu Select\n";
+
+	return 0;
 }
 
 void RegisterMenu(lua_State * ls)
@@ -114,6 +148,7 @@ void RegisterMenu(lua_State * ls)
 	{
 		{ "New",			menu_create },
 		{ "Initialize",		menu_initialize },
+		{ "Select",			menu_changeselected },
 		{ "Draw",			menu_draw },
 		/*{ "Print",			menu_print },
 		{ "Jump",			menu_jump },
