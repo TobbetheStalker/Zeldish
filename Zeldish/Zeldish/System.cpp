@@ -22,6 +22,7 @@ int System::Initialize()
 	luaL_openlibs(this->luaState);
 
 	RegisterMenu(this->luaState);
+	RegisterInputChecker(this->luaState);
 
 	int error = luaL_loadfile(this->luaState, "LuaUpdate.lua")
 		|| lua_pcall(this->luaState, 0, 0, 0);
@@ -33,17 +34,19 @@ int System::Initialize()
 	lua_getglobal(this->luaState, "InitMenu");
 	error = lua_pcall(this->luaState, 0, 1, 0);
 	if (!error) {
-		std::cout << "[C++] " << "We managed to initialize everything!" << std::endl;
+		std::cout << "[C++] " << "Initialized Menu!" << std::endl;
 	}
-	else
+	else {
 		std::cerr << lua_tostring(this->luaState, -1) << "\n";
+	}
+		
 
 	return result;
 }
 
 int System::HandleInput()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+	if (InputChecker::Instance().CheckKeyReleased(sf::Keyboard::Escape)) {
 		window->close();
 	}
 
@@ -57,11 +60,9 @@ int System::Update(float dT)
 	//Update Content
 	lua_getglobal(this->luaState, "Update");
 	int error = lua_pcall(this->luaState, 0, 1, 0);
-	if (!error) {
-		std::cout << "[C++] " << "We managed to initialize everything!" << std::endl;
+	if (error) {
+		std::cerr << lua_tostring(this->luaState, -1) << "\n";
 	}
-
-
 	
 	//Render
 	//window->draw(*this->Circle);

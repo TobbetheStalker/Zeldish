@@ -1,14 +1,19 @@
 
---create menu
-menu = Menu.New()
-
 function InitMenu ()
-	
+	--create menu
+	menu = Menu.New()
 	--Initialize menu
 	menu:Initialize()
 end
 
 function Update()
+	if Input.IsPressed(73) == 1 then
+		menu:Select(-1)
+	end
+	if Input.IsPressed(74) == 1 then
+		menu:Select(1)
+	end
+
 	DrawMenu()
 end
 
