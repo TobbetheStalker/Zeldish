@@ -1,7 +1,7 @@
 #include "TileMap.h"
 TileMap::TileMap()
 {
-	this->vertices;
+
 }
 
 TileMap::~TileMap()
@@ -12,9 +12,9 @@ TileMap::~TileMap()
 
 bool TileMap::load(const std::string & tileSet, sf::Vector2u tileSize, const int * tiles, unsigned int width, unsigned int height)
 {
-
+	std::string path = "..\\Zeldish\\Resources\\TileSets\\" + tileSet;
 	//Load the tileSt texture
-	if (!this->tileSet.loadFromFile(tileSet)) {
+	if (!this->tileSet.loadFromFile(path)) {
 		return false;
 	}
 
@@ -108,14 +108,23 @@ int tileMap_load(lua_State* ls)
 	unsigned int height = lua_tointeger(ls, 6);
 	
 	const int size = 3600;
-	int* tiles[size];
+	int tiles[size];
+	int count = 0;
+	lua_pushnil(ls);
+	
+	while (lua_next(ls,-2)) {
+		
+		if (lua_isnumber(ls, -1) ){
+			tiles[count] = (int)lua_tointeger(ls,  -1);
+		}
 
-	for (int i = 0; i < 3600; i++) {
-		*tiles[i] = lua_tointeger(ls,7+i);
+		lua_pop(ls, 1);
+
+		count++;
 	}
+	lua_pop(ls, 1);
 
-
-	if (tileMapPtr->load(tileSet, tileSize, *tiles, width, height)){
+	if (tileMapPtr->load(tileSet, tileSize, tiles, width, height)){
 		std::cout << "[C++] Loaded the tileMap\n";
 	}
 	else {
