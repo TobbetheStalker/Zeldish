@@ -54,5 +54,9 @@ function MapOne()
 		map[i] = 11	-- all grass
 	end
 
+	for j = 1, 1800 do
+		map[j] = 7 
+	end
+
 	return map
 end
