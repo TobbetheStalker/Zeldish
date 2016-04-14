@@ -142,6 +142,16 @@ int tileMap_draw(lua_State* ls)
 	return 0;
 }
 
+int tileMap_destroy(lua_State* ls)
+{
+	TileMap* tileMap = checkTileMap(ls, 1);
+	
+	delete tileMap;
+
+	return 0;
+}
+
+
 void RegisterTileMap(lua_State* ls)
 {
 	// Create a luaL metatable. This metatable is not 
@@ -158,6 +168,7 @@ void RegisterTileMap(lua_State* ls)
 		{ "New",			tileMap_create },
 		{ "Load",			tileMap_load },
 		{ "Draw",			tileMap_draw },
+		{ "__gc",			tileMap_destroy },
 		{ NULL, NULL }
 	};
 

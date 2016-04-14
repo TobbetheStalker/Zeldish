@@ -27,6 +27,8 @@ int tileMap_load(lua_State* ls);
 
 int tileMap_draw(lua_State* ls);
 
+int tileMap_destroy(lua_State* ls);
+
 void RegisterTileMap(lua_State* ls);
 
 
