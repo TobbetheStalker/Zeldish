@@ -28,8 +28,8 @@ int Menu::Initialize()
 
 	for (int i = 0; i < OPTION_COUNT; i++) {
 		this->optionTexts[i].setFont(this->menuFont);
-		this->optionTexts[i].setCharacterSize(18.f);
-		this->optionTexts[i].setPosition(sf::Vector2f(100.f , (100 + i*30)));
+		this->optionTexts[i].setCharacterSize(50.f);
+		this->optionTexts[i].setPosition(sf::Vector2f(window->getSize().x / 5, (window->getSize().y / 8 + i*(50.0f + 10.0f))));
 		this->optionTexts[i].setColor(sf::Color::Red);
 
 	}

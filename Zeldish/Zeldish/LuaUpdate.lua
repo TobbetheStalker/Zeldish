@@ -5,7 +5,7 @@ menu = Menu.New()
 function InitMenu ()
 	
 	--Initialize menu
-	menu.Initialize()
+	menu:Initialize()
 end
 
 function Update()
@@ -14,5 +14,5 @@ end
 
 function DrawMenu ()
 	--Draw menu
-	menu.Draw()	
+	menu:Draw()	
 end

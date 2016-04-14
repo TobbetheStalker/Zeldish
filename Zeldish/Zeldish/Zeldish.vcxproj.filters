@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Libs">
+      <UniqueIdentifier>{caa9a9e8-f987-4d2f-933a-a28a18ee82c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Libs">
+      <UniqueIdentifier>{a808818c-6d68-4bbc-85fc-ff2bc8c25815}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -25,7 +31,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WindowLib.cpp">
-      <Filter>Resource Files</Filter>
+      <Filter>Source Files\Libs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +42,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="WindowLib.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Libs</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuLib.h">
+      <Filter>Header Files\Libs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
