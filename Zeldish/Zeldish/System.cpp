@@ -14,20 +14,29 @@ System::~System()
 	this->Circle = NULL;
 }
 
-int System::Initialize(sf::RenderWindow * window)
+int System::Initialize()
 {
 	int result = 0;
-	this->window = window;
 
 	this->luaState = luaL_newstate();
 	luaL_openlibs(this->luaState);
 
-	int error = luaL_loadfile(this->luaState, "test.lua")
+	RegisterMenu(this->luaState);
+
+	int error = luaL_loadfile(this->luaState, "LuaUpdate.lua")
 		|| lua_pcall(this->luaState, 0, 0, 0);
 	if (error) {
 		std::cout << "Unable to run:" << lua_tostring(this->luaState, 1);
 		lua_pop(this->luaState, 1);
 	}
+
+	lua_getglobal(this->luaState, "InitMenu");
+	error = lua_pcall(this->luaState, 0, 1, 0);
+	if (!error) {
+		std::cout << "[C++] " << "We managed to initialize everything!" << std::endl;
+	}
+	else
+		std::cerr << lua_tostring(this->luaState, -1) << "\n";
 
 	return result;
 }
@@ -35,7 +44,7 @@ int System::Initialize(sf::RenderWindow * window)
 int System::HandleInput()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-		this->window->close();
+		window->close();
 	}
 
 	return 0;
@@ -46,18 +55,16 @@ int System::Update(float dT)
 	int result = 0;
 
 	//Update Content
-	lua_getglobal(this->luaState, "date");
+	lua_getglobal(this->luaState, "Update");
 	int error = lua_pcall(this->luaState, 0, 1, 0);
 	if (!error) {
-		std::cout << lua_tostring(this->luaState, -1) << std::endl;
-		lua_pop(this->luaState, 1);
+		std::cout << "[C++] " << "We managed to initialize everything!" << std::endl;
 	}
 
-	std::cout << std::endl;
 
 	
 	//Render
-	window->draw(*this->Circle);
+	//window->draw(*this->Circle);
 	return result;
 }
 
