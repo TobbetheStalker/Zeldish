@@ -23,12 +23,13 @@ int Menu::Initialize()
 {
 	this->menuFont.loadFromFile("../Zeldish/Resources/Fonts/Arimo-Regular.ttf");
 	
-
+	const float TEXT_SIZE = 50.0f;
+	const float TEXT_SPACE = 10.0f;
 
 	for (int i = 0; i < OPTION_COUNT; i++) {
 		this->optionTexts[i].setFont(this->menuFont);
-		this->optionTexts[i].setCharacterSize(50.f);
-		this->optionTexts[i].setPosition(sf::Vector2f(window->getSize().x / 5, (window->getSize().y / 8 + i*(50.0f + 10.0f))));
+		this->optionTexts[i].setCharacterSize(TEXT_SIZE);
+		this->optionTexts[i].setPosition(sf::Vector2f(window->getSize().x / 5, (window->getSize().y / 8 + i*(TEXT_SIZE + TEXT_SPACE))));
 		this->optionTexts[i].setColor(sf::Color::Red);
 
 	}
