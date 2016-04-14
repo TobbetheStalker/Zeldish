@@ -15,8 +15,10 @@ function Update()
 		menu:Select(1)
 	end
 
-	DrawMenu()
+	selection = menu:GetSelected()
+
 	DrawTileMap()
+	DrawMenu()
 end
 
 function DrawMenu ()
@@ -33,8 +35,8 @@ function LoadTileMap ()
 	tileSizeY = 16
 
 	--amount of tiles in the map
-	sizeX = 60
-	sizeY = 60
+	sizeX = 32
+	sizeY = 32
 
 	mapOne = MapOne()
 
@@ -50,9 +52,15 @@ end
 function MapOne()
 	map = {}
 
-	for i = 1, 3600 do
+	for i = 1, 32 * 32 do
 		map[i] = 11	-- all grass
 	end
+	
+	for j = 1, 32 * 16 do
+		map[j] = 7	-- all grass
+	end
+
+	map[34] = 13;
 
 	for j = 1, 1800 do
 		map[j] = 7 

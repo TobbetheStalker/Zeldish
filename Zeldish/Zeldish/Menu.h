@@ -26,6 +26,8 @@ public:
 	int Initialize();
 	void ChangeSelected(int direction);
 
+	int GetSelected();
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
@@ -38,6 +40,8 @@ int menu_create(lua_State* ls);
 int menu_destroy(lua_State* ls);
 
 int menu_changeselected(lua_State* ls);
+
+int menu_getSelected(lua_State* ls);
 
 void RegisterMenu(lua_State * ls);
 
