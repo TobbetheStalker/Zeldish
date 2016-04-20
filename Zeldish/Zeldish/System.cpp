@@ -54,9 +54,6 @@ int System::Initialize()
 
 int System::HandleInput()
 {
-	if (InputChecker::Instance().CheckKeyReleased(sf::Keyboard::Escape)) {
-		window->close();
-	}
 
 	return 0;
 }
@@ -67,10 +64,11 @@ int System::Update(float dT)
 
 	//Update Content
 	lua_getglobal(this->luaState, "Update");
-	int error = lua_pcall(this->luaState, 0, 1, 0);
+	int error = lua_pcall(this->luaState, 0, 2, 0);
 	if (error) {
 		std::cerr << lua_tostring(this->luaState, -1) << "\n";
 	}
+	result = lua_tonumber(this->luaState, -2);
 	
 	//Render
 	//window->draw(*this->Circle);

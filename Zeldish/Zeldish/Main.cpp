@@ -180,12 +180,14 @@ int main()
 		
 		window->clear();
 		zeldish.HandleInput();
-		zeldish.Update(1.0f);
+		result = zeldish.Update(1.0f);
+		if (result == 0) {
+			window->close();
+		}
 		window->display();
 	}
 
 	delete &InputChecker::Instance();
 	window = nullptr;
-	system("pause");
 	return 0;
 }
