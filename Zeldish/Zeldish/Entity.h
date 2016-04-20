@@ -36,19 +36,19 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
-int Entity_initialize(lua_State* ls);
+int entity_initialize(lua_State* ls);
 
-int Entity_draw(lua_State* ls);
+int entity_draw(lua_State* ls);
 
-int Entity_create(lua_State* ls);
+int entity_create(lua_State* ls);
 
-int Entity_destroy(lua_State* ls);
+int entity_destroy(lua_State* ls);
 
-int Entity_SetPos(lua_State* ls);
+int entity_SetPos(lua_State* ls);
 
-int Entity_SetWidth(lua_State* ls);
+int entity_SetWidth(lua_State* ls);
 
-int Entity_SetHeight(lua_State* ls);
+int entity_SetHeight(lua_State* ls);
 
 void RegisterEntity(lua_State * ls);
 
