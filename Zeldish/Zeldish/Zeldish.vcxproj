@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoundingVolume.h" />
+    <ClInclude Include="EntityLib.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="InputChecker.h" />
     <ClInclude Include="Menu.h" />

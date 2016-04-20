@@ -4,6 +4,7 @@
 #include "SFML\Graphics.hpp"
 #include "WindowLib.h"
 #include "lua.hpp"
+#include "EntityLib.h"
 class Entity : public sf::Drawable , sf::Transformable
 {
 protected:

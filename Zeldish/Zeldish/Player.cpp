@@ -69,7 +69,7 @@ void RegisterPlayer(lua_State * ls)
 		{ "New",			player_create },
 		{ "Initialize",		player_initialize },
 		{ "Draw",			player_draw },
-		/*{ "Print",			player_print },*/
+		{ "SetPos",			entity_setPos },
 		{ "__gc",			player_destroy },
 		{ NULL, NULL }
 	};

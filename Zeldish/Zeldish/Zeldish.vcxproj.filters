@@ -77,6 +77,9 @@
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EntityLib.h">
+      <Filter>Header Files\Libs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="test.lua">
