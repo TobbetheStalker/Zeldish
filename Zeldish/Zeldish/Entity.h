@@ -33,6 +33,15 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
+int Entity_initialize(lua_State* ls);
+
+int Entity_draw(lua_State* ls);
+
+int Entity_create(lua_State* ls);
+
+int Entity_destroy(lua_State* ls);
+
+void RegisterEntity(lua_State * ls);
 
 
 #endif
