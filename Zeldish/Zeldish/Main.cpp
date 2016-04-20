@@ -189,5 +189,6 @@ int main()
 
 	delete &InputChecker::Instance();
 	window = nullptr;
+	system("pause");
 	return 0;
 }

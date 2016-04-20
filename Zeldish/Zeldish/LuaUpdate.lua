@@ -16,8 +16,8 @@ function Update()
 		UpdateMenu()
 		DrawMenu()
 	elseif gameState == 1 then
-		UpdateTilemap()
-		DrawTileMap()
+		UpdateRegion()
+		DrawRegion()
 	end
 
 	return 1
@@ -34,6 +34,7 @@ function UpdateMenu ()
 		selected = menu:GetSelected()
 		if selected == 0 then
 			gameState = 1
+			CreateRegion()
 		elseif selected == 2 then
 			gameState = -1
 		end
@@ -48,13 +49,16 @@ function DrawMenu ()
 	menu:Draw()	
 end
 
-function UpdateTilemap()
+function UpdateRegion()
 	if Input.IsPressed(36) == 1 then
 		gameState = 0
 	end
+	if Input.IsPressed(57) == 1 then
+		LoadTileMap(2)
+	end
 end
 
-function LoadTileMap ()
+function LoadTileMap (level)
 	--Load TileMap
 	tileMap = TileMap.New();
 
@@ -65,14 +69,18 @@ function LoadTileMap ()
 	--amount of tiles in the map
 	sizeX = 32
 	sizeY = 32
+	
+	if level == 1 then
+		map = MapOne()
+	elseif level == 2 then
+		map = MapTwo()
+	end
 
-	mapOne = MapOne()
-
-	tileMap:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, mapOne);
+	tileMap:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
 
 end
 
-function DrawTileMap ()
+function DrawRegion ()
 	--Draw tileMap
 	tileMap:Draw()
 end
@@ -91,4 +99,24 @@ function MapOne()
 	map[34] = 13;
 
 	return map
+end
+
+function MapTwo()
+	map = {}
+
+	for i = 1, 32 * 32 do
+		map[i] = 7	-- all grass
+	end
+	
+	for j = 1, 32 * 16 do
+		map[j] = 11	-- all grass
+	end
+
+	map[534] = 13;
+
+	return map
+end
+
+function CreateRegion()
+	LoadTileMap(1)
 end

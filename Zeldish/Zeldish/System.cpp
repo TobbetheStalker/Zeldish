@@ -40,14 +40,6 @@ int System::Initialize()
 	else {
 		std::cerr << lua_tostring(this->luaState, -1) << "\n";
 	}
-	
-	lua_getglobal(this->luaState, "LoadTileMap");
-	error = lua_pcall(this->luaState, 0, 1, 0);
-	if (!error) {
-		std::cout << "[C++] " << "Initialized TileMap!" << std::endl;
-	}
-	else
-		std::cerr << lua_tostring(this->luaState, -1) << "\n";
 
 	return result;
 }
