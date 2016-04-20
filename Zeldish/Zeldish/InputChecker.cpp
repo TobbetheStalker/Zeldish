@@ -9,7 +9,8 @@ InputChecker::InputChecker()
 }
 
 InputChecker::~InputChecker()
-{}
+{
+}
 
 InputChecker& InputChecker::Instance()
 {
@@ -49,6 +50,13 @@ int InputChecker::CheckKeyDown(int keyCode)
 int InputChecker::CheckKeyReleased(int keyCode)
 {
 	return this->oldKeys[keyCode] && !this->keys[keyCode];
+}
+
+void InputChecker::ReleaseInstance()
+{
+	if (this) {
+		delete this;
+	}
 }
 
 //InputChecker* checkInput(lua_State* ls, int n)
@@ -104,6 +112,12 @@ int input_checkkeyreleased(lua_State* ls)
 
 	return 1;
 }
+int input_destroy(lua_State* ls) 
+{
+	InputChecker::Instance().ReleaseInstance();
+
+	return 0;
+}
 
 void RegisterInputChecker(lua_State * ls)
 {
@@ -123,8 +137,8 @@ void RegisterInputChecker(lua_State * ls)
 		{ "IsReleased",		input_checkkeyreleased },
 		/*{ "Print",			menu_print },
 		{ "Jump",			menu_jump },
-		{ "SetPosition",	menu_setPosition },
-		{ "__gc",			menu_destroy },*/
+		{ "SetPosition",	menu_setPosition },*/
+		{ "__gc",			input_destroy },
 		{ NULL, NULL }
 	};
 
