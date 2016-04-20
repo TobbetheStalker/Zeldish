@@ -1,6 +1,6 @@
 #pragma once
 
-namespace MySprite {
+namespace EntityLib{
 	enum Direction {
 		DOWN = 0,
 		LEFT = 1,

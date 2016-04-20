@@ -19,9 +19,9 @@ int Entity::Initialize()
 
 	this->x = 0;
 	this->y = 0;
-	this->width = 32;
-	this->height = 32;
-	this->spriteRect = sf::IntRect(0, 0, 32, 32);
+	this->width = EntityLib::PLAYER_WIDTH;
+	this->height = EntityLib::PLAYER_HEIGHT;
+	this->spriteRect = sf::IntRect(0, 0, EntityLib::PLAYER_WIDTH, EntityLib::PLAYER_HEIGHT);
 
 	this->drawTexture.loadFromFile("../Zeldish/Resources/Textures/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
@@ -63,10 +63,29 @@ void Entity::SetHeight(int height)
 int Entity::Update(float dTime)
 {
 	int result = 0;
+	
+	switch (myDirection)
+	{
+	case EntityLib::DOWN:
+		break;
+	case EntityLib::LEFT:
+		break;
+	case EntityLib::RIGHT:
+		break;
+	case EntityLib::UP:
+		break;
+	default:
+		break;
+	}
 
 
-
+	this->UpdateSprite(dTime);
 	return result;
+}
+
+int Entity::UpdateSprite(float dTime)
+{
+
 }
 
 int Entity::GetX()

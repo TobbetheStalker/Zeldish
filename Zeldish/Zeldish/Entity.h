@@ -14,7 +14,7 @@ protected:
 	BoundingVolume boundingBox;
 	sf::Texture drawTexture;
 	sf::Sprite mySprite;
-
+	EntityLib::Direction myDirection;
 public:
 	Entity();
 	virtual ~Entity();
@@ -29,6 +29,7 @@ public:
 	void SetHeight(int height);
 
 	virtual int Update(float dTIme);
+	virtual int UpdateSprite(float dTime);
 
 	int GetX();
 	int GetY();
@@ -36,6 +37,7 @@ public:
 	int GetHeight();
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
 };
 
 int entity_initialize(lua_State* ls);
