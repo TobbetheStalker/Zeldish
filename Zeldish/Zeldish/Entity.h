@@ -17,6 +17,8 @@ public:
 	virtual ~Entity();
 	virtual int Initialize();
 
+	virtual void Shutdown();
+
 	void SetX(int x);
 	void SetY(int y);
 	void SetPos(int x, int y);
