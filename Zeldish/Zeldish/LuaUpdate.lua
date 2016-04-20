@@ -14,7 +14,7 @@ function Update()
 		return 0
 	elseif gameState == 0 then
 		UpdateMenu()
-		DrawMenu()
+		menu:Draw()	
 	elseif gameState == 1 then
 		region.Update()
 		region.Draw()
@@ -43,9 +43,4 @@ function UpdateMenu ()
 	if Input.IsPressed(36) == 1 then
 		gameState = -1
 	end
-end
-
-function DrawMenu ()
-	--Draw menu
-	menu:Draw()	
 end
