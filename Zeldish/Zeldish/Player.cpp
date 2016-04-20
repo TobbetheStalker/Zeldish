@@ -25,19 +25,26 @@ Player* checkPlayer(lua_State* L, int n)
 }
 
 
-int Player_create(lua_State* ls)
+int player_create(lua_State* ls)
 {
 
+	return 1;
 }
 
-int Player_destroy(lua_State* ls)
+int player_initialize(lua_State* ls)
+{
+	return entity_initialize(ls);
+}
+
+int player_destroy(lua_State* ls)
 {
 
+	return 0;
 }
 
 int player_draw(lua_State* ls)
 {
-
+	return 0;
 }
 
 void RegisterPlayer(lua_State * ls)
@@ -54,7 +61,7 @@ void RegisterPlayer(lua_State * ls)
 	luaL_Reg sPlayerRegs[] =
 	{
 		{ "New",			player_create },
-		/*{ "Initialize",		player_initialize },*/
+		{ "Initialize",		player_initialize },
 		{ "Draw",			player_draw },
 		/*{ "Print",			player_print },*/
 		{ "__gc",			player_destroy },

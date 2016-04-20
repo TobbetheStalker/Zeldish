@@ -21,6 +21,8 @@ private:	//Functions
 
 int player_create(lua_State* ls);
 
+int player_initialize(lua_State* ls);
+
 int player_destroy(lua_State* ls);
 
 int player_draw(lua_State* ls);
