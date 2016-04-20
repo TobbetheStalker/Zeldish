@@ -5,7 +5,7 @@
 Menu::Menu()
 {
 	this->menuFont = sf::Font();
-
+	this->selected = 0;
 }
 
 
@@ -23,7 +23,7 @@ int Menu::Initialize()
 {
 	this->menuFont.loadFromFile("../Zeldish/Resources/Fonts/Arimo-Regular.ttf");
 	
-	const float TEXT_SIZE = 50.0f;
+	const float TEXT_SIZE = 40.0f;
 	const float TEXT_SPACE = 10.0f;
 
 	for (int i = 0; i < OPTION_COUNT; i++) {
@@ -33,6 +33,7 @@ int Menu::Initialize()
 		this->optionTexts[i].setColor(sf::Color::Red);
 
 	}
+	this->optionTexts[0].setColor(sf::Color::White);
 	this->optionTexts[0].setString("Start");
 	this->optionTexts[1].setString("Level Editor");
 	this->optionTexts[2].setString("Quit");
@@ -41,10 +42,25 @@ int Menu::Initialize()
 	this->optionSprite.setTexture(this->optionTexture);
 	this->optionSprite.setScale(sf::Vector2f(1, 1));
 
-	this->rect.setSize(sf::Vector2f(600.0f, 600.0f));
+	this->rect.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
 	this->rect.setTexture(&optionTexture);
 	
 	return 0;
+}
+
+void Menu::ChangeSelected(int direction)
+{
+
+	this->optionTexts[this->selected].setColor(sf::Color::Red);
+	this->selected = (this->selected + direction) % OPTION_COUNT;
+	if (this->selected < 0)
+		this->selected = OPTION_COUNT - 1;
+	this->optionTexts[this->selected].setColor(sf::Color::White);
+}
+
+int Menu::GetSelected()
+{
+	return this->selected;
 }
 
 void Menu::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -74,7 +90,7 @@ int menu_initialize(lua_State* ls)
 	Menu* menu = checkMenu(ls, 1);
 	
 	menu->Initialize();
-	std::cout << "[C++] initialized Menu\n";
+	std::cout << "[C++] initializing Menu\n";
 
 	return 0;
 }
@@ -106,9 +122,28 @@ int menu_destroy(lua_State* ls)
 	menu->Shutdown();
 	delete menu;
 
-	std::cout << "[C++] Deleted monster\n";
+	std::cout << "[C++] Deleted Menu\n";
 
 	return 0;
+}
+
+int menu_changeselected(lua_State* ls) 
+{
+	Menu* menu = checkMenu(ls, 1);
+	menu->ChangeSelected(lua_tointeger(ls, 2));
+
+	std::cout << "[C++] Moved Menu Select\n";
+
+	return 0;
+}
+
+int menu_getSelected(lua_State* ls)
+{
+	Menu* menu = checkMenu(ls, 1);
+
+	int result = menu->GetSelected();
+	lua_pushinteger(ls, result);
+	return 1;
 }
 
 void RegisterMenu(lua_State * ls)
@@ -126,10 +161,10 @@ void RegisterMenu(lua_State * ls)
 	{
 		{ "New",			menu_create },
 		{ "Initialize",		menu_initialize },
+		{ "Select",			menu_changeselected },
 		{ "Draw",			menu_draw },
-		/*{ "Print",			menu_print },
-		{ "Jump",			menu_jump },
-		{ "SetPosition",	menu_setPosition },*/
+		{ "GetSelected",	menu_getSelected },
+		/*{ "Print",			menu_print },*/
 		{ "__gc",			menu_destroy },
 		{ NULL, NULL }
 	};

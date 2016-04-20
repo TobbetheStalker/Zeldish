@@ -160,16 +160,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BoundingVolume.cpp" />
+    <ClCompile Include="InputChecker.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="WindowLib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoundingVolume.h" />
+    <ClInclude Include="InputChecker.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuLib.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="TileMap.h" />
     <ClInclude Include="WindowLib.h" />
   </ItemGroup>
   <ItemGroup>
