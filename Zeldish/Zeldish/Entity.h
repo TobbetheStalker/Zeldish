@@ -12,6 +12,7 @@ protected:
 	BoundingVolume boundingBox;
 	sf::Texture drawTexture;
 	sf::Sprite mySprite;
+
 public:
 	Entity();
 	virtual ~Entity();
@@ -25,7 +26,7 @@ public:
 	void SetWidth(int width);
 	void SetHeight(int height);
 
-	virtual int Update();
+	virtual int Update(float dTIme);
 
 	int GetX();
 	int GetY();

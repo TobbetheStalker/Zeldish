@@ -60,7 +60,7 @@ void Entity::SetHeight(int height)
 	this->height = height;
 }
 
-int Entity::Update()
+int Entity::Update(float dTime)
 {
 	int result = 0;
 
