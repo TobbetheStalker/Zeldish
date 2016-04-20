@@ -164,9 +164,7 @@ void RegisterMenu(lua_State * ls)
 		{ "Select",			menu_changeselected },
 		{ "Draw",			menu_draw },
 		{ "GetSelected",	menu_getSelected },
-		/*{ "Print",			menu_print },
-		{ "Jump",			menu_jump },
-		{ "SetPosition",	menu_setPosition },*/
+		/*{ "Print",			menu_print },*/
 		{ "__gc",			menu_destroy },
 		{ NULL, NULL }
 	};
