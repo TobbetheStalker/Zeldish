@@ -44,6 +44,12 @@ int Entity_create(lua_State* ls);
 
 int Entity_destroy(lua_State* ls);
 
+int Entity_SetPos(lua_State* ls);
+
+int Entity_SetWidth(lua_State* ls);
+
+int Entity_SetHeight(lua_State* ls);
+
 void RegisterEntity(lua_State * ls);
 
 

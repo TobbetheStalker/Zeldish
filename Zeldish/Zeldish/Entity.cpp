@@ -150,6 +150,28 @@ int entity_destroy(lua_State* ls)
 	return 0;
 }
 
+
+int Entity_SetPos(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	
+	return 0;
+}
+
+int Entity_SetWidth(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+
+	return 0;
+}
+
+int Entity_SetHeight(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+
+	return 0;
+}
+
 void RegisterEntity(lua_State * ls)
 {
 	// Create a luaL metatable. This metatable is not 
