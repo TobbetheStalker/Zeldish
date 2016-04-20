@@ -27,5 +27,17 @@ public:
 	void setTile(int value, int index);
 
 };
+int collisionMap_create(lua_State* ls);
 
+int collisionMap_load(lua_State* ls);
+
+int collisionMap_save(lua_State* ls);
+
+int collisionMap_destroy(lua_State* ls);
+
+int collisionMap_set(lua_State* ls);
+
+int collisionMap_get(lua_State* ls);
+
+void RegisterCollisionMap(lua_State* ls);
 #endif

@@ -28,7 +28,7 @@ end
 
 function LoadTileMap ()
 	--Load TileMap
-	tileMap = TileMap.New();
+	tileMap = TileMap.New()
 
 	--tiles size in pixels
 	tileSizeX = 16
