@@ -1,7 +1,8 @@
 #ifndef COLLISIONMAP_H
 #define COLLISIONMAP_H
 
-#include <sstream>
+#include <iostream>
+#include <fstream>
 #include <string>
 #include "SFML\Graphics.hpp"
 #include "lua.hpp"
@@ -11,15 +12,19 @@ class CollisionMap : public sf::Transformable
 {
 
 private:
+	int width;
+	int height;
 	int size;
-	int tiles[];
+	int* tiles;
 
 public:
 	CollisionMap();
 	~CollisionMap();
 
-	bool load(std::string filename);
-
+	bool Load(std::string filename);
+	bool Save(std::string filename);
+	int getTile(int index);
+	void setTile(int value, int index);
 
 };
 
