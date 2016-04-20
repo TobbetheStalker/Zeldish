@@ -29,34 +29,34 @@ bool TileMap::load(const std::string & tileSet, sf::Vector2u tileSize, const int
 
 			//Tile number (in what order the texture is in the tileSet)
 			int tileNr = tiles[i + j * width];
+			if (tileNr != -1) {
+				//Find the tiles position
+				int tu = tileNr % (this->tileSet.getSize().x / tileSize.x);
+				int tv = tileNr / (this->tileSet.getSize().x / tileSize.x);
 
-			//Find the tiles position
-			int tu = tileNr % (this->tileSet.getSize().x / tileSize.x);
-			int tv = tileNr / (this->tileSet.getSize().x / tileSize.x);
+				//Get the pointer to the current tile's quad
+				sf::Vertex* quad = &this->vertices[(i + j *width) * 4];
 
-			//Get the pointer to the current tile's quad
-			sf::Vertex* quad = &this->vertices[(i + j *width) *4];
+				int dX, dY;
+				dX = window->getSize().x / width;
+				dY = window->getSize().y / height;
 
-			int dX, dY;
-			dX = window->getSize().x / width;
-			dY = window->getSize().y / height;
+				//defines its 4 corners
+				quad[0].position = sf::Vector2f(i * dX, j * dY);	//Uper Left
+				quad[1].position = sf::Vector2f((i + 1) * dX, j * dY);	//Uper Right
+				quad[2].position = sf::Vector2f((i + 1) * dX, (j + 1) * dY);	//Lower right
+				quad[3].position = sf::Vector2f(i * dX, (j + 1) * dY);	//Lower Left//defines its 4 corners
+																		//quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);	//Uper Left
+																		//quad[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);	//Uper Right
+																		//quad[2].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);	//Lower right
+																		//quad[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);	//Lower Left
 
-			//defines its 4 corners
-			quad[0].position = sf::Vector2f(i * dX, j * dY);	//Uper Left
-			quad[1].position = sf::Vector2f((i + 1) * dX, j * dY);	//Uper Right
-			quad[2].position = sf::Vector2f((i + 1) * dX, (j + 1) * dY);	//Lower right
-			quad[3].position = sf::Vector2f(i * dX, (j + 1) * dY);	//Lower Left//defines its 4 corners
-			//quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);	//Uper Left
-			//quad[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);	//Uper Right
-			//quad[2].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);	//Lower right
-			//quad[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);	//Lower Left
-
-			//define its 4 texture coords
-			quad[0].texCoords = sf::Vector2f(tu * tileSize.x, tv * tileSize.y);	//Uper Left
-			quad[1].texCoords = sf::Vector2f((tu + 1) * tileSize.x, tv * tileSize.y);	//Uper Left
-			quad[2].texCoords = sf::Vector2f((tu + 1) * tileSize.x, (tv + 1) * tileSize.y);	//Uper Left
-			quad[3].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);	//Uper Left
-
+																		//define its 4 texture coords
+				quad[0].texCoords = sf::Vector2f(tu * tileSize.x, tv * tileSize.y);	//Uper Left
+				quad[1].texCoords = sf::Vector2f((tu + 1) * tileSize.x, tv * tileSize.y);	//Uper Left
+				quad[2].texCoords = sf::Vector2f((tu + 1) * tileSize.x, (tv + 1) * tileSize.y);	//Uper Left
+				quad[3].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);	//Uper Left
+			}
 
 		}
 

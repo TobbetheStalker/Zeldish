@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="BoundingVolume.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="CollisionMap.cpp" />
     <ClCompile Include="InputChecker.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="BoundingVolume.h" />
     <ClInclude Include="EntityLib.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="CollisionMap.h" />
     <ClInclude Include="InputChecker.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuLib.h" />
@@ -183,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LuaUpdate.lua" />
+    <None Include="Region.lua" />
     <None Include="test.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
