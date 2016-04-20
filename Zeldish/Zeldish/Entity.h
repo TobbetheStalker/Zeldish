@@ -3,6 +3,7 @@
 #include "BoundingVolume.h"
 #include "SFML\Graphics.hpp"
 #include "WindowLib.h"
+#include "lua.hpp"
 class Entity : public sf::Drawable , sf::Transformable
 {
 protected:
@@ -44,11 +45,19 @@ int entity_create(lua_State* ls);
 
 int entity_destroy(lua_State* ls);
 
-int entity_SetPos(lua_State* ls);
+int entity_setPos(lua_State* ls);
 
-int entity_SetWidth(lua_State* ls);
+int entity_setWidth(lua_State* ls);
 
-int entity_SetHeight(lua_State* ls);
+int entity_setHeight(lua_State* ls);
+
+int entity_getPos(lua_State* ls);
+
+int entity_getWidth(lua_State* ls);
+
+int entity_getHeight(lua_State* ls);
+
+int entity_update(lua_State* ls);
 
 void RegisterEntity(lua_State * ls);
 

@@ -151,7 +151,7 @@ int entity_destroy(lua_State* ls)
 }
 
 
-int Entity_SetPos(lua_State* ls)
+int entity_setPos(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
@@ -160,7 +160,7 @@ int Entity_SetPos(lua_State* ls)
 	return 0;
 }
 
-int Entity_SetWidth(lua_State* ls)
+int entity_setWidth(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
@@ -169,12 +169,65 @@ int Entity_SetWidth(lua_State* ls)
 	return 0;
 }
 
-int Entity_SetHeight(lua_State* ls)
+int entity_setHeight(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
 		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
 
+	return 0;
+}
+
+int entity_getPos(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+
+	int x = -1;
+	int y = -1;
+	if (entity)
+	{
+		x = entity->GetX();
+		y = entity->GetY();
+	}
+
+	lua_pushinteger(ls, x);
+	lua_pushinteger(ls, y);
+	return 2;
+}
+
+int entity_getWidth(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	int width = -1;
+	if (entity)
+	{
+		width = entity->GetWidth();
+	}
+
+	lua_pushinteger(ls, width);
+	return 1;
+}
+
+int entity_getHeight(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	int height = -1;
+	if (entity)
+	{
+		height = entity->GetHeight();
+	}
+
+	lua_pushinteger(ls, height);
+	return 1;
+}
+
+int entity_update(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	if (entity)
+	{
+		entity->Update(lua_tonumber(ls, 2));
+	}
 	return 0;
 }
 
@@ -194,7 +247,13 @@ void RegisterEntity(lua_State * ls)
 		{ "New",			entity_create },
 		{ "Initialize",		entity_initialize },
 		{ "Draw",			entity_draw },
-		/*{ "Print",			entity_print },*/
+		{ "SetPos",			entity_setPos },
+		{ "SetWidth",		entity_setWidth },
+		{ "SetHeight",		entity_setHeight },
+		{ "GetPos",			entity_getPos },
+		{ "GetWidth",		entity_getWidth },
+		{ "GetHeight",		entity_getHeight },
+		{ "Update",			entity_update },
 		{ "__gc",			entity_destroy },
 		{ NULL, NULL }
 	};

@@ -33,7 +33,13 @@ int player_create(lua_State* ls)
 
 int player_initialize(lua_State* ls)
 {
-	return entity_initialize(ls);
+	int result = 0;
+
+	Player* playerPtr = checkPlayer(ls, 1);
+	//If not implemented, this will call the parent version of the function
+	result = playerPtr->Initialize();
+
+	return result;
 }
 
 int player_destroy(lua_State* ls)
