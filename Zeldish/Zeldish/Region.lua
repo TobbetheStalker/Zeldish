@@ -5,11 +5,16 @@ function this.Update()
 		gameState = 0
 	end
 	if Input.IsPressed(57) == 1 then
-		this.LoadTileMap(2)
+		this.LoadTileMaps(2)
 	end
 end
 
-function this.LoadTileMap (level)
+function this.LoadCollisionMap()
+	this.collisionMap = CollisionMap.New()
+	this.collisionMap:Load("testMap")
+end
+
+function this.LoadTileMaps (level)
 	--Load TileMap
 	this.tileMapBackground = TileMap.New()
 	this.tileMapForeground = TileMap.New()
@@ -96,7 +101,8 @@ function this.MapTwoF()
 end
 
 function this.Create()
-	this.LoadTileMap(1)
+	this.LoadTileMaps(1)
+	this.LoadCollisionMap()
 end
 
 return this

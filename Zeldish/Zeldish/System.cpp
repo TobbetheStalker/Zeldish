@@ -24,6 +24,7 @@ int System::Initialize()
 	RegisterMenu(this->luaState);
 	RegisterInputChecker(this->luaState);
 	RegisterTileMap(this->luaState);
+	RegisterCollisionMap(this->luaState);
 
 	int error = luaL_loadfile(this->luaState, "LuaUpdate.lua")
 		|| lua_pcall(this->luaState, 0, 0, 0);
