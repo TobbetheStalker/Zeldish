@@ -48,6 +48,7 @@ end
 function this.Draw ()
 	--Draw tileMap
 	this.tileMapBackground:Draw()
+	this.player:Draw()
 	this.tileMapForeground:Draw()
 end
 
@@ -103,6 +104,10 @@ end
 function this.Create()
 	this.LoadTileMaps(1)
 	this.LoadCollisionMap()
+	this.player = Entity.New()
+	this.player:Initialize()
+	this.player:SetPos(64, 64)
+
 end
 
 return this

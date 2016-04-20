@@ -48,6 +48,7 @@ void Entity::SetPos(int x, int y)
 {
 	this->x = x;
 	this->y = y;
+	this->mySprite.setPosition(sf::Vector2f(x, y));
 }
 
 void Entity::SetWidth(int width)
@@ -85,7 +86,9 @@ int Entity::Update(float dTime)
 
 int Entity::UpdateSprite(float dTime)
 {
+	int result = 0;
 
+	return result;
 }
 
 int Entity::GetX()
