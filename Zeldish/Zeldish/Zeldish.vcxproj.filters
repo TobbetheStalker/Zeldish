@@ -42,6 +42,12 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+		<Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="CollisionMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -67,6 +73,15 @@
     </ClInclude>
     <ClInclude Include="TileMap.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityLib.h">
+      <Filter>Header Files\Libs</Filter>
     </ClInclude>
     <ClInclude Include="CollisionMap.h">
       <Filter>Header Files</Filter>

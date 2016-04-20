@@ -4,6 +4,7 @@
 #include "Menu.h"
 #include "InputChecker.h"
 #include "TileMap.h"
+#include "Entity.h"
 #include "CollisionMap.h"
 
 class System : public sf::Drawable
