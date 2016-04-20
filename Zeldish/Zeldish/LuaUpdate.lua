@@ -60,7 +60,8 @@ end
 
 function LoadTileMap (level)
 	--Load TileMap
-	tileMap = TileMap.New();
+	tileMapBackground = TileMap.New();
+	tileMapForeground = TileMap.New();
 
 	--tiles size in pixels
 	tileSizeX = 16
@@ -71,21 +72,30 @@ function LoadTileMap (level)
 	sizeY = 32
 	
 	if level == 1 then
-		map = MapOne()
+		map = MapOneB()
 	elseif level == 2 then
-		map = MapTwo()
+		map = MapTwoB()
 	end
 
-	tileMap:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+
+	if level == 1 then
+		map = MapOneF()
+	elseif level == 2 then
+		map = MapTwoF()
+	end
+
+	tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
 
 end
 
 function DrawRegion ()
 	--Draw tileMap
-	tileMap:Draw()
+	tileMapBackground:Draw()
+	tileMapForeground:Draw()
 end
 
-function MapOne()
+function MapOneB()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -96,20 +106,37 @@ function MapOne()
 		map[j] = 7	-- all grass
 	end
 
+	return map
+end
+
+function MapTwoB()
+	map = {}
+
+	for i = 1, 32 * 32 do
+		map[i] = 11	-- all grass
+	end
+
+	return map
+end
+
+
+function MapOneF()
+	map = {}
+
+	for i = 1, 32 * 32 do
+		map[i] = -1	-- all grass
+	end
+	
 	map[34] = 13;
 
 	return map
 end
 
-function MapTwo()
+function MapTwoF()
 	map = {}
 
 	for i = 1, 32 * 32 do
-		map[i] = 7	-- all grass
-	end
-	
-	for j = 1, 32 * 16 do
-		map[j] = 11	-- all grass
+		map[i] = -1	-- all grass
 	end
 
 	map[534] = 13;
