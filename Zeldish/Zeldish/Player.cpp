@@ -11,6 +11,20 @@ Player::~Player()
 {
 }
 
+Player* checkPlayer(lua_State* L, int n)
+{
+	Player* playerPtr = nullptr;
+
+	void* ptr = luaL_testudata(L, n, "MetaPlayer");
+
+	if (ptr != nullptr) {
+		playerPtr = *(Player**)ptr;
+	}
+
+	return playerPtr;
+}
+
+
 int Player_create(lua_State* ls)
 {
 

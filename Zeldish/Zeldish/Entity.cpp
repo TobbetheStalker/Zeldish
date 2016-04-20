@@ -154,13 +154,17 @@ int entity_destroy(lua_State* ls)
 int Entity_SetPos(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
-	
+	if(entity)
+		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+
 	return 0;
 }
 
 int Entity_SetWidth(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
+	if(entity)
+		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
 
 	return 0;
 }
@@ -168,6 +172,8 @@ int Entity_SetWidth(lua_State* ls)
 int Entity_SetHeight(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
+	if(entity)
+		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
 
 	return 0;
 }
