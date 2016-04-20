@@ -21,9 +21,12 @@ int Entity::Initialize()
 	this->y = 0;
 	this->width = 32;
 	this->height = 32;
+	this->spriteRect = sf::IntRect(0, 0, 32, 32);
 
 	this->drawTexture.loadFromFile("../Zeldish/Resources/Textures/RacoonCharacter.png");
-	
+	this->mySprite.setTexture(drawTexture);
+	this->mySprite.setTextureRect(this->spriteRect);
+
 	return result;
 }
 

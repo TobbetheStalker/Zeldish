@@ -7,10 +7,11 @@ class Entity : public sf::Drawable , sf::Transformable
 {
 protected:
 	int x, y, width, height;
+	sf::IntRect spriteRect;
 
 	BoundingVolume boundingBox;
 	sf::Texture drawTexture;
-	sf::RectangleShape rect;
+	sf::Sprite mySprite;
 public:
 	Entity();
 	virtual ~Entity();
