@@ -25,6 +25,8 @@ public:
 	int CheckKeyPressed(int keyCode);
 	int CheckKeyDown(int keyCode);
 	int CheckKeyReleased(int keyCode);
+
+	void ReleaseInstance();
 };
 
 int input_create(lua_State* ls);

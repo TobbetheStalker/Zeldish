@@ -143,6 +143,9 @@ int menu_getSelected(lua_State* ls)
 
 	int result = menu->GetSelected();
 	lua_pushinteger(ls, result);
+
+	std::cout << "[C++] Menu Get Select\n";
+
 	return 1;
 }
 
