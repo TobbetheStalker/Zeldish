@@ -56,6 +56,15 @@ void Entity::SetHeight(int height)
 	this->height = height;
 }
 
+int Entity::Update()
+{
+	int result = 0;
+
+
+
+	return result;
+}
+
 int Entity::GetX()
 {
 	return this->x;
@@ -78,4 +87,6 @@ int Entity::GetHeight()
 
 void Entity::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
+	target.draw(this->mySprite, states);
+
 }

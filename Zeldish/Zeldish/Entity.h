@@ -23,6 +23,8 @@ public:
 	void SetWidth(int width);
 	void SetHeight(int height);
 
+	virtual int Update();
+
 	int GetX();
 	int GetY();
 	int GetWidth();
