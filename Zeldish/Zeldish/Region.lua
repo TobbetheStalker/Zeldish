@@ -1,6 +1,6 @@
 this = {}
 
-function this.UpdateRegion()
+function this.Update()
 	if Input.IsPressed(36) == 1 then
 		gameState = 0
 	end
@@ -40,7 +40,7 @@ function this.LoadTileMap (level)
 
 end
 
-function this.DrawRegion ()
+function this.Draw ()
 	--Draw tileMap
 	this.tileMapBackground:Draw()
 	this.tileMapForeground:Draw()
@@ -95,7 +95,7 @@ function this.MapTwoF()
 	return map
 end
 
-function this.CreateRegion()
+function this.Create()
 	this.LoadTileMap(1)
 end
 

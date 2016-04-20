@@ -16,8 +16,8 @@ function Update()
 		UpdateMenu()
 		DrawMenu()
 	elseif gameState == 1 then
-		region.UpdateRegion()
-		region.DrawRegion()
+		region.Update()
+		region.Draw()
 	end
 
 	return 1
@@ -35,6 +35,7 @@ function UpdateMenu ()
 		if selected == 0 then
 			gameState = 1
 			region = require("Region")
+			region.Create()
 		elseif selected == 2 then
 			gameState = -1
 		end
