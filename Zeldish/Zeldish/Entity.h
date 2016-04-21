@@ -22,6 +22,7 @@ public:
 
 	virtual void Shutdown();
 
+#pragma region
 	void SetX(float x);
 	void SetSpriteX(int x);
 	void SetY(float y);
@@ -33,6 +34,7 @@ public:
 	void SetSpriteHeight(int height);
 	void SetSpriteWidth(int width);
 	void SetDirection(EntityLib::Direction direction);
+#pragma endregion getters & setters
 
 	virtual int Update(float dTIme);
 	virtual int UpdateSprite(float dTime);
