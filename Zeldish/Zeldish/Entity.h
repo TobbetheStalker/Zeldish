@@ -20,7 +20,7 @@ protected:
 public:
 	Entity();
 	virtual ~Entity();
-	virtual int Initialize();
+	virtual int Initialize(std::string texturePath);
 
 	virtual void Shutdown();
 

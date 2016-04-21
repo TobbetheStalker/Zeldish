@@ -14,7 +14,7 @@ Entity::~Entity()
 {
 }
 
-int Entity::Initialize()
+int Entity::Initialize(std::string texturePath)
 {
 	int result = 0;
 	this->animationTime = 0.0f;
@@ -25,7 +25,8 @@ int Entity::Initialize()
 	this->height = EntityLib::PLAYER_HEIGHT;
 	this->spriteRect = sf::IntRect(0, 0, EntityLib::PLAYER_WIDTH, EntityLib::PLAYER_HEIGHT);
 
-	this->drawTexture.loadFromFile("../Zeldish/Resources/Textures/RacoonCharacter.png");
+	this->drawTexture.loadFromFile(texturePath);
+	//this->drawTexture.loadFromFile("../Zeldish/Resources/Textures/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
 	this->mySprite.setTextureRect(this->spriteRect);
 
