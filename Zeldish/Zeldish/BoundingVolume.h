@@ -15,8 +15,7 @@ public:
 	void ShutDown();
 	int Initialize(float x, float y, int width, int height);
 	int SetPosition(float x, float y);
-	int SetPosition(int x, int y);
-	void GetPosition(int& x, int& y);
+	void GetPosition(float& x, float& y);
 	int GetWidth();
 	int GetHeight();
 

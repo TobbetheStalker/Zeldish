@@ -35,28 +35,8 @@ int BoundingVolume::SetPosition(float x, float y)
 	return result;
 }
 
-//0 if outside, 1 if intersection, 2 if contained
-int BoundingVolume::CheckAgainst(BoundingVolume * other)
-{
-	int result = 1;
 
-	if (this->m_x > other->m_x + other->m_width || this->m_x + this->m_width < other->m_x ||
-		this->m_y > other->m_y + other->m_height || this->m_y + this->m_height < other->m_y)
-	{
-		//False
-		result = 0;
-	}
-	else
-	{
-		//Intersection
-		result = 1;
-		//Add check for containing
-	}
-	
-	return result;
-}
-
-void BoundingVolume::GetPosition(int& x, int& y)
+void BoundingVolume::GetPosition(float& x, float& y)
 {
 	x = this->m_x;
 	y = this->m_y;
@@ -74,6 +54,27 @@ int BoundingVolume::GetHeight()
 	return this->m_height;
 }
 
+
+//0 if outside, 1 if intersection, 2 if contained
+int BoundingVolume::CheckAgainst(BoundingVolume * other)
+{
+	int result = 1;
+
+	if (this->m_x > other->m_x + other->m_width || this->m_x + this->m_width < other->m_x ||
+		this->m_y > other->m_y + other->m_height || this->m_y + this->m_height < other->m_y)
+	{
+		//False
+		result = 0;
+	}
+	else
+	{
+		//Intersection
+		result = 1;
+		//Add check for containing
+	}
+
+	return result;
+}
 
 BoundingVolume* checkBoundingVolume(lua_State* L, int n)
 {
@@ -130,7 +131,7 @@ int BoundingVolume_GetWidth(lua_State* ls)
 	
 	lua_pushinteger(ls, width);
 
-	return 0;
+	return 1;
 }
 
 int BoundingVolume_GetHeight(lua_State* ls)
@@ -141,22 +142,22 @@ int BoundingVolume_GetHeight(lua_State* ls)
 
 	lua_pushinteger(ls, height);
 
-	return 0;
+	return 1;
 }
 
 int BoundingVolume_GetPosition(lua_State* ls)
 {
 	BoundingVolume* BoundingVolume = checkBoundingVolume(ls, 1);
 
-	int x = -1;
-	int y = -1;
+	float x = -1;
+	float y = -1;
 
 	BoundingVolume->GetPosition(x, y);
 
-	lua_pushinteger(ls, x);
-	lua_pushinteger(ls, y);
+	lua_pushnumber(ls, x);
+	lua_pushnumber(ls, y);
 
-	return 0;
+	return 2;
 }
 
 
