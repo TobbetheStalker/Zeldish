@@ -4,7 +4,8 @@
 
 Entity::Entity()
 {
-	this->x = this->y = this->width = this->height = 0;
+	this->x = this->y = this->width = this->height = this->animationType = 0;
+	this->animationTime = 0.0f;
 	this->boundingBox = BoundingVolume();
 }
 
@@ -16,7 +17,8 @@ Entity::~Entity()
 int Entity::Initialize()
 {
 	int result = 0;
-
+	this->animationTime = 0.0f;
+	this->animationType = EntityLib::DOWN;
 	this->x = 0;
 	this->y = 0;
 	this->width = EntityLib::PLAYER_WIDTH;
@@ -115,13 +117,31 @@ int Entity::Update(float dTime)
 	this->y += yDelta * dTime;
 
 	//Apply the new position to the sprite
-	this->UpdateSprite(dTime);
+	result = this->UpdateSprite(dTime);
 	return result;
 }
 
 int Entity::UpdateSprite(float dTime)
 {
-	int result = 0;
+	int result = 1;
+	this->mySprite.setPosition(sf::Vector2f(this->x, this->y));
+	
+	//Update animation time
+	this->animationTime = (this->animationTime + dTime);
+	//Apply animation bounds
+	if (this->animationTime >= EntityLib::ANIMATION_LIMIT)
+		this->animationTime -= EntityLib::ANIMATION_LIMIT;
+	//Calculate animation frame
+	int frame = this->animationTime / EntityLib::FRAME_TIME;
+	//Apply animation frame
+	this->spriteRect.left = frame * EntityLib::PLAYER_WIDTH;
+	//Calculate the animation type to be used
+	if (this->myDirection != EntityLib::Direction::NONE)
+		this->animationType = this->myDirection;
+	//Apply the animation type
+	this->spriteRect.top = (this->animationType * EntityLib::PLAYER_HEIGHT);
+	//And finally set our animation to be the one displayed
+	this->mySprite.setTextureRect(this->spriteRect);
 
 	return result;
 }

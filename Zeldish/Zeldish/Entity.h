@@ -9,6 +9,8 @@ class Entity : public sf::Drawable , sf::Transformable
 {
 protected:
 	int x, y, width, height;
+	int animationType;
+	float animationTime;
 	sf::IntRect spriteRect;
 
 	BoundingVolume boundingBox;
