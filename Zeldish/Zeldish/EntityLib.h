@@ -9,6 +9,12 @@ namespace EntityLib{
 		NONE = 4
 	};
 
+	static const int SPEED = 10;
+	static const int X_SPEED = SPEED;
+	static const int Y_SPEED = SPEED;
+
+	static const float FRAME_TIME = 1.2f;
+
 	static const int FRAME_COUNT = 3;
 	static const int PLAYER_WIDTH = 32;
 	static const int PLAYER_HEIGHT = 32;
