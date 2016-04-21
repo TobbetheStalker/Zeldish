@@ -26,7 +26,7 @@ public:
 	bool Save(std::string filename);
 	int getTile(int indexX, int indexY);
 	void setTile(int value, int indexX, int indexY);
-	bool checkCollision(BoundingVolume bv);
+	bool checkCollision(BoundingVolume* bv, int& correctionX, int& correctionY);
 
 };
 int collisionMap_create(lua_State* ls);
@@ -40,6 +40,8 @@ int collisionMap_destroy(lua_State* ls);
 int collisionMap_set(lua_State* ls);
 
 int collisionMap_get(lua_State* ls);
+
+int collisionMap_checkCollision(lua_State* ls);
 
 void RegisterCollisionMap(lua_State* ls);
 #endif

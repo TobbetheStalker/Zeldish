@@ -23,6 +23,7 @@ public:
 	int CheckAgainst(BoundingVolume* other);
 };
 
+BoundingVolume* checkBoundingVolume(lua_State* L, int n);
 
 int BoundingVolume_initialize(lua_State* ls);
 
