@@ -19,6 +19,8 @@ public:
 	void SetWidth(int width);
 	void SetHeight(int height);
 	void GetPosition(float& x, float& y);
+	float GetX();
+	float GetY();
 	int GetWidth();
 	int GetHeight();
 

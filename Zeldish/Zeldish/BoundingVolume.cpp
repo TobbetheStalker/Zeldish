@@ -60,6 +60,16 @@ void BoundingVolume::GetPosition(float& x, float& y)
 	return;
 }
 
+float BoundingVolume::GetX()
+{
+	return this->m_x;
+}
+
+float BoundingVolume::GetY()
+{
+	return this->m_y;
+}
+
 int BoundingVolume::GetWidth()
 {
 	return this->m_width;
