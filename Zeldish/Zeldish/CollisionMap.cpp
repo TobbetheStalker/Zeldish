@@ -80,14 +80,29 @@ bool CollisionMap::Save(std::string filename)
 	return true;
 }
 
-int CollisionMap::getTile(int index)
+int CollisionMap::getTile(int indexX, int indexY)
 {
-	return this->tiles[index];
+	return this->tiles[(indexY * this->width) + indexX];
 }
 
-void CollisionMap::setTile(int value, int index)
+void CollisionMap::setTile(int value, int indexX, int indexY)
 {
-	this->tiles[index] = value;
+	this->tiles[(indexY * this->width) + indexX] = value;
+}
+
+bool CollisionMap::checkCollision(BoundingVolume bv)
+{
+	bool result = false;
+	
+	int x, y;
+	int width, height;
+
+	bv.GetPosition(x,y);
+	width = bv.GetWidth();
+	height = bv.GetHeight();
+
+
+	return result;
 }
 
 CollisionMap* checkCollisionMap(lua_State* ls, int n)
@@ -160,9 +175,10 @@ int collisionMap_set(lua_State* ls)
 {
 	CollisionMap* collisionMapPtr = checkCollisionMap(ls, 1);
 	int value = lua_tointeger(ls, 2);
-	int index = lua_tointeger(ls, 3);
+	int indexX = lua_tointeger(ls, 3);
+	int indexY = lua_tointeger(ls, 4);
 
-	collisionMapPtr->setTile(value, index);
+	collisionMapPtr->setTile(value, indexX, indexY);
 
 	return 0;
 }
@@ -170,8 +186,9 @@ int collisionMap_set(lua_State* ls)
 int collisionMap_get(lua_State* ls)
 {
 	CollisionMap* collisionMapPtr = checkCollisionMap(ls, 1);
-	int index = lua_tointeger(ls, 2);
-	int value = collisionMapPtr->getTile(index);
+	int indexX = lua_tointeger(ls, 2);
+	int indexY = lua_tointeger(ls, 3);
+	int value = collisionMapPtr->getTile(indexX, indexY);
 	lua_pushinteger(ls, value);
 	
 	return 0;

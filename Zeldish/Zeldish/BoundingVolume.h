@@ -14,8 +14,11 @@ public:
 	~BoundingVolume();
 	void ShutDown();
 	int Initialize(float x, float y, int width, int height);
-
 	int SetPosition(float x, float y);
+	int SetPosition(int x, int y);
+	void GetPosition(int& x, int& y);
+	int GetWidth();
+	int GetHeight();
 
 	int CheckAgainst(BoundingVolume* other);
 };
@@ -26,6 +29,12 @@ int BoundingVolume_initialize(lua_State* ls);
 int BoundingVolume_create(lua_State* ls);
 
 int BoundingVolume_CheckAgainst(lua_State* ls);
+
+int BoundingVolume_GetWidth(lua_State* ls);
+
+int BoundingVolume_GetHeight(lua_State* ls);
+
+int BoundingVolume_GetPosition(lua_State* ls);
 
 int BoundingVolume_setPosition(lua_State* ls);
 
