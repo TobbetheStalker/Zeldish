@@ -11,6 +11,7 @@ protected:
 	int x, y, width, height;
 	int animationType;
 	float animationTime;
+	int animationWidth;
 	sf::IntRect spriteRect;
 
 	BoundingVolume boundingBox;

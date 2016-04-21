@@ -197,7 +197,8 @@ int entity_initialize(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 
-	entity->Initialize();
+	//Not sure if this works
+	entity->Initialize(lua_tostring(ls, 1));
 	std::cout << "[C++] initializing Entity\n";
 
 	return 0;
