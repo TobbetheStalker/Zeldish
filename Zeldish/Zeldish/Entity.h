@@ -22,11 +22,12 @@ public:
 
 	virtual void Shutdown();
 
-	void SetX(int x);
-	void SetY(int y);
-	void SetPos(int x, int y);
-	void SetWidth(int width);
-	void SetHeight(int height);
+	void SetX(float x);
+	void SetY(float y);
+	void SetPos(float x, float y);
+	void SetWidth(float width);
+	void SetHeight(float height);
+	void SetDirection(EntityLib::Direction direction);
 
 	virtual int Update(float dTIme);
 	virtual int UpdateSprite(float dTime);
@@ -35,6 +36,7 @@ public:
 	int GetY();
 	int GetWidth();
 	int GetHeight();
+	EntityLib::Direction GetDirection();
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

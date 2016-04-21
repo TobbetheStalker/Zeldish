@@ -34,50 +34,61 @@ void Entity::Shutdown()
 {
 }
 
-void Entity::SetX(int x)
+void Entity::SetX(float x)
 {
 	this->x = x;
 }
 
-void Entity::SetY(int y)
+void Entity::SetY(float y)
 {
 	this->y = y;
 }
 
-void Entity::SetPos(int x, int y)
+void Entity::SetPos(float x, float y)
 {
 	this->x = x;
 	this->y = y;
 	this->mySprite.setPosition(sf::Vector2f(x, y));
 }
 
-void Entity::SetWidth(int width)
+void Entity::SetWidth(float width)
 {
 	this->width = width;
 }
 
-void Entity::SetHeight(int height)
+void Entity::SetHeight(float height)
 {
 	this->height = height;
+}
+
+void Entity::SetDirection(EntityLib::Direction direction)
+{
+	this->myDirection = direction;
 }
 
 int Entity::Update(float dTime)
 {
 	int result = 0;
-	
+	int xDelta = 0, yDelta = 0;
 	switch (myDirection)
 	{
 	case EntityLib::DOWN:
+		yDelta++;
 		break;
 	case EntityLib::LEFT:
+		xDelta--;
 		break;
 	case EntityLib::RIGHT:
+		xDelta++;
 		break;
 	case EntityLib::UP:
+		yDelta--;
 		break;
 	default:
 		break;
 	}
+
+	//Apply the difference in position
 
 
 	this->UpdateSprite(dTime);
@@ -109,6 +120,11 @@ int Entity::GetWidth()
 int Entity::GetHeight()
 {
 	return this->height;
+}
+
+EntityLib::Direction Entity::GetDirection()
+{
+	return this->myDirection;
 }
 
 void Entity::draw(sf::RenderTarget & target, sf::RenderStates states) const

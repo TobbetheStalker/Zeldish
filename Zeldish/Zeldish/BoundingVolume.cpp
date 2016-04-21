@@ -16,7 +16,7 @@ void BoundingVolume::ShutDown()
 {
 }
 
-int BoundingVolume::Initialize(int x, int y, int width, int height)
+int BoundingVolume::Initialize(float x, float y, int width, int height)
 {
 	this->m_x = x;
 	this->m_y = y;
@@ -25,7 +25,7 @@ int BoundingVolume::Initialize(int x, int y, int width, int height)
 	return 1;
 }
 
-int BoundingVolume::SetPosition(int x, int y)
+int BoundingVolume::SetPosition(float x, float y)
 {
 	int result = 1;
 
