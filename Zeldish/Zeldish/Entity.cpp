@@ -138,6 +138,9 @@ int Entity::UpdateSprite(float dTime)
 	//Calculate the animation type to be used
 	if (this->myDirection != EntityLib::Direction::NONE)
 		this->animationType = this->myDirection;
+	//Do Safety correction
+	if (this->animationType < 0 || this->animationType > EntityLib::Direction::NONE)
+		this->animationType = 0;
 	//Apply the animation type
 	this->spriteRect.top = (this->animationType * EntityLib::PLAYER_HEIGHT);
 	//And finally set our animation to be the one displayed
