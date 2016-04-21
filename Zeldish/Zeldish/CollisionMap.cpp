@@ -16,6 +16,20 @@ CollisionMap::~CollisionMap()
 	}
 }
 
+bool CollisionMap::Create(int width, int height)
+{
+	this->width = width;
+	this->height = height;
+	int size = width * height;
+	this->tiles = new int[size];
+
+	for (int i = 0; i < size; i++) {
+		this->tiles[i] = 0;
+	}
+
+	return true;
+}
+
 bool CollisionMap::Load(std::string filename)
 {
 	std::string path = "..\\Zeldish\\Resources\\CollisionMaps\\" + filename + ".txt";
@@ -117,6 +131,20 @@ int collisionMap_create(lua_State* ls)
 	return 1;
 }
 
+int collisionMap_createempty(lua_State* ls)
+{
+	CollisionMap* collisionMapPtr = checkCollisionMap(ls, 1);
+
+	if (collisionMapPtr->Create(lua_tointeger(ls, 2), lua_tointeger(ls, 3))) {
+		std::cout << "[C++] Created empty collisionMap\n";
+	}
+	else {
+		std::cout << "[C++] Could not create empty collisionMap\n";
+	}
+
+	return 0;
+}
+
 int collisionMap_load(lua_State* ls)
 {
 	CollisionMap* collisionMapPtr = checkCollisionMap(ls,1);
@@ -191,6 +219,7 @@ void RegisterCollisionMap(lua_State* ls)
 	luaL_Reg sCollisionMapRegs[] =
 	{
 		{ "New",			collisionMap_create },
+		{ "Empty",			collisionMap_createempty },
 		{ "Load",			collisionMap_load },
 		{ "Save",			collisionMap_save},
 		{ "Get",			collisionMap_get },

@@ -21,6 +21,7 @@ public:
 	CollisionMap();
 	~CollisionMap();
 
+	bool Create(int width, int height);
 	bool Load(std::string filename);
 	bool Save(std::string filename);
 	int getTile(int index);

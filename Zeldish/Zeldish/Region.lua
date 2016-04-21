@@ -14,7 +14,7 @@ function this.LoadCollisionMap()
 	this.collisionMap:Load("testMap")
 end
 
-function this.LoadTileMaps (level)
+function this.LoadTileMaps(level)
 	--Load TileMap
 	this.tileMapBackground = TileMap.New()
 	this.tileMapForeground = TileMap.New()
@@ -45,7 +45,7 @@ function this.LoadTileMaps (level)
 
 end
 
-function this.Draw ()
+function this.Draw()
 	--Draw tileMap
 	this.tileMapBackground:Draw()
 	this.player:Draw()

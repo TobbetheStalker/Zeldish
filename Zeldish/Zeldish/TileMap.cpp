@@ -29,6 +29,9 @@ bool TileMap::load(const std::string & tileSet, sf::Vector2u tileSize, const int
 
 			//Tile number (in what order the texture is in the tileSet)
 			int tileNr = tiles[i + j * width];
+			if (tileNr > 30) {
+				tileNr = 11;
+			}
 			if (tileNr != -1) {
 				//Find the tiles position
 				int tu = tileNr % (this->tileSet.getSize().x / tileSize.x);
