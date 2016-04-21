@@ -113,8 +113,7 @@ int Entity::Update(float dTime)
 	}
 
 	//Apply the difference in position
-	this->x += xDelta * dTime;
-	this->y += yDelta * dTime;
+	this->boundingBox.ApplyPosition(xDelta * dTime * EntityLib::X_SPEED, yDelta * dTime * EntityLib::Y_SPEED);
 
 	//Apply the new position to the sprite
 	result = this->UpdateSprite(dTime);
