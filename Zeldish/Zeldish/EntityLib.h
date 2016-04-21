@@ -24,4 +24,5 @@ namespace EntityLib{
 	static const int PLAYER_HEIGHT = ENTITY_HEIGHT;
 	//
 	static const int PROJECTILE_WIDTH = ENTITY_WIDTH - 2 - 2;
+	static const int PROJECTILE_HEIGHT = ENTITY_HEIGHT - 6 - 6;
 }
