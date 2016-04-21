@@ -35,6 +35,12 @@ int BoundingVolume::SetPosition(float x, float y)
 	return result;
 }
 
+void BoundingVolume::ApplyPosition(float x, float y)
+{
+	this->m_x += x;
+	this->m_y += y;
+}
+
 void BoundingVolume::SetWidth(int width)
 {
 	this->m_width = width;
