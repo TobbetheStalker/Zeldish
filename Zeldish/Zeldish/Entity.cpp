@@ -26,7 +26,7 @@ int Entity::Initialize(std::string texturePath)
 	this->spriteRect = sf::IntRect(0, 0, EntityLib::PLAYER_WIDTH, EntityLib::PLAYER_HEIGHT);
 
 	this->drawTexture.loadFromFile(texturePath);
-	//this->drawTexture.loadFromFile("../Zeldish/Resources/Textures/RacoonCharacter.png");
+	//this->drawTexture.loadFromFile("../Zeldish/Resources/TileSets/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
 	this->mySprite.setTextureRect(this->spriteRect);
 
