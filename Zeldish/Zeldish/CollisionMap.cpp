@@ -94,7 +94,7 @@ bool CollisionMap::checkCollision(BoundingVolume bv)
 {
 	bool result = false;
 	
-	int x, y;
+	float x, y;
 	int width, height;
 
 	bv.GetPosition(x,y);
