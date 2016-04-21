@@ -59,6 +59,8 @@ public:
 
 };
 
+Entity* checkEntity(lua_State* L, int n);
+
 int entity_initialize(lua_State* ls);
 
 int entity_draw(lua_State* ls);
