@@ -401,6 +401,32 @@ int entity_getHeight(lua_State* ls)
 	return 1;
 }
 
+int entity_getSpriteWidth(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	int width = -1;
+	if (entity)
+	{
+		width = entity->GetSpriteWidth();
+	}
+
+	lua_pushinteger(ls, width);
+	return 1;
+}
+
+int entity_getSpriteHeight(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	int height = -1;
+	if (entity)
+	{
+		height = entity->GetSpriteHeight();
+	}
+
+	lua_pushinteger(ls, height);
+	return 1;
+}
+
 int entity_update(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
@@ -428,11 +454,17 @@ void RegisterEntity(lua_State * ls)
 		{ "Initialize",		entity_initialize },
 		{ "Draw",			entity_draw },
 		{ "SetPos",			entity_setPos },
+		{ "SetSpritePos",	entity_setSpritePos },
 		{ "SetWidth",		entity_setWidth },
 		{ "SetHeight",		entity_setHeight },
+		{ "SetSpriteWidth",	entity_setSpriteWidth },
+		{ "SetSpriteHeight",entity_setSpriteHeight },
 		{ "GetPos",			entity_getPos },
 		{ "GetWidth",		entity_getWidth },
 		{ "GetHeight",		entity_getHeight },
+		{ "GetSpritePos",	entity_getSpritePos },
+		{ "GetSpriteWidth",	entity_getSpriteWidth },
+		{ "GetSpriteHeight",entity_getSpriteHeight },
 		{ "Update",			entity_update },
 		{ "__gc",			entity_destroy },
 		{ NULL, NULL }

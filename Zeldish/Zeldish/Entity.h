@@ -83,8 +83,10 @@ int entity_getPos(lua_State* ls);
 int entity_getSpritePos(lua_State* ls);
 
 int entity_getWidth(lua_State* ls);
-
 int entity_getHeight(lua_State* ls);
+
+int entity_getSpriteWidth(lua_State* ls);
+int entity_getSpriteHeight(lua_State* ls);
 
 int entity_update(lua_State* ls);
 
