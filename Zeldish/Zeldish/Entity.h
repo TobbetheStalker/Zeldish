@@ -23,7 +23,10 @@ public:
 	virtual void Shutdown();
 
 	void SetX(float x);
+	void SetSpriteX(int x);
 	void SetY(float y);
+	void SetSpriteY(int y);
+	void SetSpritePos(int x, int y);
 	void SetPos(float x, float y);
 	void SetWidth(float width);
 	void SetHeight(float height);

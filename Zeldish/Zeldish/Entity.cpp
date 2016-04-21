@@ -36,19 +36,31 @@ void Entity::Shutdown()
 
 void Entity::SetX(float x)
 {
+}
+
+void Entity::SetSpriteX(int x)
+{
 	this->x = x;
 }
 
 void Entity::SetY(float y)
 {
+}
+
+void Entity::SetSpriteY(int y)
+{
 	this->y = y;
 }
 
-void Entity::SetPos(float x, float y)
+void Entity::SetSpritePos(int x, int y)
 {
 	this->x = x;
 	this->y = y;
 	this->mySprite.setPosition(sf::Vector2f(x, y));
+}
+
+void Entity::SetPos(float x, float y)
+{
 }
 
 void Entity::SetWidth(float width)
@@ -193,7 +205,7 @@ int entity_setPos(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
 
 	return 0;
 }
@@ -202,7 +214,7 @@ int entity_setWidth(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
 
 	return 0;
 }
@@ -211,7 +223,7 @@ int entity_setHeight(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
 
 	return 0;
 }
