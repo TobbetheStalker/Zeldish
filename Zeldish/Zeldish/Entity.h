@@ -9,6 +9,7 @@ class Entity : public sf::Drawable , sf::Transformable
 {
 protected:
 	int x, y, width, height;
+	float speed;
 	int animationType;
 	float animationTime;
 	int animationWidth;
@@ -37,16 +38,18 @@ public:
 	void SetSpriteHeight(int height);
 	void SetSpriteWidth(int width);
 	void SetDirection(EntityLib::Direction direction);
-#pragma endregion getters & setters
-
-	virtual int Update(float dTIme);
-	virtual int UpdateSprite(float dTime);
+	void SetSpeed(float speed);
 
 	int GetX();
 	int GetY();
 	int GetWidth();
 	int GetHeight();
+	float GetSpeed();
 	EntityLib::Direction GetDirection();
+#pragma endregion getters & setters
+
+	virtual int Update(float dTIme);
+	virtual int UpdateSprite(float dTime);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

@@ -5,7 +5,7 @@
 Entity::Entity()
 {
 	this->x = this->y = this->width = this->height = this->animationType = 0;
-	this->animationTime = 0.0f;
+	this->animationTime = this->speed = 0.0f;
 	this->boundingBox = BoundingVolume();
 }
 
@@ -17,6 +17,7 @@ Entity::~Entity()
 int Entity::Initialize(std::string texturePath)
 {
 	int result = 0;
+	this->speed = EntityLib::SPEED;
 	this->animationTime = 0.0f;
 	this->animationType = EntityLib::DOWN;
 	this->x = 0;
@@ -41,6 +42,8 @@ int Entity::Initialize(std::string texturePath)
 void Entity::Shutdown()
 {
 }
+
+#pragma region
 
 void Entity::SetX(float x)
 {
@@ -97,6 +100,43 @@ void Entity::SetDirection(EntityLib::Direction direction)
 	this->myDirection = direction;
 }
 
+void Entity::SetSpeed(float speed)
+{
+}
+
+
+int Entity::GetX()
+{
+	return this->x;
+}
+
+int Entity::GetY()
+{
+	return this->y;
+}
+
+int Entity::GetWidth()
+{
+	return this->width;
+}
+
+int Entity::GetHeight()
+{
+	return this->height;
+}
+
+float Entity::GetSpeed()
+{
+	return this->speed;
+}
+
+EntityLib::Direction Entity::GetDirection()
+{
+	return this->myDirection;
+}
+
+#pragma endregion setters & getters
+
 int Entity::Update(float dTime)
 {
 	int result = 0;
@@ -120,7 +160,7 @@ int Entity::Update(float dTime)
 	}
 
 	//Apply the difference in position
-	this->boundingBox.ApplyPosition(xDelta * dTime * EntityLib::X_SPEED, yDelta * dTime * EntityLib::Y_SPEED);
+	this->boundingBox.ApplyPosition(xDelta * dTime * this->speed, yDelta * dTime * this->speed);
 
 	//Apply the new position to the sprite
 	result = this->UpdateSprite(dTime);
@@ -130,8 +170,17 @@ int Entity::Update(float dTime)
 int Entity::UpdateSprite(float dTime)
 {
 	int result = 1;
-	this->mySprite.setPosition(sf::Vector2f(this->x, this->y));
+	//Update the position relative to the boundingvolume center
+	float bX = 0, bY = 0;
+	this->boundingBox.GetPosition(bX, bY);
+	bX += this->boundingBox.GetWidth() / 2;
+	bY += this->boundingBox.GetHeight() / 2;
 	
+	int sX = bX - this->width / 2 + x;
+	int sY = bY - this->height / 2 + y;
+
+	this->mySprite.setPosition(sf::Vector2f(sX, sY));
+
 	//Update animation time
 	this->animationTime = (this->animationTime + dTime);
 	//Apply animation bounds
@@ -154,31 +203,6 @@ int Entity::UpdateSprite(float dTime)
 
 
 	return result;
-}
-
-int Entity::GetX()
-{
-	return this->x;
-}
-
-int Entity::GetY()
-{
-	return this->y;
-}
-
-int Entity::GetWidth()
-{
-	return this->width;
-}
-
-int Entity::GetHeight()
-{
-	return this->height;
-}
-
-EntityLib::Direction Entity::GetDirection()
-{
-	return this->myDirection;
 }
 
 void Entity::draw(sf::RenderTarget & target, sf::RenderStates states) const
