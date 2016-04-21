@@ -25,6 +25,8 @@ public:
 	int CheckKeyPressed(int keyCode);
 	int CheckKeyDown(int keyCode);
 	int CheckKeyReleased(int keyCode);
+	int GetMouseX();
+	int GetMouseY();
 
 	void ReleaseInstance();
 };

@@ -1,52 +1,73 @@
-this = {}
+editor = {}
 
-function Update()
-	
+function editor.Update()
+	if Input.IsPressed(36) == 1 then
+		gameState = 0
+	end
+	if Input.IsPressed(57) == 1 then
+		if editor.tileInfo == 1 then
+			print("[LUA] Mouse pos; X: " .. Input.GetMousePosX() .. ", Y: " .. Input.GetMousePosY())
+			editor.tileInfo = 0
+		else
+			editor.tileInfo = 1
+		end
+	end
 end
 
-function CreateEmpty()
+function editor.Draw()
+	editor.tileMapBackground:Draw()
+	editor.tileMapForeground:Draw()
+	if editor.tileInfo == 1 then
+		editor.tileMapTiles:Draw()
+	end
+end
+
+function editor.CreateEmpty()
 	--Create TileMaps
-	this.tileMapBackground = TileMap.New()
-	this.tileMapForeground = TileMap.New()
+	editor.tileMapBackground = TileMap.New()
+	editor.tileMapForeground = TileMap.New()
+	editor.tileMapTiles = TileMap.New()
 
 	--tiles size in pixels
 	tileSizeX = 16
 	tileSizeY = 16
 
 	--amount of tiles in the map
-	sizeX = 33
+	sizeX = 32
 	sizeY = 32
 	
-	map = this.MapGrass()
+	map = editor.MapGrass()
 
-	this.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	editor.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
 
-	sizeX = 32
-	map = this.MapEmpty()
+	map = editor.MapEmpty()
 
-	this.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	editor.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
 
-	this.collisionMap = CollisionMap.New()
-	this.collisionMap.Empty()
+	map = editor.MapTiles()
+
+	editor.tileMapTiles:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+
+	editor.collisionMap = CollisionMap.New()
+	editor.collisionMap:Empty(32, 32)
 
 	--Set some needed state variables
-	this.workingLayer = 0 --0: Background, 1: Entities, 2: Foreground
+	editor.workingLayer = 0 --0: Background, 1: Entities, 2: Foreground
+	editor.tileInfo = 1
 end
 
-function this.MapGrass()
+function editor.MapGrass()
 	map = {}
 
-	for i = 1, 33 * 32 do
+	for i = 1, 32 * 32 do
 		map[i] = 11	-- all grass
 	end
-	for i = 1, 32 do
-		map[i * 32 + 1] = i
-	end
+	
 
 	return map
 end
 
-function this.MapEmpty()
+function editor.MapEmpty()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -56,12 +77,26 @@ function this.MapEmpty()
 	return map
 end
 
-function Load()
+function editor.MapTiles()
+	map = {}
+
+	for i = 1, 32 * 32 do
+		map[i] = -1	-- all empty
+	end
+
+	for i = 1, 29 do
+		map[i] = i
+	end
+
+	return map
+end
+
+function editor.Load()
 
 end
 
-function Save()
+function editor.Save()
 
 end
 
-return this
+return editor

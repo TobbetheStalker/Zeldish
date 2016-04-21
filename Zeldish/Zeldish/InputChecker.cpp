@@ -52,6 +52,16 @@ int InputChecker::CheckKeyReleased(int keyCode)
 	return this->oldKeys[keyCode] && !this->keys[keyCode];
 }
 
+int InputChecker::GetMouseX()
+{
+	return sf::Mouse::getPosition(*window).x;
+}
+
+int InputChecker::GetMouseY()
+{
+	return sf::Mouse::getPosition(*window).y;
+}
+
 void InputChecker::ReleaseInstance()
 {
 	if (this) {
@@ -112,6 +122,21 @@ int input_checkkeyreleased(lua_State* ls)
 
 	return 1;
 }
+
+int input_getmouseposx(lua_State* ls)
+{
+	lua_pushinteger(ls, InputChecker::Instance().GetMouseX());
+
+	return 1;
+}
+
+int input_getmouseposy(lua_State* ls)
+{
+	lua_pushinteger(ls, InputChecker::Instance().GetMouseY());
+
+	return 1;
+}
+
 int input_destroy(lua_State* ls) 
 {
 	InputChecker::Instance().ReleaseInstance();
@@ -135,6 +160,8 @@ void RegisterInputChecker(lua_State * ls)
 		{ "IsPressed",		input_checkkeypressed },
 		{ "IsDown",			input_checkkeydown },
 		{ "IsReleased",		input_checkkeyreleased },
+		{ "GetMousePosX",	input_getmouseposx },
+		{ "GetMousePosY",	input_getmouseposy },
 		/*{ "Print",			menu_print },
 		{ "Jump",			menu_jump },
 		{ "SetPosition",	menu_setPosition },*/

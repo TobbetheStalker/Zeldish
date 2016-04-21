@@ -1,23 +1,23 @@
-this = {}
+region = {}
 
-function this.Update()
+function region.Update()
 	if Input.IsPressed(36) == 1 then
 		gameState = 0
 	end
 	if Input.IsPressed(57) == 1 then
-		this.LoadTileMaps(2)
+		region.LoadTileMaps(2)
 	end
 end
 
-function this.LoadCollisionMap()
-	this.collisionMap = CollisionMap.New()
-	this.collisionMap:Load("testMap")
+function region.LoadCollisionMap()
+	region.collisionMap = CollisionMap.New()
+	region.collisionMap:Load("testMap")
 end
 
-function this.LoadTileMaps(level)
+function region.LoadTileMaps(level)
 	--Load TileMap
-	this.tileMapBackground = TileMap.New()
-	this.tileMapForeground = TileMap.New()
+	region.tileMapBackground = TileMap.New()
+	region.tileMapForeground = TileMap.New()
 
 	--tiles size in pixels
 	tileSizeX = 16
@@ -28,31 +28,31 @@ function this.LoadTileMaps(level)
 	sizeY = 32
 	
 	if level == 1 then
-		map = this.MapOneB()
+		map = region.MapOneB()
 	elseif level == 2 then
-		map = this.MapTwoB()
+		map = region.MapTwoB()
 	end
 
-	this.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	region.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
 
 	if level == 1 then
-		map = this.MapOneF()
+		map = region.MapOneF()
 	elseif level == 2 then
-		map = this.MapTwoF()
+		map = region.MapTwoF()
 	end
 
-	this.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	region.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
 
 end
 
-function this.Draw()
+function region.Draw()
 	--Draw tileMap
-	this.tileMapBackground:Draw()
-	this.player:Draw()
-	this.tileMapForeground:Draw()
+	region.tileMapBackground:Draw()
+	region.player:Draw()
+	region.tileMapForeground:Draw()
 end
 
-function this.MapOneB()
+function region.MapOneB()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -66,7 +66,7 @@ function this.MapOneB()
 	return map
 end
 
-function this.MapTwoB()
+function region.MapTwoB()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -77,7 +77,7 @@ function this.MapTwoB()
 end
 
 
-function this.MapOneF()
+function region.MapOneF()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -89,7 +89,7 @@ function this.MapOneF()
 	return map
 end
 
-function this.MapTwoF()
+function region.MapTwoF()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -101,13 +101,13 @@ function this.MapTwoF()
 	return map
 end
 
-function this.Create()
-	this.LoadTileMaps(1)
-	this.LoadCollisionMap()
-	this.player = Entity.New()
-	this.player:Initialize()
-	this.player:SetPos(64, 64)
+function region.Create()
+	region.LoadTileMaps(1)
+	region.LoadCollisionMap()
+	region.player = Entity.New()
+	region.player:Initialize()
+	region.player:SetPos(64, 64)
 
 end
 
-return this
+return region

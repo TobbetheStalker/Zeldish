@@ -46,7 +46,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-		<Filter>Source Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CollisionMap.cpp">
       <Filter>Source Files</Filter>
@@ -95,6 +95,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Region.lua">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="LevelEditor.lua">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
