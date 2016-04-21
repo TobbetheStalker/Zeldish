@@ -115,6 +115,11 @@ int Entity::GetY()
 	return this->y;
 }
 
+int Entity::GetSpriteX()
+{
+	return 0;
+}
+
 int Entity::GetWidth()
 {
 	return this->width;
@@ -277,6 +282,15 @@ int entity_setPos(lua_State* ls)
 	return 0;
 }
 
+int entity_setSpritePos(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	if (entity)
+		entity->SetSpritePos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+
+	return 0;
+}
+
 int entity_setWidth(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
@@ -295,6 +309,24 @@ int entity_setHeight(lua_State* ls)
 	return 0;
 }
 
+int entity_setSpriteWidth(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	if (entity)
+		entity->SetSpritePos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+
+	return 0;
+}
+
+int entity_setSpriteHeight(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	if (entity)
+		entity->SetSpritePos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+
+	return 0;
+}
+
 int entity_getPos(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
@@ -305,6 +337,23 @@ int entity_getPos(lua_State* ls)
 	{
 		x = entity->GetX();
 		y = entity->GetY();
+	}
+
+	lua_pushinteger(ls, x);
+	lua_pushinteger(ls, y);
+	return 2;
+}
+
+int entity_getSpritePos(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+
+	int x = -1;
+	int y = -1;
+	if (entity)
+	{
+		x = entity->GetSpriteX();
+		y = entity->GetSpriteY();
 	}
 
 	lua_pushinteger(ls, x);

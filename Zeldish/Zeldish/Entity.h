@@ -42,6 +42,8 @@ public:
 
 	int GetX();
 	int GetY();
+	int GetSpriteX();
+	int GetSpriteY();
 	int GetWidth();
 	int GetHeight();
 	float GetSpeed();
@@ -65,11 +67,18 @@ int entity_destroy(lua_State* ls);
 
 int entity_setPos(lua_State* ls);
 
+int entity_setSpritePos(lua_State* ls);
+
 int entity_setWidth(lua_State* ls);
 
 int entity_setHeight(lua_State* ls);
 
+int entity_setSpriteWidth(lua_State* ls);
+
+int entity_setSpriteHeight(lua_State* ls);
+
 int entity_getPos(lua_State* ls);
+int entity_getSpritePos(lua_State* ls);
 
 int entity_getWidth(lua_State* ls);
 
