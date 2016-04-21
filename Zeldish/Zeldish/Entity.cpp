@@ -21,14 +21,19 @@ int Entity::Initialize(std::string texturePath)
 	this->animationType = EntityLib::DOWN;
 	this->x = 0;
 	this->y = 0;
-	this->width = EntityLib::PLAYER_WIDTH;
-	this->height = EntityLib::PLAYER_HEIGHT;
+	this->width = EntityLib::ENTITY_WIDTH;
+	this->height = EntityLib::ENTITY_HEIGHT;
 	this->spriteRect = sf::IntRect(0, 0, EntityLib::PLAYER_WIDTH, EntityLib::PLAYER_HEIGHT);
 
 	this->drawTexture.loadFromFile(texturePath);
 	//this->drawTexture.loadFromFile("../Zeldish/Resources/TileSets/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
 	this->mySprite.setTextureRect(this->spriteRect);
+
+	//Do the boundingbox setup
+	this->boundingBox.SetWidth(EntityLib::ENTITY_WIDTH);
+	this->boundingBox.SetHeight(EntityLib::ENTITY_HEIGHT);
+	this->boundingBox.SetPosition(0, 0);
 
 	return result;
 }
@@ -64,6 +69,7 @@ void Entity::SetSpritePos(int x, int y)
 
 void Entity::SetPos(float x, float y)
 {
+	this->boundingBox.SetPosition(x, y);
 }
 
 void Entity::SetWidth(int width)
@@ -145,6 +151,7 @@ int Entity::UpdateSprite(float dTime)
 	this->spriteRect.top = (this->animationType * EntityLib::PLAYER_HEIGHT);
 	//And finally set our animation to be the one displayed
 	this->mySprite.setTextureRect(this->spriteRect);
+
 
 	return result;
 }
