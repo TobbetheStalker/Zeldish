@@ -28,8 +28,10 @@ public:
 	void SetSpriteY(int y);
 	void SetSpritePos(int x, int y);
 	void SetPos(float x, float y);
-	void SetWidth(float width);
-	void SetHeight(float height);
+	void SetWidth(int width);
+	void SetHeight(int height);
+	void SetSpriteHeight(int height);
+	void SetSpriteWidth(int width);
 	void SetDirection(EntityLib::Direction direction);
 
 	virtual int Update(float dTIme);

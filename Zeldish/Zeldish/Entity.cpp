@@ -63,14 +63,24 @@ void Entity::SetPos(float x, float y)
 {
 }
 
-void Entity::SetWidth(float width)
+void Entity::SetWidth(int width)
 {
-	this->width = width;
+	this->boundingBox.SetWidth(width);
 }
 
-void Entity::SetHeight(float height)
+void Entity::SetHeight(int height)
+{
+	this->boundingBox.SetHeight(height);
+}
+
+void Entity::SetSpriteHeight(int height)
 {
 	this->height = height;
+}
+
+void Entity::SetSpriteWidth(int width)
+{
+	this->width = width;
 }
 
 void Entity::SetDirection(EntityLib::Direction direction)
@@ -101,8 +111,10 @@ int Entity::Update(float dTime)
 	}
 
 	//Apply the difference in position
+	this->x += xDelta * dTime;
+	this->y += yDelta * dTime;
 
-
+	//Apply the new position to the sprite
 	this->UpdateSprite(dTime);
 	return result;
 }
