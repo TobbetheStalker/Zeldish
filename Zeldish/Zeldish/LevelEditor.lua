@@ -1,16 +1,23 @@
 editor = {}
 
 function editor.Update()
-	if Input.IsPressed(36) == 1 then
+	if Input.IsPressed(36) == 1 then --Escape -> menu
 		gameState = 0
 	end
 	if Input.IsPressed(57) == 1 then
 		if editor.tileInfo == 1 then
-			print("[LUA] Mouse pos; X: " .. Input.GetMousePosX() .. ", Y: " .. Input.GetMousePosY())
+			tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
+			print("[LUA] Mouse tile pos; X: " .. tilePos[1] .. ", Y: " .. tilePos[2])
+			editor.activeTile = tilePos[1] + 1
 			editor.tileInfo = 0
 		else
 			editor.tileInfo = 1
 		end
+	end
+	if Input.IsMousePressed() == 1 then
+		tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
+		ChangeTile(tilePos[1], tilePos[2])
+		UpdateMaps()
 	end
 end
 
@@ -36,17 +43,17 @@ function editor.CreateEmpty()
 	sizeX = 32
 	sizeY = 32
 	
-	map = editor.MapGrass()
+	editor.mapB = MapGrass()
 
-	editor.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	editor.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, editor.mapB)
 
-	map = editor.MapEmpty()
+	editor.mapF = MapEmpty()
 
-	editor.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	editor.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, editor.mapF)
 
-	map = editor.MapTiles()
+	map = MapTiles()
 
-	editor.tileMapTiles:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	editor.tileMapTiles:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map)
 
 	editor.collisionMap = CollisionMap.New()
 	editor.collisionMap:Empty(32, 32)
@@ -54,9 +61,26 @@ function editor.CreateEmpty()
 	--Set some needed state variables
 	editor.workingLayer = 0 --0: Background, 1: Entities, 2: Foreground
 	editor.tileInfo = 1
+	editor.activeTile = 0
 end
 
-function editor.MapGrass()
+function ChangeTile(x, y)
+	if editor.workingLayer == 0 then
+		editor.mapB[y * 32 + x + 1] = editor.activeTile;
+	elseif editor.workingLayer == 2 then
+		editor.mapF[y * 32 + x + 1] = editor.activeTile;
+	end
+end
+
+function UpdateMaps()
+	if editor.workingLayer == 0 then
+		editor.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, editor.mapB)
+	elseif editor.workingLayer == 1 then
+		editor.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, editor.mapF)
+	end
+end
+
+function MapGrass()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -67,7 +91,7 @@ function editor.MapGrass()
 	return map
 end
 
-function editor.MapEmpty()
+function MapEmpty()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -77,7 +101,7 @@ function editor.MapEmpty()
 	return map
 end
 
-function editor.MapTiles()
+function MapTiles()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -97,6 +121,18 @@ end
 
 function editor.Save()
 
+end
+
+function MapPosToTile(x, y)
+	result = {}
+
+	tileX = x / 20
+	tileY = y / 20
+
+	result[1] = math.floor(tileX)
+	result[2] = math.floor(tileY)
+
+	return result
 end
 
 return editor

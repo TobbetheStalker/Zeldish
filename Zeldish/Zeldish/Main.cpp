@@ -176,6 +176,12 @@ int main()
 			if (event.type == sf::Event::KeyReleased) {
 				InputChecker::Instance().SetKeyReleased(event.key.code);
 			}
+			if (event.type == sf::Event::MouseButtonPressed) {
+				InputChecker::Instance().SetMousePressed();
+			}
+			if (event.type == sf::Event::MouseButtonReleased) {
+				InputChecker::Instance().SetMouseReleased();
+			}
 		}
 		
 		window->clear();
