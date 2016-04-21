@@ -14,8 +14,10 @@ namespace EntityLib{
 	static const int Y_SPEED = SPEED;
 
 	static const float FRAME_TIME = 1.2f;
-
 	static const int FRAME_COUNT = 3;
+	static const float ANIMATION_LIMIT = FRAME_TIME * FRAME_COUNT;
+
+
 	static const int PLAYER_WIDTH = 32;
 	static const int PLAYER_HEIGHT = 32;
 }
