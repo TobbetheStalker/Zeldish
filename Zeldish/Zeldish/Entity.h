@@ -46,6 +46,8 @@ public:
 	int GetSpriteY();
 	int GetWidth();
 	int GetHeight();
+	int GetSpriteWidth();
+	int GetSpriteHeight();
 	float GetSpeed();
 	EntityLib::Direction GetDirection();
 #pragma endregion getters & setters

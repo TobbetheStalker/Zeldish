@@ -67,7 +67,6 @@ void Entity::SetSpritePos(int x, int y)
 {
 	this->x = x;
 	this->y = y;
-	this->mySprite.setPosition(sf::Vector2f(x, y));
 }
 
 void Entity::SetPos(float x, float y)
@@ -107,25 +106,40 @@ void Entity::SetSpeed(float speed)
 
 int Entity::GetX()
 {
-	return this->x;
+	return this->boundingBox.GetX();
 }
 
 int Entity::GetY()
 {
-	return this->y;
+	return this->boundingBox.GetY();;
 }
 
 int Entity::GetSpriteX()
 {
-	return 0;
+	return this->x;
+}
+
+int Entity::GetSpriteY()
+{
+	return this->y;
 }
 
 int Entity::GetWidth()
 {
-	return this->width;
+	return this->boundingBox.GetWidth();
 }
 
 int Entity::GetHeight()
+{
+	return this->boundingBox.GetHeight();
+}
+
+int Entity::GetSpriteWidth()
+{
+	return this->width;
+}
+
+int Entity::GetSpriteHeight()
 {
 	return this->height;
 }
