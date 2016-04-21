@@ -69,9 +69,19 @@ void Entity::SetSpritePos(int x, int y)
 	this->y = y;
 }
 
+void Entity::ApplySpritePos(int x, int y)
+{
+}
+
 void Entity::SetPos(float x, float y)
 {
 	this->boundingBox.SetPosition(x, y);
+}
+
+void Entity::ApplyPosition(float x, float y)
+{
+	this->x += x;
+	this->y += y;
 }
 
 void Entity::SetWidth(int width)

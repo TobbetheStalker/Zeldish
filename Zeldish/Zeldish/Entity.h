@@ -32,7 +32,9 @@ public:
 	void SetY(float y);
 	void SetSpriteY(int y);
 	void SetSpritePos(int x, int y);
+	void ApplySpritePos(int x, int y);
 	void SetPos(float x, float y);
+	void ApplyPosition(float x, float y);
 	void SetWidth(int width);
 	void SetHeight(int height);
 	void SetSpriteHeight(int height);
