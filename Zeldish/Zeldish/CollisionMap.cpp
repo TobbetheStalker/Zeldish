@@ -94,7 +94,7 @@ bool CollisionMap::checkCollision(BoundingVolume* bv, int& correctionX, int& cor
 {
 	bool result = true;
 	
-	int x, y;
+	float x, y;
 	int width, height;
 	float difX, difY;
 	float totalX = 0;

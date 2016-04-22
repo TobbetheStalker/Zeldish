@@ -7,16 +7,20 @@
 class BoundingVolume
 {
 private:
-	int m_x, m_y;
+	float m_x, m_y;
 	int m_width, m_height;
 public:
 	BoundingVolume();
 	~BoundingVolume();
 	void ShutDown();
-	int Initialize(int x, int y, int width, int height);
-
-	int SetPosition(int x, int y);
-	void GetPosition(int& x, int& y);
+	int Initialize(float x, float y, int width, int height);
+	int SetPosition(float x, float y);
+	void ApplyPosition(float x, float y);
+	void SetWidth(int width);
+	void SetHeight(int height);
+	void GetPosition(float& x, float& y);
+	float GetX();
+	float GetY();
 	int GetWidth();
 	int GetHeight();
 
