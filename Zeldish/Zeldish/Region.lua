@@ -2,7 +2,6 @@ region = {}
 
 --region has [projectileMetatable][bool active]
 region.projectiles = {}
-region.projectileCnt = 0
 
 keyW =		22
 keyA =		0
@@ -28,13 +27,12 @@ function region.Update(deltaTime)
 	
 	--Update the player
 	region.player:Update(deltaTime);
-	print(region.projectiles[1])
-	--for key, projectile in (region.projectiles) do
-		--if projectile[2] then
-			--projectile[1]:Update(deltaTime)
-		--end
-		--print(key .. " " .. projectile)
-	--end
+
+	for key, projectile in pairs(region.projectiles) do
+		if projectile[2] then
+			projectile[1]:Update(deltaTime)
+		end
+	end
 end
 
 function region.HandlePlayerInput()
@@ -89,12 +87,13 @@ end
 function region.InsertProjectile(toAdd)
 foundPos = 0
 print("[LUA] Finding position for projectile")
-	for key, projectile in (region.projectiles) do
+	for key, projectile in pairs(region.projectiles) do
 		if projectile[2] == false then
 			foundPos = key
 			--The projectile is inactive
 			--Push yourself to its place in the list
-			projectile = toAdd
+			projectile[1]:StoreFrom(toAdd)
+			projectile[2] = true;
 			print("adding entity")
 			break
 		end
@@ -105,19 +104,31 @@ print("[LUA] Finding position for projectile")
 end
 
 function region.SpawnProjectile(original)
-	x, y = original:GetPos()
-	print(x .. " " .. y)
-	projectile = Entity:New()
-	projectile:Initialize("FireBall.png");
-	projectile:SetPos(x, y)
-	projectile:SetWidth(20)
-	projectile:SetHeight(20)
-	projectile:SetSpriteWidth(20)
-	projectile:SetSpriteHeight(20)
-	projectile:SetDirection(original:GetDirection())
-	projectile:SetSpeed(10)
-	print("[LUA] created projectile")
-	region.InsertProjectile(projectile)
+	for key, projectile in pairs(region.projectiles) do
+		if projectile[2] == false then
+			foundPos = key
+			--The projectile is inactive
+			--Push yourself to its place in the list
+			x, y = original:GetPos()
+			print(x .. " " .. y)
+			projectile[1]:Initialize("FireBall.png");
+			projectile[1]:SetPos(x, y)
+			projectile[1]:SetWidth(20)
+			projectile[1]:SetHeight(20)
+			projectile[1]:SetSpriteWidth(20)
+			projectile[1]:SetSpriteHeight(20)
+			projectile[1]:SetDirection(original:GetDirection())
+			projectile[1]:SetSpeed(1000)
+			print("[LUA] created projectile[1]")
+
+			projectile[2] = true;
+			print("adding entity")
+			break
+		end
+	end
+	if foundPos == 0 then
+		print("[LUA] Resourcepool overload")
+	end
 end
 
 function region.LoadCollisionMap()
@@ -162,11 +173,12 @@ function region.Draw()
 	--Draw tileMap
 	region.tileMapBackground:Draw()
 	region.player:Draw()
-
-	for projectile, active in (region.projectiles) do
-		if ative then
+	--projectile, active = region.projectiles[1], region.projectiles[2]
+	--print(projectile .. " " .. active)
+	for key, adTemp in pairs(region.projectiles) do
+		if adTemp[2] then
 			--print("[LUA] Drawing projectile")
-			projectile:Draw()
+			adTemp[1]:Draw()
 		end
 	end
 
@@ -235,7 +247,7 @@ function region.Create()
 	region.player:SetDirection(4)
 	region.player:SetSpeed(40)
 
-	for pIndex = 1, pIndex < 100, 1 do
+	for pIndex = 1, 100, 1 do
 		tempP = Entity:New()
 		tempP:Initialize("Fireball.png");
 		region.projectiles[pIndex] = {tempP, false}
