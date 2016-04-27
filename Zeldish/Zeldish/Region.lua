@@ -65,7 +65,6 @@ function region.HandlePlayerInput()
 		end
 	end
 	region.player:SetDirection(newDirection)
-
 end
 
 function region.LoadCollisionMap()
@@ -73,7 +72,8 @@ function region.LoadCollisionMap()
 	region.collisionMap:Load("testMap")
 end
 
-function region.LoadTileMaps (level)
+function region.LoadTileMaps(level)
+
 	--Load TileMap
 	region.tileMapBackground = TileMap.New()
 	region.tileMapForeground = TileMap.New()
@@ -104,7 +104,8 @@ function region.LoadTileMaps (level)
 
 end
 
-function region.Draw ()
+
+function region.Draw()
 	--Draw tileMap
 	region.tileMapBackground:Draw()
 	region.player:Draw()
@@ -168,7 +169,6 @@ function region.Create()
 	region.player:SetPos(64, 64)
 	region.player:SetDirection(4)
 	region.player:SetSpeed(40)
-
 end
 
 return region
