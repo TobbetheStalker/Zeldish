@@ -7,7 +7,7 @@ function editor.Update()
 	if Input.IsPressed(36) == 1 then --Escape -> menu
 		gameState = 0
 	end
-	if Input.IsPressed(57) == 1 then
+	if Input.IsPressed(57) == 1 then --Space -> tile picker
 		if editor.tileInfo == 1 then
 			tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
 			print("[LUA] Mouse tile pos; X: " .. tilePos[1] .. ", Y: " .. tilePos[2])
@@ -15,7 +15,7 @@ function editor.Update()
 				editor.activeTile = tilePos[1] + 1
 			end
 			editor.tileInfo = 0
-		else
+		elseif editor.tileInfo == 0 and (editor.workingLayer == 0 or editor.workingLayer == 2) then
 			editor.tileInfo = 1
 		end
 	end
@@ -36,7 +36,7 @@ function editor.Update()
 		print("[LUA] Save maps initiated")
 		Save()
 	end
-	if Input.IsPressed(11) == 1 then --S -> Load maps
+	if Input.IsPressed(11) == 1 then --L -> Load maps
 		print("[LUA] Load maps initiated")
 		Load()
 		UpdateMaps()
@@ -52,7 +52,7 @@ end
 function editor.Draw()
 	editor.tileMapBackground:Draw()
 	editor.tileMapForeground:Draw()
-	if editor.tileInfo == 1 and (editor.workingLayer == 0 or editor.workingLayer == 2) then
+	if editor.tileInfo == 1 then
 		editor.tileMapTiles:Draw()
 	end
 end
