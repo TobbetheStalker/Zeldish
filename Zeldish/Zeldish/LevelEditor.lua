@@ -128,8 +128,10 @@ function ChangeTile(x, y, button)
 	elseif editor.workingLayer == 3 then
 		if button == 1 then
 			editor.mapC[y * MAP_SIZE_X + x + 1] = 2
+			editor.collisionMap:Set(1, x, y)
 		else
 			editor.mapC[y * MAP_SIZE_X + x + 1] = -1
+			editor.collisionMap:Set(0, x, y)
 		end
 		print("[LUA] Changed tile in collision")
 	end
@@ -212,6 +214,16 @@ function Load()
 	end
 	file:close()
 
+	editor.collisionMap:Load(filename)
+	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+		local tempValue = editor.collisionMap:Get((i - 1) % MAP_SIZE_X, math.floor((i - 1) / MAP_SIZE_X))
+		if tempValue ~= 0 then
+			editor.mapC[i] = 2
+		else
+			editor.mapC[i] = -1
+		end
+	end
+
 	io.stdout:write("Maps loaded from: " .. filename .. "\n")
 end
 
@@ -234,6 +246,8 @@ function Save()
 		 file:write(editor.mapF[i] .. " ")
 	end
 	file:close()
+
+	editor.collisionMap:Save(filename)
 
 	io.stdout:write("Maps saved as: " .. filename .. "\n")
 end

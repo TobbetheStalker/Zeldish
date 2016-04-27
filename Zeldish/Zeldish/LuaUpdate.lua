@@ -8,7 +8,7 @@ function InitMenu ()
 	
 end
 
-function Update()
+function Update(deltaTime)
 	
 	if gameState == -1 then
 		return 0
@@ -16,7 +16,7 @@ function Update()
 		UpdateMenu()
 		menu:Draw()	
 	elseif gameState == 1 then
-		region.Update()
+		region.Update(deltaTime)
 		region.Draw()
 	elseif gameState == 2 then
 		editor.Update()

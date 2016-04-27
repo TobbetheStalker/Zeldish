@@ -16,7 +16,7 @@ void BoundingVolume::ShutDown()
 {
 }
 
-int BoundingVolume::Initialize(int x, int y, int width, int height)
+int BoundingVolume::Initialize(float x, float y, int width, int height)
 {
 	this->m_x = x;
 	this->m_y = y;
@@ -25,7 +25,7 @@ int BoundingVolume::Initialize(int x, int y, int width, int height)
 	return 1;
 }
 
-int BoundingVolume::SetPosition(int x, int y)
+int BoundingVolume::SetPosition(float x, float y)
 {
 	int result = 1;
 
@@ -34,6 +34,52 @@ int BoundingVolume::SetPosition(int x, int y)
 
 	return result;
 }
+
+void BoundingVolume::ApplyPosition(float x, float y)
+{
+	this->m_x += x;
+	this->m_y += y;
+}
+
+void BoundingVolume::SetWidth(int width)
+{
+	this->m_width = width;
+}
+
+void BoundingVolume::SetHeight(int height)
+{
+	this->m_height = height;
+}
+
+
+void BoundingVolume::GetPosition(float& x, float& y)
+{
+	x = this->m_x;
+	y = this->m_y;
+
+	return;
+}
+
+float BoundingVolume::GetX()
+{
+	return this->m_x;
+}
+
+float BoundingVolume::GetY()
+{
+	return this->m_y;
+}
+
+int BoundingVolume::GetWidth()
+{
+	return this->m_width;
+}
+
+int BoundingVolume::GetHeight()
+{
+	return this->m_height;
+}
+
 
 //0 if outside, 1 if intersection, 2 if contained
 int BoundingVolume::CheckAgainst(BoundingVolume * other)
@@ -52,10 +98,9 @@ int BoundingVolume::CheckAgainst(BoundingVolume * other)
 		result = 1;
 		//Add check for containing
 	}
-	
+
 	return result;
 }
-
 
 BoundingVolume* checkBoundingVolume(lua_State* L, int n)
 {
@@ -104,6 +149,44 @@ int BoundingVolume_CheckAgainst(lua_State* ls)
 	return 1;
 }
 
+int BoundingVolume_GetWidth(lua_State* ls)
+{
+	BoundingVolume* BoundingVolume = checkBoundingVolume(ls, 1);
+
+	int width = BoundingVolume->GetWidth();
+	
+	lua_pushinteger(ls, width);
+
+	return 1;
+}
+
+int BoundingVolume_GetHeight(lua_State* ls)
+{
+	BoundingVolume* BoundingVolume = checkBoundingVolume(ls, 1);
+
+	int height = BoundingVolume->GetWidth();
+
+	lua_pushinteger(ls, height);
+
+	return 1;
+}
+
+int BoundingVolume_GetPosition(lua_State* ls)
+{
+	BoundingVolume* BoundingVolume = checkBoundingVolume(ls, 1);
+
+	float x = -1;
+	float y = -1;
+
+	BoundingVolume->GetPosition(x, y);
+
+	lua_pushnumber(ls, x);
+	lua_pushnumber(ls, y);
+
+	return 2;
+}
+
+
 int BoundingVolume_setPosition(lua_State* ls) {
 	int result = 0;
 
@@ -140,9 +223,9 @@ void RegisterBoundingVolume(lua_State * ls)
 		{ "New",			BoundingVolume_create },
 		{ "Initialize",		BoundingVolume_initialize },
 		{ "CheckAgainst",	BoundingVolume_CheckAgainst },
-		/*{ "Draw",			BoundingVolume_draw },
-		{ "Print",			BoundingVolume_print },
-		{ "Jump",			BoundingVolume_jump },*/
+		{ "GetWidth",			BoundingVolume_GetWidth },
+		{ "GetHeight",			BoundingVolume_GetHeight },
+		{ "GetPosition",		BoundingVolume_GetPosition },
 		{ "SetPosition",	BoundingVolume_setPosition },
 		{ "__gc",			BoundingVolume_destroy },
 		{ NULL, NULL }

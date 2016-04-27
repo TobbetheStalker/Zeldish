@@ -1,12 +1,13 @@
 region = {}
 
-function region.Update()
+function region.Update(deltaTime)
 	if Input.IsPressed(36) == 1 then
 		gameState = 0
 	end
 	if Input.IsPressed(57) == 1 then
 		region.LoadTileMaps(2)
 	end
+	region.player:Update(deltaTime);
 end
 
 function region.LoadCollisionMap()
@@ -105,9 +106,9 @@ function region.Create()
 	region.LoadTileMaps(1)
 	region.LoadCollisionMap()
 	region.player = Entity.New()
-	region.player:Initialize()
+	region.player:Initialize("RacoonCharacter.png")
 	region.player:SetPos(64, 64)
-
+	region.player:SetDirection(2)
 end
 
 return region
