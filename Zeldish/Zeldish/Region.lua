@@ -16,6 +16,24 @@ directionRight =	2
 directionUp =		3
 directionNone =		4
 
+region.regionWidth = 32 * 20
+region.regionHeight = 32 * 20
+
+function region.CheckParticles()
+	for key, projectile in pairs(region.projectiles) do
+		if projectile[2] == true then
+			--check if we should deactivate them or do something
+			--First check is if outside of screen
+			x, y = projectile[1]:GetPos()
+			if x + projectile[1]:GetWidth() < 0 or y + projectile[1]:GetHeight() < 0 or x > region.regionWidth or y > region.regionHeight then
+				projectile[2] = false
+			end
+			--second check is against the collision map
+			--third check is against the other entities
+		end
+	end
+end
+
 function region.Update(deltaTime)
 	if Input.IsPressed(keyEscape) == 1 then
 		gameState = 0
@@ -28,6 +46,10 @@ function region.Update(deltaTime)
 	--Update the player
 	region.player:Update(deltaTime);
 
+	--Check if we should kill / deactivate any particles
+	region.CheckParticles()
+
+	--Update the active particles
 	for key, projectile in pairs(region.projectiles) do
 		if projectile[2] then
 			projectile[1]:Update(deltaTime)
@@ -84,25 +106,6 @@ function region.HandlePlayerInput()
 
 end
 
-function region.InsertProjectile(toAdd)
-foundPos = 0
-print("[LUA] Finding position for projectile")
-	for key, projectile in pairs(region.projectiles) do
-		if projectile[2] == false then
-			foundPos = key
-			--The projectile is inactive
-			--Push yourself to its place in the list
-			projectile[1]:StoreFrom(toAdd)
-			projectile[2] = true;
-			print("adding entity")
-			break
-		end
-	end
-	if foundPos == 0 then
-		print("[LUA] Resourcepool overload")
-	end
-end
-
 function region.SpawnProjectile(original)
 	for key, projectile in pairs(region.projectiles) do
 		if projectile[2] == false then
@@ -122,7 +125,7 @@ function region.SpawnProjectile(original)
 				spawnDirection = original:GetLastDirection()
 			end
 			projectile[1]:SetDirection(spawnDirection)
-			projectile[1]:SetSpeed(10)
+			projectile[1]:SetSpeed(60)
 			print("[LUA] created projectile[1]")
 
 			projectile[2] = true;
