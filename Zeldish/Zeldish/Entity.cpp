@@ -27,7 +27,7 @@ int Entity::Initialize(std::string texturePath)
 	this->y = 0;
 	this->width = EntityLib::ENTITY_WIDTH;
 	this->height = EntityLib::ENTITY_HEIGHT;
-	this->spriteRect = sf::IntRect(0, 0, EntityLib::PLAYER_WIDTH, EntityLib::PLAYER_HEIGHT);
+	this->spriteRect = sf::IntRect(0, 0, EntityLib::ENTITY_WIDTH, EntityLib::ENTITY_HEIGHT);
 
 	this->drawTexture.loadFromFile(fullPath);
 	//this->drawTexture.loadFromFile("../Zeldish/Resources/TileSets/RacoonCharacter.png");
@@ -239,6 +239,16 @@ int Entity::UpdateSprite(float dTime)
 	//And finally set our animation to be the one displayed
 	this->mySprite.setTextureRect(this->spriteRect);
 
+	this->mySprite.setScale(sf::Vector2f(float(this->width) / EntityLib::ENTITY_WIDTH, float(this->height) / EntityLib::ENTITY_HEIGHT));
+
+	return result;
+}
+
+int Entity::Intersects(Entity * other)
+{
+	int result = 0;
+
+	result = this->boundingBox.CheckAgainst(&other->boundingBox);
 
 	return result;
 }
@@ -346,7 +356,7 @@ int entity_setWidth(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+		entity->SetWidth(lua_tonumber(ls, 2));
 
 	return 0;
 }
@@ -355,7 +365,7 @@ int entity_setHeight(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+		entity->SetHeight(lua_tonumber(ls, 2));
 
 	return 0;
 }
@@ -364,7 +374,7 @@ int entity_setSpriteWidth(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if (entity)
-		entity->SetSpritePos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetSpriteWidth(lua_tointeger(ls, 2));
 
 	return 0;
 }
@@ -373,7 +383,7 @@ int entity_setSpriteHeight(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if (entity)
-		entity->SetSpritePos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetSpriteHeight(lua_tointeger(ls, 2));
 	return 0;
 }
 
@@ -513,6 +523,20 @@ int entity_update(lua_State* ls)
 	return 0;
 }
 
+int entity_Intersects(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	Entity* other = checkEntity(ls, 2);
+	int result = 0;
+	if (entity)
+	{
+		result = entity->Intersects(other);
+	}
+	lua_pushinteger(ls, result);
+
+	return 1;
+}
+
 void RegisterEntity(lua_State * ls)
 {
 	// Create a luaL metatable. This metatable is not 
@@ -548,6 +572,7 @@ void RegisterEntity(lua_State * ls)
 		{ "GetDirection",	entity_getDirection },
 		{ "GetSpeed",		entity_getSpeed },
 		{ "Update",			entity_update },
+		{ "Intersects",		entity_Intersects },
 		{ "__gc",			entity_destroy },
 		{ NULL, NULL }
 	};

@@ -21,7 +21,10 @@ function region.Update(deltaTime)
 		region.LoadTileMaps(2)
 	end
 	region.HandlePlayerInput()
+	
+	--Update the player
 	region.player:Update(deltaTime);
+
 end
 
 function region.HandlePlayerInput()
@@ -65,6 +68,7 @@ function region.HandlePlayerInput()
 		end
 	end
 	region.player:SetDirection(newDirection)
+
 end
 
 function region.LoadCollisionMap()
@@ -166,9 +170,17 @@ function region.Create()
 	region.LoadCollisionMap()
 	region.player = Entity.New()
 	region.player:Initialize("RacoonCharacter.png")
-	region.player:SetPos(64, 64)
+	region.player:SetPos(100, 100)
+	region.player:SetSpriteWidth(20)
+	region.player:SetSpriteHeight(20)
+	region.player:SetWidth(20)
+	region.player:SetHeight(20)
 	region.player:SetDirection(4)
 	region.player:SetSpeed(40)
+
+	region.projectiles = {}
+	region.activeProjectiles = {}
+	region.projectileCnt = 1
 end
 
 return region

@@ -58,8 +58,9 @@ public:
 	virtual int Update(float dTIme);
 	virtual int UpdateSprite(float dTime);
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	int Intersects(Entity* other);
 
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 
 Entity* checkEntity(lua_State* L, int n);
@@ -106,6 +107,8 @@ int entity_getDirection(lua_State* ls);
 int entity_getSpeed(lua_State* ls);
 
 int entity_update(lua_State* ls);
+
+int entity_Intersects(lua_State* ls);
 
 void RegisterEntity(lua_State * ls);
 
