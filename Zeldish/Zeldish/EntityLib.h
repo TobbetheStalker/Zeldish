@@ -9,6 +9,10 @@ namespace EntityLib{
 		NONE = 4
 	};
 
+	static const char* RESOURCE_DIRECTORY = "../Zeldish/Resources/";
+	static const char* TILESETS_DIRECTORY = "../Zeldish/Resources/TileSets/";
+	static const char* RACCON_FILE = "../Zeldish/Resources/TileSets/RacoonCharacter.png";
+
 	static const float SPEED = 5.0f;
 
 	static const float FRAME_TIME = 1.2f;
