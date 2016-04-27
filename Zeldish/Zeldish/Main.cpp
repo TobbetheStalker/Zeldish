@@ -177,10 +177,20 @@ int main()
 				InputChecker::Instance().SetKeyReleased(event.key.code);
 			}
 			if (event.type == sf::Event::MouseButtonPressed) {
-				InputChecker::Instance().SetMousePressed();
+				if (event.mouseButton.button == sf::Mouse::Button::Left) {
+					InputChecker::Instance().SetLeftMousePressed();
+				} 
+				else if (event.mouseButton.button == sf::Mouse::Button::Right) {
+					InputChecker::Instance().SetRightMousePressed();
+				}
 			}
 			if (event.type == sf::Event::MouseButtonReleased) {
-				InputChecker::Instance().SetMouseReleased();
+				if (event.mouseButton.button == sf::Mouse::Button::Left) {
+					InputChecker::Instance().SetLeftMouseReleased();
+				}
+				else if (event.mouseButton.button == sf::Mouse::Button::Right) {
+					InputChecker::Instance().SetRightMouseReleased();
+				}
 			}
 		}
 		

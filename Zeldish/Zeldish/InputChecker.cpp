@@ -6,8 +6,10 @@ InputChecker::InputChecker()
 		this->keys[i] = false;
 		this->oldKeys[i] = false;
 	}
-	this->mouse = false;
-	this->oldMouse = false;
+	this->leftMouse = false;
+	this->rightMouse = false;
+	this->oldLeftMouse = false;
+	this->oldRightMouse = false;
 }
 
 InputChecker::~InputChecker()
@@ -25,7 +27,8 @@ void InputChecker::UpdateInput()
 	for (int i = 0; i < 200; i++) {
 		this->oldKeys[i] = this->keys[i];
 	}
-	this->oldMouse = this->mouse;
+	this->oldLeftMouse = this->leftMouse;
+	this->oldRightMouse = this->rightMouse;
 }
 
 void InputChecker::SetKeyPressed(int keyCode)
@@ -65,19 +68,34 @@ int InputChecker::GetMouseY()
 	return sf::Mouse::getPosition(*window).y;
 }
 
-void InputChecker::SetMousePressed()
+void InputChecker::SetLeftMousePressed()
 {
-	this->mouse = true;
+	this->leftMouse = true;
 }
 
-void InputChecker::SetMouseReleased()
+void InputChecker::SetLeftMouseReleased()
 {
-	this->mouse = false;
+	this->leftMouse = false;
 }
 
-int InputChecker::CheckMousePressed()
+int InputChecker::CheckLeftMousePressed()
 {
-	return !this->oldMouse && this->mouse;
+	return !this->oldLeftMouse && this->leftMouse;
+}
+
+void InputChecker::SetRightMousePressed()
+{
+	this->rightMouse = true;
+}
+
+void InputChecker::SetRightMouseReleased()
+{
+	this->rightMouse = false;
+}
+
+int InputChecker::CheckRightMousePressed()
+{
+	return !this->oldRightMouse && this->rightMouse;
 }
 
 void InputChecker::ReleaseInstance()
@@ -155,9 +173,16 @@ int input_getmouseposy(lua_State* ls)
 	return 1;
 }
 
-int input_checkmousepressed(lua_State* ls) 
+int input_checkleftmousepressed(lua_State* ls) 
 {
-	lua_pushinteger(ls, InputChecker::Instance().CheckMousePressed());
+	lua_pushinteger(ls, InputChecker::Instance().CheckLeftMousePressed());
+
+	return 1;
+}
+
+int input_checkrightmousepressed(lua_State* ls)
+{
+	lua_pushinteger(ls, InputChecker::Instance().CheckRightMousePressed());
 
 	return 1;
 }
@@ -187,7 +212,8 @@ void RegisterInputChecker(lua_State * ls)
 		{ "IsReleased",		input_checkkeyreleased },
 		{ "GetMousePosX",	input_getmouseposx },
 		{ "GetMousePosY",	input_getmouseposy },
-		{ "IsMousePressed",	input_checkmousepressed },
+		{ "IsLeftMousePressed",	input_checkleftmousepressed },
+		{ "IsRightMousePressed",	input_checkrightmousepressed },
 		/*{ "Print",			menu_print },
 		{ "Jump",			menu_jump },
 		{ "SetPosition",	menu_setPosition },*/

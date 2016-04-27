@@ -11,8 +11,10 @@ private:
 	static InputChecker* instance_;
 	bool keys[200];
 	bool oldKeys[200];
-	bool mouse;
-	bool oldMouse;
+	bool leftMouse;
+	bool rightMouse;
+	bool oldLeftMouse;
+	bool oldRightMouse;
 	InputChecker();
 	
 
@@ -29,9 +31,12 @@ public:
 	int CheckKeyReleased(int keyCode);
 	int GetMouseX();
 	int GetMouseY();
-	void SetMousePressed();
-	void SetMouseReleased();
-	int CheckMousePressed();
+	void SetLeftMousePressed();
+	void SetLeftMouseReleased();
+	int CheckLeftMousePressed();
+	void SetRightMousePressed();
+	void SetRightMouseReleased();
+	int CheckRightMousePressed();
 
 	void ReleaseInstance();
 };

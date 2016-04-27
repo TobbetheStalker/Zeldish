@@ -47,9 +47,14 @@ function editor.Update()
 		UpdateMaps()
 	end
 
-	if Input.IsMousePressed() == 1 then
+	if Input.IsLeftMousePressed() == 1 then
 		tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
-		ChangeTile(tilePos[1], tilePos[2])
+		ChangeTile(tilePos[1], tilePos[2], 1)
+		UpdateMap()
+	end
+	if Input.IsRightMousePressed() == 1 then
+		tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
+		ChangeTile(tilePos[1], tilePos[2], 2)
 		UpdateMap()
 	end
 
@@ -105,15 +110,23 @@ function editor.CreateEmpty()
 	editor.activeTile = 11
 end
 
-function ChangeTile(x, y)
+function ChangeTile(x, y, button)
 	if editor.workingLayer == 0 then
-		editor.mapB[y * MAP_SIZE_X + x + 1] = editor.activeTile;
+		if button == 1 then
+			editor.mapB[y * MAP_SIZE_X + x + 1] = editor.activeTile;
+		else
+			editor.mapB[y * MAP_SIZE_X + x + 1] = 11;
+		end
 		print("[LUA] Changed tile in background")
 	elseif editor.workingLayer == 2 then
-		editor.mapF[y * MAP_SIZE_X + x + 1] = editor.activeTile;
+		if button == 1 then
+			editor.mapF[y * MAP_SIZE_X + x + 1] = editor.activeTile;
+		else
+			editor.mapF[y * MAP_SIZE_X + x + 1] = -1;
+		end
 		print("[LUA] Changed tile in foreground")
 	elseif editor.workingLayer == 3 then
-		if editor.mapC[y * MAP_SIZE_X + x + 1] == -1 then
+		if button == 1 then
 			editor.mapC[y * MAP_SIZE_X + x + 1] = 2
 		else
 			editor.mapC[y * MAP_SIZE_X + x + 1] = -1
