@@ -30,7 +30,7 @@ function UpdateMenu ()
 	if Input.IsPressed(74) == 1 then
 		menu:Select(1)
 	end
-	if Input.IsPressed(58) == 1 then
+	if Input.IsPressed(58) == 1 or Input.IsPressed(57) == 1 then
 		selected = menu:GetSelected()
 		if selected == 0 then
 			gameState = 1
