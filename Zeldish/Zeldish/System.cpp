@@ -47,7 +47,7 @@ int System::Initialize()
 }
 
 int System::HandleInput()
-{
+{ 
 
 	return 0;
 }
@@ -58,7 +58,8 @@ int System::Update(float dT)
 
 	//Update Content
 	lua_getglobal(this->luaState, "Update");
-	int error = lua_pcall(this->luaState, 0, 2, 0);
+	lua_pushnumber(this->luaState, dT);
+	int error = lua_pcall(this->luaState, 1, 2, 0);
 	if (error) {
 		std::cerr << lua_tostring(this->luaState, -1) << "\n";
 	}

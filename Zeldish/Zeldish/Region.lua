@@ -1,23 +1,82 @@
-this = {}
+region = {}
 
-function this.Update()
-	if Input.IsPressed(36) == 1 then
+keyW =		22
+keyA =		0
+keyS =		18
+keyD =		3
+keySpace =	57
+keyEscape =	36
+
+directionDown =		0
+directionLeft =		1
+directionRight =	2
+directionUp =		3
+directionNone =		4
+
+function region.Update(deltaTime)
+	if Input.IsPressed(keyEscape) == 1 then
 		gameState = 0
 	end
-	if Input.IsPressed(57) == 1 then
-		this.LoadTileMaps(2)
+	if Input.IsPressed(keySpace) == 1 then
+		region.LoadTileMaps(2)
 	end
+	region.HandlePlayerInput()
+	region.player:Update(deltaTime);
 end
 
-function this.LoadCollisionMap()
-	this.collisionMap = CollisionMap.New()
-	this.collisionMap:Load("testMap")
+function region.HandlePlayerInput()
+	--extract the input
+	down = Input.IsDown(keyS) 
+	left = Input.IsDown(keyA) 
+	right = Input.IsDown(keyD) 
+	up = Input.IsDown(keyW)
+	none = down + left + right + up
+	newDirection = 0
+
+	--do the input logic
+	if none == 0 or none > 1 then
+		--no key was pressed or to many keys was pressed
+		newDirection = directionNone
+	else
+		--one single key was pressed
+		if down == 1 then
+			newDirection = directionDown
+			--if Input.IsPressed(keyS) == 1 then
+				--region.player:SetDirection(newDirection)
+			--end
+		end
+		if left == 1 then
+			newDirection = directionLeft
+			--if Input.IsPressed(keyA) == 1 then
+				--region.player:SetDirection(newDirection)
+			--end
+		end
+		if right == 1 then
+			newDirection = directionRight
+			--if Input.IsPressed(keyD) == 1 then
+				--region.player:SetDirection(newDirection)
+			--end
+		end
+		if up == 1 then
+			newDirection = directionUp
+			--if Input.IsPressed(keyW) == 1 then
+				--region.player:SetDirection(newDirection)
+			--end
+		end
+	end
+	region.player:SetDirection(newDirection)
 end
 
-function this.LoadTileMaps (level)
+function region.LoadCollisionMap()
+	region.collisionMap = CollisionMap.New()
+	region.collisionMap:Load("testMap")
+end
+
+function region.LoadTileMaps(level)
+
 	--Load TileMap
-	this.tileMapBackground = TileMap.New()
-	this.tileMapForeground = TileMap.New()
+	region.tileMapBackground = TileMap.New()
+	region.tileMapForeground = TileMap.New()
 
 	--tiles size in pixels
 	tileSizeX = 16
@@ -28,31 +87,32 @@ function this.LoadTileMaps (level)
 	sizeY = 32
 	
 	if level == 1 then
-		map = this.MapOneB()
+		map = region.MapOneB()
 	elseif level == 2 then
-		map = this.MapTwoB()
+		map = region.MapTwoB()
 	end
 
-	this.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	region.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
 
 	if level == 1 then
-		map = this.MapOneF()
+		map = region.MapOneF()
 	elseif level == 2 then
-		map = this.MapTwoF()
+		map = region.MapTwoF()
 	end
 
-	this.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	region.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
 
 end
 
-function this.Draw ()
+
+function region.Draw()
 	--Draw tileMap
-	this.tileMapBackground:Draw()
-	this.player:Draw()
-	this.tileMapForeground:Draw()
+	region.tileMapBackground:Draw()
+	region.player:Draw()
+	region.tileMapForeground:Draw()
 end
 
-function this.MapOneB()
+function region.MapOneB()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -66,7 +126,7 @@ function this.MapOneB()
 	return map
 end
 
-function this.MapTwoB()
+function region.MapTwoB()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -77,7 +137,7 @@ function this.MapTwoB()
 end
 
 
-function this.MapOneF()
+function region.MapOneF()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -89,7 +149,7 @@ function this.MapOneF()
 	return map
 end
 
-function this.MapTwoF()
+function region.MapTwoF()
 	map = {}
 
 	for i = 1, 32 * 32 do
@@ -101,13 +161,14 @@ function this.MapTwoF()
 	return map
 end
 
-function this.Create()
-	this.LoadTileMaps(1)
-	this.LoadCollisionMap()
-	this.player = Entity.New()
-	this.player:Initialize()
-	this.player:SetPos(64, 64)
-
+function region.Create()
+	region.LoadTileMaps(1)
+	region.LoadCollisionMap()
+	region.player = Entity.New()
+	region.player:Initialize("RacoonCharacter.png")
+	region.player:SetPos(64, 64)
+	region.player:SetDirection(4)
+	region.player:SetSpeed(40)
 end
 
-return this
+return region

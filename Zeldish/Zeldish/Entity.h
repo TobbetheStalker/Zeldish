@@ -5,6 +5,7 @@
 #include "WindowLib.h"
 #include "lua.hpp"
 #include "EntityLib.h"
+#include <string>
 class Entity : public sf::Drawable , sf::Transformable
 {
 protected:
@@ -73,7 +74,11 @@ int entity_destroy(lua_State* ls);
 
 int entity_setPos(lua_State* ls);
 
+int entity_applyPos(lua_State* ls);
+
 int entity_setSpritePos(lua_State* ls);
+
+int entity_applySpritePos(lua_State* ls);
 
 int entity_setWidth(lua_State* ls);
 
@@ -83,6 +88,10 @@ int entity_setSpriteWidth(lua_State* ls);
 
 int entity_setSpriteHeight(lua_State* ls);
 
+int entity_setDirection(lua_State* ls);
+
+int entity_setSpeed(lua_State* ls);
+
 int entity_getPos(lua_State* ls);
 int entity_getSpritePos(lua_State* ls);
 
@@ -91,6 +100,10 @@ int entity_getHeight(lua_State* ls);
 
 int entity_getSpriteWidth(lua_State* ls);
 int entity_getSpriteHeight(lua_State* ls);
+
+int entity_getDirection(lua_State* ls);
+		   
+int entity_getSpeed(lua_State* ls);
 
 int entity_update(lua_State* ls);
 
