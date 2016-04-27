@@ -184,6 +184,7 @@
     <ClInclude Include="WindowLib.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AI.lua" />
     <None Include="LevelEditor.lua" />
     <None Include="LuaUpdate.lua" />
     <None Include="Region.lua" />

@@ -1,4 +1,5 @@
 region = {}
+ai = require("AI")
 
 function region.Update()
 	if Input.IsPressed(36) == 1 then
@@ -7,6 +8,9 @@ function region.Update()
 	if Input.IsPressed(57) == 1 then
 		region.LoadTileMaps(2)
 	end
+
+	ai.Update(region.player, region.enemies);
+
 end
 
 function region.LoadCollisionMap()
@@ -105,6 +109,9 @@ function region.Create()
 	region.LoadTileMaps(1)
 	region.LoadCollisionMap()
 	region.player = Entity.New()
+	region.enemy = Entity.New()
+	region.enemy:SetPos(100, 100);
+	region.enemies = {region.enemy};
 	region.player:Initialize()
 	region.player:SetPos(64, 64)
 
