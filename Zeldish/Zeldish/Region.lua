@@ -25,8 +25,8 @@ function region.Update(deltaTime)
 	--Update the player
 	region.player:Update(deltaTime);
 	--Update the projectiles
-	for pIndex = 1, pIndex < region.projectileCnt do
-
+	for pIndex = 1, pIndex < region.projectileCnt, 1 do
+		
 	end
 
 end
@@ -182,6 +182,7 @@ function region.Create()
 	region.player:SetSpeed(40)
 
 	region.projectiles = {}
+	region.activeProjectiles = {}
 	region.projectileCnt = 1
 end
 
