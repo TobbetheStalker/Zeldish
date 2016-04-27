@@ -1,12 +1,13 @@
 this = {}
 
-function this.Update()
+function this.Update(deltaTime)
 	if Input.IsPressed(36) == 1 then
 		gameState = 0
 	end
 	if Input.IsPressed(57) == 1 then
 		this.LoadTileMaps(2)
 	end
+	this.player:Update(deltaTime);
 end
 
 function this.LoadCollisionMap()
@@ -105,8 +106,9 @@ function this.Create()
 	this.LoadTileMaps(1)
 	this.LoadCollisionMap()
 	this.player = Entity.New()
-	this.player:Initialize()
+	this.player:Initialize("RacoonCharacter.png")
 	this.player:SetPos(64, 64)
+	this.player:SetDirection(4)
 
 end
 

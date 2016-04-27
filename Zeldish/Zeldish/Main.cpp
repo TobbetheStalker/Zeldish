@@ -180,7 +180,7 @@ int main()
 		
 		window->clear();
 		zeldish.HandleInput();
-		result = zeldish.Update(1.0f);
+		result = zeldish.Update(gameTimer.restart().asSeconds());
 		if (result == 0) {
 			window->close();
 		}
