@@ -94,14 +94,82 @@ bool CollisionMap::Save(std::string filename)
 	return true;
 }
 
-int CollisionMap::getTile(int index)
+int CollisionMap::getTile(int indexX, int indexY)
 {
-	return this->tiles[index];
+	return this->tiles[(indexY * this->width) + indexX];
 }
 
-void CollisionMap::setTile(int value, int index)
+void CollisionMap::setTile(int value, int indexX, int indexY)
 {
-	this->tiles[index] = value;
+	this->tiles[(indexY * this->width) + indexX] = value;
+}
+
+bool CollisionMap::checkCollision(BoundingVolume* bv, int& correctionX, int& correctionY)
+{
+	bool result = true;
+	
+	float x, y;
+	int width, height;
+	float difX, difY;
+	float totalX = 0;
+	float totalY = 0;
+
+	bv->GetPosition(x,y);
+	width = bv->GetWidth();
+	height = bv->GetHeight();
+
+	//Return if we are out of bounds
+	if (x < 0 || x > 640 - width || y < 0 || y > 640 - height) {
+		if (x < 0)
+			correctionX = 0 - x;
+		
+		if (x > 640 - width)
+			correctionX = 640 - (x + width);
+		
+		if (y < 0)
+			correctionY = 0 - y;
+
+		if (y > 640 - height)
+			correctionY = 640 - (y + height);
+
+		return true;
+	}
+
+	//Calculate the tile that the position is in
+	int startTileX = (x / 20);
+	int startTileY = (y / 20);
+	int endTileX = (x + width / 20);
+	int endTileY = (y + height / 20);
+
+	//Loop through all tiles that the volume intersects 
+	for (int i = startTileY; i <= startTileY; i++) {
+		for (int j = startTileX; j <= endTileX; j++) {
+
+			//check if the tile is not free
+			if (!this->tiles[(i * this->width) + j] == 0) {
+				result = true;
+				
+				difX = ((x + width) / 2) - (j + 10);
+				difY = ((y + height) / 2) - (i + 10);
+
+				if (difX < difY) {
+					totalY += difY;
+				}
+				else{
+					totalX += difX;
+				}
+
+			}
+
+		}
+
+	}
+
+	correctionX = totalX;
+	correctionY = totalY;
+
+
+	return result;
 }
 
 CollisionMap* checkCollisionMap(lua_State* ls, int n)
@@ -147,7 +215,7 @@ int collisionMap_createempty(lua_State* ls)
 
 int collisionMap_load(lua_State* ls)
 {
-	CollisionMap* collisionMapPtr = checkCollisionMap(ls,1);
+	CollisionMap* collisionMapPtr = checkCollisionMap(ls, 1);
 	std::string file = lua_tostring(ls, 2);
 
 	if (collisionMapPtr->Load(file)) {
@@ -158,6 +226,7 @@ int collisionMap_load(lua_State* ls)
 	}
 
 	return 0;
+
 }
 
 int collisionMap_save(lua_State* ls)
@@ -188,9 +257,10 @@ int collisionMap_set(lua_State* ls)
 {
 	CollisionMap* collisionMapPtr = checkCollisionMap(ls, 1);
 	int value = lua_tointeger(ls, 2);
-	int index = lua_tointeger(ls, 3);
+	int indexX = lua_tointeger(ls, 3);
+	int indexY = lua_tointeger(ls, 4);
 
-	collisionMapPtr->setTile(value, index);
+	collisionMapPtr->setTile(value, indexX, indexY);
 
 	return 0;
 }
@@ -198,11 +268,30 @@ int collisionMap_set(lua_State* ls)
 int collisionMap_get(lua_State* ls)
 {
 	CollisionMap* collisionMapPtr = checkCollisionMap(ls, 1);
-	int index = lua_tointeger(ls, 2);
-	int value = collisionMapPtr->getTile(index);
+	int indexX = lua_tointeger(ls, 2);
+	int indexY = lua_tointeger(ls, 3);
+	int value = collisionMapPtr->getTile(indexX, indexY);
 	lua_pushinteger(ls, value);
 	
 	return 0;
+}
+
+int collisionMap_checkCollision(lua_State* ls)
+{
+	CollisionMap* collisionMapPtr = checkCollisionMap(ls, 1);
+	BoundingVolume* bvPtr = checkBoundingVolume(ls, 2);
+
+	int x = 0;
+	int y = 0;
+	bool result = false;
+
+	result = collisionMapPtr->checkCollision(bvPtr, x, y);
+
+	lua_pushboolean(ls, result);
+	lua_pushinteger(ls, x);
+	lua_pushinteger(ls, y);
+
+	return 3;
 }
 
 void RegisterCollisionMap(lua_State* ls)
@@ -224,6 +313,7 @@ void RegisterCollisionMap(lua_State* ls)
 		{ "Save",			collisionMap_save},
 		{ "Get",			collisionMap_get },
 		{ "Set",			collisionMap_set },
+		{ "CheckCollision",	collisionMap_checkCollision },
 		{ "__gc",			collisionMap_destroy },
 		{ NULL, NULL }
 	};
