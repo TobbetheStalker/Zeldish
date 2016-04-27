@@ -26,6 +26,7 @@ int Entity::Initialize()
 	this->drawTexture.loadFromFile("../Zeldish/Resources/Textures/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
 	this->mySprite.setTextureRect(this->spriteRect);
+	this->boundingBox.Initialize(this->x, this->y, this->width, this->height);
 
 	return result;
 }
