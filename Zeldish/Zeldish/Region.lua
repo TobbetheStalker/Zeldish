@@ -108,7 +108,7 @@ function this.Create()
 	this.player = Entity.New()
 	this.player:Initialize("RacoonCharacter.png")
 	this.player:SetPos(64, 64)
-	this.player:SetDirection(4)
+	this.player:SetDirection(2)
 
 end
 

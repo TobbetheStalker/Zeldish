@@ -223,7 +223,10 @@ int Entity::UpdateSprite(float dTime)
 	//Calculate animation frame
 	int frame = this->animationTime / EntityLib::FRAME_TIME;
 	//Apply animation frame
-	this->spriteRect.left = frame * EntityLib::PLAYER_WIDTH;
+	if (this->myDirection != EntityLib::Direction::NONE)
+		this->spriteRect.left = frame * EntityLib::ENTITY_WIDTH;
+	else
+		this->spriteRect.left = EntityLib::ENTITY_WIDTH;
 	//Calculate the animation type to be used
 	if (this->myDirection != EntityLib::Direction::NONE)
 		this->animationType = this->myDirection;
@@ -231,7 +234,7 @@ int Entity::UpdateSprite(float dTime)
 	if (this->animationType < 0 || this->animationType > EntityLib::Direction::NONE)
 		this->animationType = 0;
 	//Apply the animation type
-	this->spriteRect.top = (this->animationType * EntityLib::PLAYER_HEIGHT);
+	this->spriteRect.top = (this->animationType * EntityLib::ENTITY_HEIGHT);
 	//And finally set our animation to be the one displayed
 	this->mySprite.setTextureRect(this->spriteRect);
 
