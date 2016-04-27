@@ -4,7 +4,8 @@
 
 Entity::Entity()
 {
-	this->x = this->y = this->width = this->height = 0;
+	this->x = this->y = this->width = this->height = this->animationType = 0;
+	this->animationTime = this->speed = 0.0f;
 	this->boundingBox = BoundingVolume();
 }
 
@@ -13,20 +14,28 @@ Entity::~Entity()
 {
 }
 
-int Entity::Initialize()
+int Entity::Initialize(std::string texturePath)
 {
 	int result = 0;
-
+	this->speed = EntityLib::SPEED;
+	this->animationTime = 0.0f;
+	this->animationType = EntityLib::DOWN;
 	this->x = 0;
 	this->y = 0;
-	this->width = EntityLib::PLAYER_WIDTH;
-	this->height = EntityLib::PLAYER_HEIGHT;
+	this->width = EntityLib::ENTITY_WIDTH;
+	this->height = EntityLib::ENTITY_HEIGHT;
 	this->spriteRect = sf::IntRect(0, 0, EntityLib::PLAYER_WIDTH, EntityLib::PLAYER_HEIGHT);
 
-	this->drawTexture.loadFromFile("../Zeldish/Resources/Textures/RacoonCharacter.png");
+	this->drawTexture.loadFromFile(texturePath);
+	//this->drawTexture.loadFromFile("../Zeldish/Resources/TileSets/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
 	this->mySprite.setTextureRect(this->spriteRect);
 	this->boundingBox.Initialize(this->x, this->y, this->width, this->height);
+
+	//Do the boundingbox setup
+	this->boundingBox.SetWidth(EntityLib::ENTITY_WIDTH);
+	this->boundingBox.SetHeight(EntityLib::ENTITY_HEIGHT);
+	this->boundingBox.SetPosition(0, 0);
 
 	return result;
 }
@@ -35,81 +44,195 @@ void Entity::Shutdown()
 {
 }
 
-void Entity::SetX(int x)
+#pragma region
+
+void Entity::SetX(float x)
+{
+}
+
+void Entity::SetSpriteX(int x)
 {
 	this->x = x;
 }
 
-void Entity::SetY(int y)
+void Entity::SetY(float y)
+{
+}
+
+void Entity::SetSpriteY(int y)
 {
 	this->y = y;
 }
 
-void Entity::SetPos(int x, int y)
+void Entity::SetSpritePos(int x, int y)
 {
 	this->x = x;
 	this->y = y;
-	this->mySprite.setPosition(sf::Vector2f(x, y));
+}
+
+void Entity::ApplySpritePos(int x, int y)
+{
+}
+
+void Entity::SetPos(float x, float y)
+{
+	this->boundingBox.SetPosition(x, y);
+}
+
+void Entity::ApplyPosition(float x, float y)
+{
+	this->x += x;
+	this->y += y;
 }
 
 void Entity::SetWidth(int width)
 {
-	this->width = width;
+	this->boundingBox.SetWidth(width);
 }
 
 void Entity::SetHeight(int height)
 {
+	this->boundingBox.SetHeight(height);
+}
+
+void Entity::SetSpriteHeight(int height)
+{
 	this->height = height;
 }
 
-int Entity::Update(float dTime)
+void Entity::SetSpriteWidth(int width)
 {
-	int result = 0;
-	
-	switch (myDirection)
-	{
-	case EntityLib::DOWN:
-		break;
-	case EntityLib::LEFT:
-		break;
-	case EntityLib::RIGHT:
-		break;
-	case EntityLib::UP:
-		break;
-	default:
-		break;
-	}
-
-
-	this->UpdateSprite(dTime);
-	return result;
+	this->width = width;
 }
 
-int Entity::UpdateSprite(float dTime)
+void Entity::SetDirection(EntityLib::Direction direction)
 {
-	int result = 0;
-
-	return result;
+	this->myDirection = direction;
 }
+
+void Entity::SetSpeed(float speed)
+{
+}
+
 
 int Entity::GetX()
+{
+	return this->boundingBox.GetX();
+}
+
+int Entity::GetY()
+{
+	return this->boundingBox.GetY();;
+}
+
+int Entity::GetSpriteX()
 {
 	return this->x;
 }
 
-int Entity::GetY()
+int Entity::GetSpriteY()
 {
 	return this->y;
 }
 
 int Entity::GetWidth()
 {
-	return this->width;
+	return this->boundingBox.GetWidth();
 }
 
 int Entity::GetHeight()
 {
+	return this->boundingBox.GetHeight();
+}
+
+int Entity::GetSpriteWidth()
+{
+	return this->width;
+}
+
+int Entity::GetSpriteHeight()
+{
 	return this->height;
+}
+
+float Entity::GetSpeed()
+{
+	return this->speed;
+}
+
+EntityLib::Direction Entity::GetDirection()
+{
+	return this->myDirection;
+}
+
+#pragma endregion setters & getters
+
+int Entity::Update(float dTime)
+{
+	int result = 0;
+	int xDelta = 0, yDelta = 0;
+	switch (myDirection)
+	{
+	case EntityLib::DOWN:
+		yDelta++;
+		break;
+	case EntityLib::LEFT:
+		xDelta--;
+		break;
+	case EntityLib::RIGHT:
+		xDelta++;
+		break;
+	case EntityLib::UP:
+		yDelta--;
+		break;
+	default:
+		break;
+	}
+
+	//Apply the difference in position
+	this->boundingBox.ApplyPosition(xDelta * dTime * this->speed, yDelta * dTime * this->speed);
+
+	//Apply the new position to the sprite
+	result = this->UpdateSprite(dTime);
+	return result;
+}
+
+int Entity::UpdateSprite(float dTime)
+{
+	int result = 1;
+	//Update the position relative to the boundingvolume center
+	float bX = 0, bY = 0;
+	this->boundingBox.GetPosition(bX, bY);
+	bX += this->boundingBox.GetWidth() / 2;
+	bY += this->boundingBox.GetHeight() / 2;
+	
+	int sX = bX - this->width / 2 + x;
+	int sY = bY - this->height / 2 + y;
+
+	this->mySprite.setPosition(sf::Vector2f(sX, sY));
+
+	//Update animation time
+	this->animationTime = (this->animationTime + dTime);
+	//Apply animation bounds
+	if (this->animationTime >= EntityLib::ANIMATION_LIMIT)
+		this->animationTime -= EntityLib::ANIMATION_LIMIT;
+	//Calculate animation frame
+	int frame = this->animationTime / EntityLib::FRAME_TIME;
+	//Apply animation frame
+	this->spriteRect.left = frame * EntityLib::PLAYER_WIDTH;
+	//Calculate the animation type to be used
+	if (this->myDirection != EntityLib::Direction::NONE)
+		this->animationType = this->myDirection;
+	//Do Safety correction
+	if (this->animationType < 0 || this->animationType > EntityLib::Direction::NONE)
+		this->animationType = 0;
+	//Apply the animation type
+	this->spriteRect.top = (this->animationType * EntityLib::PLAYER_HEIGHT);
+	//And finally set our animation to be the one displayed
+	this->mySprite.setTextureRect(this->spriteRect);
+
+
+	return result;
 }
 
 void Entity::draw(sf::RenderTarget & target, sf::RenderStates states) const
@@ -135,7 +258,8 @@ int entity_initialize(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 
-	entity->Initialize();
+	//Not sure if this works
+	entity->Initialize(lua_tostring(ls, 1));
 	std::cout << "[C++] initializing Entity\n";
 
 	return 0;
@@ -178,7 +302,16 @@ int entity_setPos(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+
+	return 0;
+}
+
+int entity_setSpritePos(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	if (entity)
+		entity->SetSpritePos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
 
 	return 0;
 }
@@ -187,7 +320,7 @@ int entity_setWidth(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
 
 	return 0;
 }
@@ -196,7 +329,25 @@ int entity_setHeight(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+
+	return 0;
+}
+
+int entity_setSpriteWidth(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	if (entity)
+		entity->SetSpritePos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+
+	return 0;
+}
+
+int entity_setSpriteHeight(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	if (entity)
+		entity->SetSpritePos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
 
 	return 0;
 }
@@ -211,6 +362,23 @@ int entity_getPos(lua_State* ls)
 	{
 		x = entity->GetX();
 		y = entity->GetY();
+	}
+
+	lua_pushinteger(ls, x);
+	lua_pushinteger(ls, y);
+	return 2;
+}
+
+int entity_getSpritePos(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+
+	int x = -1;
+	int y = -1;
+	if (entity)
+	{
+		x = entity->GetSpriteX();
+		y = entity->GetSpriteY();
 	}
 
 	lua_pushinteger(ls, x);
@@ -244,6 +412,32 @@ int entity_getHeight(lua_State* ls)
 	return 1;
 }
 
+int entity_getSpriteWidth(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	int width = -1;
+	if (entity)
+	{
+		width = entity->GetSpriteWidth();
+	}
+
+	lua_pushinteger(ls, width);
+	return 1;
+}
+
+int entity_getSpriteHeight(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	int height = -1;
+	if (entity)
+	{
+		height = entity->GetSpriteHeight();
+	}
+
+	lua_pushinteger(ls, height);
+	return 1;
+}
+
 int entity_update(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
@@ -271,11 +465,17 @@ void RegisterEntity(lua_State * ls)
 		{ "Initialize",		entity_initialize },
 		{ "Draw",			entity_draw },
 		{ "SetPos",			entity_setPos },
+		{ "SetSpritePos",	entity_setSpritePos },
 		{ "SetWidth",		entity_setWidth },
 		{ "SetHeight",		entity_setHeight },
+		{ "SetSpriteWidth",	entity_setSpriteWidth },
+		{ "SetSpriteHeight",entity_setSpriteHeight },
 		{ "GetPos",			entity_getPos },
 		{ "GetWidth",		entity_getWidth },
 		{ "GetHeight",		entity_getHeight },
+		{ "GetSpritePos",	entity_getSpritePos },
+		{ "GetSpriteWidth",	entity_getSpriteWidth },
+		{ "GetSpriteHeight",entity_getSpriteHeight },
 		{ "Update",			entity_update },
 		{ "__gc",			entity_destroy },
 		{ NULL, NULL }
