@@ -1,5 +1,12 @@
 gameState = 0
 
+keyW =		22
+keyA =		0
+keyS =		18
+keyD =		3
+keySpace =	57
+keyEscape =	36
+
 function InitMenu ()
 	--create menu
 	menu = Menu.New()

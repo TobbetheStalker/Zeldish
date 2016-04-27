@@ -1,17 +1,13 @@
 region = {}
 
-keyW =		22
-keyA =		0
-keyS =		18
-keyD =		3
-keySpace =	57
-keyEscape =	36
-
 directionDown =		0
 directionLeft =		1
 directionRight =	2
 directionUp =		3
 directionNone =		4
+
+MAP_SIZE_X = 32
+MAP_SIZE_Y = 32
 
 function region.Update(deltaTime)
 	if Input.IsPressed(keyEscape) == 1 then
@@ -71,17 +67,12 @@ function region.HandlePlayerInput()
 
 end
 
-function region.LoadCollisionMap()
-	region.collisionMap = CollisionMap.New()
-	region.collisionMap:Load("testMap")
+function LoadCollisionMap(map)
+	
+	region.collisionMap:Load(map)
 end
 
 function region.LoadTileMaps(level)
-
-	--Load TileMap
-	region.tileMapBackground = TileMap.New()
-	region.tileMapForeground = TileMap.New()
-
 	--tiles size in pixels
 	tileSizeX = 16
 	tileSizeY = 16
@@ -90,22 +81,12 @@ function region.LoadTileMaps(level)
 	sizeX = 32
 	sizeY = 32
 	
-	if level == 1 then
-		map = region.MapOneB()
-	elseif level == 2 then
-		map = region.MapTwoB()
-	end
+	LoadMaps(level)
 
-	region.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
+	region.tileMapBackground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, region.mapB)
+	region.tileMapForeground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, region.mapF)
 
-	if level == 1 then
-		map = region.MapOneF()
-	elseif level == 2 then
-		map = region.MapTwoF()
-	end
-
-	region.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, sizeX, sizeY, map);
-
+	LoadCollisionMap("level"..level)
 end
 
 
@@ -116,58 +97,13 @@ function region.Draw()
 	region.tileMapForeground:Draw()
 end
 
-function region.MapOneB()
-	map = {}
-
-	for i = 1, 32 * 32 do
-		map[i] = 11	-- all grass
-	end
-	
-	for j = 1, 32 * 16 do
-		map[j] = 7	-- all grass
-	end
-
-	return map
-end
-
-function region.MapTwoB()
-	map = {}
-
-	for i = 1, 32 * 32 do
-		map[i] = 11	-- all grass
-	end
-
-	return map
-end
-
-
-function region.MapOneF()
-	map = {}
-
-	for i = 1, 32 * 32 do
-		map[i] = -1	-- all grass
-	end
-	
-	map[34] = 13;
-
-	return map
-end
-
-function region.MapTwoF()
-	map = {}
-
-	for i = 1, 32 * 32 do
-		map[i] = -1	-- all grass
-	end
-
-	map[534] = 13;
-
-	return map
-end
-
 function region.Create()
+	region.tileMapBackground = TileMap.New()
+	region.tileMapForeground = TileMap.New()
+	region.collisionMap = CollisionMap.New()
+	region.mapB = {}
+	region.mapF = {}
 	region.LoadTileMaps(1)
-	region.LoadCollisionMap()
 	region.player = Entity.New()
 	region.player:Initialize("RacoonCharacter.png")
 	region.player:SetPos(100, 100)
@@ -181,6 +117,26 @@ function region.Create()
 	region.projectiles = {}
 	region.activeProjectiles = {}
 	region.projectileCnt = 1
+end
+
+function LoadMaps(level)
+	local file = assert(io.open("Resources/Maps/level" .. level .. "B.txt", "r"))
+
+	MAP_SIZE_X = file:read("*number")
+	MAP_SIZE_Y = file:read("*number")
+
+	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+		region.mapB[i] = file:read("*number")
+	end
+	file:close()
+
+	file = assert(io.open("Resources/Maps/level" .. level .. "F.txt", "r"))
+
+	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+		region.mapF[i] = file:read("*number")
+	end
+
+	file:close()
 end
 
 return region
