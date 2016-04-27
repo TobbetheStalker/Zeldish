@@ -244,6 +244,15 @@ int Entity::UpdateSprite(float dTime)
 	return result;
 }
 
+int Entity::Intersects(Entity * other)
+{
+	int result = 0;
+
+	result = this->boundingBox.CheckAgainst(&other->boundingBox);
+
+	return result;
+}
+
 void Entity::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
 	target.draw(this->mySprite, states);
@@ -514,6 +523,20 @@ int entity_update(lua_State* ls)
 	return 0;
 }
 
+int entity_Intersects(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	Entity* other = checkEntity(ls, 2);
+	int result = 0;
+	if (entity)
+	{
+		result = entity->Intersects(other);
+	}
+	lua_pushinteger(ls, result);
+
+	return 1;
+}
+
 void RegisterEntity(lua_State * ls)
 {
 	// Create a luaL metatable. This metatable is not 
@@ -549,6 +572,7 @@ void RegisterEntity(lua_State * ls)
 		{ "GetDirection",	entity_getDirection },
 		{ "GetSpeed",		entity_getSpeed },
 		{ "Update",			entity_update },
+		{ "Intersects",		entity_Intersects },
 		{ "__gc",			entity_destroy },
 		{ NULL, NULL }
 	};
