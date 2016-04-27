@@ -26,10 +26,15 @@ function editor.Update()
 	if Input.IsPressed(28) == 1 then --2 -> entities layer
 		print("[LUA] Changed working layer to entities")
 		editor.workingLayer = 1
+		editor.tileInfo = 0
 	end
 	if Input.IsPressed(29) == 1 then --3 -> foreground layer
 		print("[LUA] Changed working layer to foreground")
 		editor.workingLayer = 2
+	end
+	if Input.IsPressed(30) == 1 then --4 -> collision layer
+		print("[LUA] Changed working layer to collision")
+		editor.workingLayer = 3
 	end
 
 	if Input.IsPressed(18) == 1 then --S -> Save maps
@@ -47,6 +52,10 @@ function editor.Update()
 		ChangeTile(tilePos[1], tilePos[2])
 		UpdateMap()
 	end
+
+	if editor.workingLayer ~= 0 and editor.workingLayer ~= 2 then
+		editor.tileInfo = 0
+	end
 end
 
 function editor.Draw()
@@ -55,6 +64,9 @@ function editor.Draw()
 	if editor.tileInfo == 1 then
 		editor.tileMapTiles:Draw()
 	end
+	if editor.workingLayer == 3 then
+		editor.tileMapCollision:Draw()
+	end
 end
 
 function editor.CreateEmpty()
@@ -62,6 +74,7 @@ function editor.CreateEmpty()
 	editor.tileMapBackground = TileMap.New()
 	editor.tileMapForeground = TileMap.New()
 	editor.tileMapTiles = TileMap.New()
+	editor.tileMapCollision = TileMap.New()
 
 	--tiles size in pixels
 	tileSizeX = 16
@@ -79,11 +92,15 @@ function editor.CreateEmpty()
 
 	editor.tileMapTiles:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, map)
 
+	editor.mapC = MapEmpty()
+
+	editor.tileMapCollision:Load("misc_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapC)
+
 	editor.collisionMap = CollisionMap.New()
 	editor.collisionMap:Empty(MAP_SIZE_X, MAP_SIZE_Y)
 
 	--Set some needed state variables
-	editor.workingLayer = 0 --0: Background, 1: Entities, 2: Foreground
+	editor.workingLayer = 0 --0: Background, 1: Entities, 2: Foreground, 3: Collision
 	editor.tileInfo = 1
 	editor.activeTile = 11
 end
@@ -95,6 +112,13 @@ function ChangeTile(x, y)
 	elseif editor.workingLayer == 2 then
 		editor.mapF[y * MAP_SIZE_X + x + 1] = editor.activeTile;
 		print("[LUA] Changed tile in foreground")
+	elseif editor.workingLayer == 3 then
+		if editor.mapC[y * MAP_SIZE_X + x + 1] == -1 then
+			editor.mapC[y * MAP_SIZE_X + x + 1] = 2
+		else
+			editor.mapC[y * MAP_SIZE_X + x + 1] = -1
+		end
+		print("[LUA] Changed tile in collision")
 	end
 end
 
@@ -105,6 +129,9 @@ function UpdateMap()
 	elseif editor.workingLayer == 2 then
 		editor.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapF)
 		print("[LUA] Updated tiles in foreground")
+	elseif editor.workingLayer == 3 then
+		editor.tileMapCollision:Load("misc_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapC)
+		print("[LUA] Updated tiles in collision")
 	end
 end
 
@@ -113,6 +140,8 @@ function UpdateMaps()
 	print("[LUA] Updated tiles in background")
 	editor.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapF)
 	print("[LUA] Updated tiles in foreground")
+	editor.tileMapCollision:Load("misc_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapC)
+	print("[LUA] Updated tiles in collision")
 end
 
 function MapGrass()
