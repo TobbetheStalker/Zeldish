@@ -16,6 +16,9 @@ Entity::~Entity()
 
 int Entity::Initialize(std::string texturePath)
 {
+	//Convert texture path to the full resource path
+	std::string fullPath = EntityLib::TILESETS_DIRECTORY;
+	fullPath += texturePath;
 	int result = 0;
 	this->speed = EntityLib::SPEED;
 	this->animationTime = 0.0f;
@@ -26,7 +29,7 @@ int Entity::Initialize(std::string texturePath)
 	this->height = EntityLib::ENTITY_HEIGHT;
 	this->spriteRect = sf::IntRect(0, 0, EntityLib::PLAYER_WIDTH, EntityLib::PLAYER_HEIGHT);
 
-	this->drawTexture.loadFromFile(texturePath);
+	this->drawTexture.loadFromFile(fullPath);
 	//this->drawTexture.loadFromFile("../Zeldish/Resources/TileSets/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
 	this->mySprite.setTextureRect(this->spriteRect);
@@ -206,6 +209,7 @@ int Entity::UpdateSprite(float dTime)
 	bX += this->boundingBox.GetWidth() / 2;
 	bY += this->boundingBox.GetHeight() / 2;
 	
+	//x & y is the offset from the origin for the sprite
 	int sX = bX - this->width / 2 + x;
 	int sY = bY - this->height / 2 + y;
 
