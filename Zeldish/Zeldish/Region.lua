@@ -1,5 +1,9 @@
 region = {}
 
+--region has [projectileMetatable][bool active]
+region.projectiles = {}
+region.projectileCnt = 0
+
 keyW =		22
 keyA =		0
 keyS =		18
@@ -25,6 +29,11 @@ function region.Update(deltaTime)
 	--Update the player
 	region.player:Update(deltaTime);
 
+	for key, projectile in pairs(region.projectiles) do
+		if projectile[1][2] then
+			projectile[1][1]:Update(deltaTime)
+		end
+	end
 end
 
 function region.HandlePlayerInput()
@@ -69,6 +78,34 @@ function region.HandlePlayerInput()
 	end
 	region.player:SetDirection(newDirection)
 
+	if Input.IsPressed(keySpace) then
+		--Spawn Projectile
+		region.SpawnProjectile(region.player)
+	end
+
+end
+
+function region.InsertProjectile(toAdd)
+	for key, projectile in pairs(region.projectiles) do
+		if projectile[1][2] == false then
+			--The projectile is inactive
+			--Push yourself to its place in the list
+			region.projectiles[key] = toAdd
+		end
+	end
+end
+
+function region.SpawnProjectile(original)
+	x, y = original:GetPos()
+	projectile = Entity:new()
+	projectile:Initialize("FireBall.png");
+	projectile:SetPos(x, y)
+	projectile:SetWidth(20)
+	projectile:SetHeight(20)
+	projectile:SetSpriteWidth(20)
+	projectile:SetSpriteHeight(20)
+	projectile:SetDirection(original:GetDirection())
+	projectile:SetSpeed(120)
 end
 
 function region.LoadCollisionMap()
@@ -113,6 +150,13 @@ function region.Draw()
 	--Draw tileMap
 	region.tileMapBackground:Draw()
 	region.player:Draw()
+
+	for key, projectile in pairs(region.projectiles) do
+		if projectile[1][2] then
+			projectile[1][1]:Draw()
+		end
+	end
+
 	region.tileMapForeground:Draw()
 end
 
@@ -178,9 +222,6 @@ function region.Create()
 	region.player:SetDirection(4)
 	region.player:SetSpeed(40)
 
-	region.projectiles = {}
-	region.activeProjectiles = {}
-	region.projectileCnt = 1
 end
 
 return region

@@ -550,9 +550,16 @@ void RegisterEntity(lua_State * ls)
 
 	luaL_Reg sEntityRegs[] =
 	{
+		//Constructor and initialiser
 		{ "New",			entity_create },
 		{ "Initialize",		entity_initialize },
+		//Drawable entity function
 		{ "Draw",			entity_draw },
+		//Runs internal logic
+		{ "Update",			entity_update },
+		//Functions
+		{ "Intersects",		entity_Intersects },
+		//setters
 		{ "SetPos",			entity_setPos },
 		{ "SetSpritePos",	entity_setSpritePos },
 		{ "SetWidth",		entity_setWidth },
@@ -561,8 +568,10 @@ void RegisterEntity(lua_State * ls)
 		{ "SetSpriteHeight",entity_setSpriteHeight },
 		{ "SetDirection",	entity_setDirection },
 		{ "SetSpeed",		entity_setSpeed },
+		//Applied setters
 		{ "ApplyPos",		entity_applyPos },
 		{ "ApplySpritePos",	entity_applySpritePos },
+		//Getters
 		{ "GetPos",			entity_getPos },
 		{ "GetWidth",		entity_getWidth },
 		{ "GetHeight",		entity_getHeight },
@@ -571,8 +580,6 @@ void RegisterEntity(lua_State * ls)
 		{ "GetSpriteHeight",entity_getSpriteHeight },
 		{ "GetDirection",	entity_getDirection },
 		{ "GetSpeed",		entity_getSpeed },
-		{ "Update",			entity_update },
-		{ "Intersects",		entity_Intersects },
 		{ "__gc",			entity_destroy },
 		{ NULL, NULL }
 	};
