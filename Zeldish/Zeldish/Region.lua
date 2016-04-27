@@ -181,13 +181,16 @@ function region.Create()
 	region.LoadCollisionMap()
 	region.player = Entity.New()
 	region.enemy = Entity.New()
+
 	region.enemy:Initialize("LinkCharacter.png")
 	region.enemy:SetPos(320, 320);
+	region.enemy:SetSpeed(40)
 	region.enemies = {region.enemy}
+	
 	region.player:Initialize("RacoonCharacter.png")
-	region.player:SetPos(64, 64)
+	region.player:SetPos(320, 320)
 	region.player:SetDirection(4)
-	region.player:SetSpeed(40)
+	region.player:SetSpeed(160)
 end
 
 return region
