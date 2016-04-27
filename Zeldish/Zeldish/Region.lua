@@ -1,12 +1,5 @@
 region = {}
 
-keyW =		22
-keyA =		0
-keyS =		18
-keyD =		3
-keySpace =	57
-keyEscape =	36
-
 directionDown =		0
 directionLeft =		1
 directionRight =	2
@@ -83,14 +76,11 @@ function region.LoadTileMaps(level)
 	--amount of tiles in the map
 	sizeX = 32
 	sizeY = 32
-
-	region.mapB = MapEmpty()
-	region.mapF = MapEmpty()
 	
 	LoadMaps(level)
 
-	region.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, region.mapB)
-	region.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, region.mapF)
+	region.tileMapBackground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, region.mapB)
+	region.tileMapForeground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, region.mapF)
 
 	LoadCollisionMap("level"..level)
 end
@@ -107,22 +97,14 @@ function region.Create()
 	region.tileMapBackground = TileMap.New()
 	region.tileMapForeground = TileMap.New()
 	region.collisionMap = CollisionMap.New()
+	region.mapB = {}
+	region.mapF = {}
 	region.LoadTileMaps(1)
 	region.player = Entity.New()
 	region.player:Initialize("RacoonCharacter.png")
 	region.player:SetPos(64, 64)
 	region.player:SetDirection(4)
 	region.player:SetSpeed(40)
-end
-
-function MapEmpty()
-	map = {}
-
-	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
-		map[i] = -1	-- all empty
-	end
-
-	return map
 end
 
 function LoadMaps(level)

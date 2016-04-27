@@ -4,10 +4,10 @@ MAP_SIZE_X = 32
 MAP_SIZE_Y = 32
 
 function editor.Update()
-	if Input.IsPressed(36) == 1 then --Escape -> menu
+	if Input.IsPressed(keyEscape) == 1 then --Escape -> menu
 		gameState = 0
 	end
-	if Input.IsPressed(57) == 1 then --Space -> tile picker
+	if Input.IsPressed(keySpace) == 1 then --Space -> tile picker
 		if editor.tileInfo == 1 then
 			tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
 			print("[LUA] Mouse tile pos; X: " .. tilePos[1] .. ", Y: " .. tilePos[2])
@@ -55,12 +55,12 @@ function editor.Update()
 		UpdateMaps()
 	end
 
-	if Input.IsLeftMousePressed() == 1 then
+	if Input.IsLeftMousePressed() == 1 then --LeftMouse -> change tile
 		tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
 		ChangeTile(tilePos[1], tilePos[2], 1)
 		UpdateMap()
 	end
-	if Input.IsRightMousePressed() == 1 then
+	if Input.IsRightMousePressed() == 1 then --RightMouse -> remove tile
 		tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
 		ChangeTile(tilePos[1], tilePos[2], 2)
 		UpdateMap()
@@ -104,11 +104,11 @@ function editor.CreateEmpty()
 	
 	editor.mapB = MapGrass()
 
-	editor.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapB)
+	editor.tileMapBackground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapB)
 
 	editor.mapF = MapEmpty()
 
-	editor.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapF)
+	editor.tileMapForeground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapF)
 
 	map = MapTiles()
 
@@ -171,13 +171,13 @@ end
 
 function UpdateMap()
 	if editor.workingLayer == 0 then
-		editor.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapB)
+		editor.tileMapBackground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapB)
 		print("[LUA] Updated tiles in background")
 	elseif editor.workingLayer == 1 then
 		editor.tileMapEntitiesPlaced:Load("misc_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapE)
 		print("[LUA] Updated tiles in entites")
 	elseif editor.workingLayer == 2 then
-		editor.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapF)
+		editor.tileMapForeground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapF)
 		print("[LUA] Updated tiles in foreground")
 	elseif editor.workingLayer == 3 then
 		editor.tileMapCollision:Load("misc_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapC)
@@ -186,11 +186,11 @@ function UpdateMap()
 end
 
 function UpdateMaps()
-	editor.tileMapBackground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapB)
+	editor.tileMapBackground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapB)
 	print("[LUA] Updated tiles in background")
 	editor.tileMapEntitiesPlaced:Load("misc_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapE)
 	print("[LUA] Updated tiles in entites")
-	editor.tileMapForeground:Load("town_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapF)
+	editor.tileMapForeground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapF)
 	print("[LUA] Updated tiles in foreground")
 	editor.tileMapCollision:Load("misc_tiles.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, editor.mapC)
 	print("[LUA] Updated tiles in collision")
