@@ -9,9 +9,26 @@ Entity::Entity()
 	this->boundingBox = BoundingVolume();
 }
 
-
 Entity::~Entity()
 {
+}
+
+int Entity::storeFrom(const Entity* other)
+{
+	this->speed =other->speed;
+	this->animationTime =other->animationTime;
+	this->animationType =other->animationType;
+	this->animationWidth =other->animationWidth;
+	this->spriteRect =other->spriteRect;
+	this->x =other->x;
+	this->y =other->y;
+	this->width =other->width;
+	this->height =other->height;
+
+	this->boundingBox =other->boundingBox;
+	this->drawTexture =other->drawTexture;
+	this->mySprite =other->mySprite;
+	this->myDirection =other->myDirection;
 }
 
 int Entity::Initialize(std::string texturePath)
@@ -315,6 +332,19 @@ int entity_destroy(lua_State* ls)
 	return 0;
 }
 
+int entity_storeFrom(lua_State* ls)
+{
+	Entity* storeIn = checkEntity(ls, 1);
+	Entity* storeFrom = checkEntity(ls, 1);
+	
+	if (storeIn && storeFrom)
+	{
+		storeIn->storeFrom(storeFrom);
+	}
+
+	return 0;
+}
+
 
 int entity_setPos(lua_State* ls)
 {
@@ -554,6 +584,7 @@ void RegisterEntity(lua_State * ls)
 		{ "New",			entity_create },
 		{ "Initialize",		entity_initialize },
 		//Drawable entity function
+		{ "StoreFrom",		entity_storeFrom },
 		{ "Draw",			entity_draw },
 		//Runs internal logic
 		{ "Update",			entity_update },

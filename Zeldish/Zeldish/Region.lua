@@ -28,12 +28,13 @@ function region.Update(deltaTime)
 	
 	--Update the player
 	region.player:Update(deltaTime);
-
-	for key, projectile in pairs(region.projectiles) do
-		if projectile[1][2] then
-			projectile[1][1]:Update(deltaTime)
-		end
-	end
+	print(region.projectiles[1])
+	--for key, projectile in (region.projectiles) do
+		--if projectile[2] then
+			--projectile[1]:Update(deltaTime)
+		--end
+		--print(key .. " " .. projectile)
+	--end
 end
 
 function region.HandlePlayerInput()
@@ -78,7 +79,7 @@ function region.HandlePlayerInput()
 	end
 	region.player:SetDirection(newDirection)
 
-	if Input.IsPressed(keySpace) then
+	if Input.IsLeftMousePressed() == 1 then
 		--Spawn Projectile
 		region.SpawnProjectile(region.player)
 	end
@@ -86,18 +87,27 @@ function region.HandlePlayerInput()
 end
 
 function region.InsertProjectile(toAdd)
-	for key, projectile in pairs(region.projectiles) do
-		if projectile[1][2] == false then
+foundPos = 0
+print("[LUA] Finding position for projectile")
+	for key, projectile in (region.projectiles) do
+		if projectile[2] == false then
+			foundPos = key
 			--The projectile is inactive
 			--Push yourself to its place in the list
-			region.projectiles[key] = toAdd
+			projectile = toAdd
+			print("adding entity")
+			break
 		end
+	end
+	if foundPos == 0 then
+		print("[LUA] Resourcepool overload")
 	end
 end
 
 function region.SpawnProjectile(original)
 	x, y = original:GetPos()
-	projectile = Entity:new()
+	print(x .. " " .. y)
+	projectile = Entity:New()
 	projectile:Initialize("FireBall.png");
 	projectile:SetPos(x, y)
 	projectile:SetWidth(20)
@@ -105,7 +115,9 @@ function region.SpawnProjectile(original)
 	projectile:SetSpriteWidth(20)
 	projectile:SetSpriteHeight(20)
 	projectile:SetDirection(original:GetDirection())
-	projectile:SetSpeed(120)
+	projectile:SetSpeed(10)
+	print("[LUA] created projectile")
+	region.InsertProjectile(projectile)
 end
 
 function region.LoadCollisionMap()
@@ -151,9 +163,10 @@ function region.Draw()
 	region.tileMapBackground:Draw()
 	region.player:Draw()
 
-	for key, projectile in pairs(region.projectiles) do
-		if projectile[1][2] then
-			projectile[1][1]:Draw()
+	for projectile, active in (region.projectiles) do
+		if ative then
+			--print("[LUA] Drawing projectile")
+			projectile:Draw()
 		end
 	end
 
@@ -221,6 +234,12 @@ function region.Create()
 	region.player:SetHeight(20)
 	region.player:SetDirection(4)
 	region.player:SetSpeed(40)
+
+	for pIndex = 1, pIndex < 100, 1 do
+		tempP = Entity:New()
+		tempP:Initialize("Fireball.png");
+		region.projectiles[pIndex] = {tempP, false}
+	end
 
 end
 

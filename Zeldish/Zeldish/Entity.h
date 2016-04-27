@@ -23,6 +23,7 @@ protected:
 public:
 	Entity();
 	virtual ~Entity();
+	int storeFrom(const Entity* other);
 	virtual int Initialize(std::string texturePath);
 
 	virtual void Shutdown();
@@ -72,6 +73,8 @@ int entity_draw(lua_State* ls);
 int entity_create(lua_State* ls);
 
 int entity_destroy(lua_State* ls);
+
+int entity_storeFrom(lua_State* ls);
 
 int entity_setPos(lua_State* ls);
 
