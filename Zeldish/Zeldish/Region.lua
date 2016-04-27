@@ -21,7 +21,14 @@ function region.Update(deltaTime)
 		region.LoadTileMaps(2)
 	end
 	region.HandlePlayerInput()
+	
+	--Update the player
 	region.player:Update(deltaTime);
+	--Update the projectiles
+	for pIndex = 1, pIndex < region.projectileCnt do
+
+	end
+
 end
 
 function region.HandlePlayerInput()
@@ -65,6 +72,10 @@ function region.HandlePlayerInput()
 		end
 	end
 	region.player:SetDirection(newDirection)
+
+	if Input.isDown(keySpace) then
+	end
+
 end
 
 function region.LoadCollisionMap()
@@ -169,6 +180,9 @@ function region.Create()
 	region.player:SetPos(64, 64)
 	region.player:SetDirection(4)
 	region.player:SetSpeed(40)
+
+	region.projectiles = {}
+	region.projectileCnt = 1
 end
 
 return region
