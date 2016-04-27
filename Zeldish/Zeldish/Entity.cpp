@@ -115,6 +115,7 @@ void Entity::SetDirection(EntityLib::Direction direction)
 
 void Entity::SetSpeed(float speed)
 {
+	this->speed = speed;
 }
 
 
