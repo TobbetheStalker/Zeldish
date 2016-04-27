@@ -13,7 +13,7 @@ namespace EntityLib{
 	static const char* TILESETS_DIRECTORY = "../Zeldish/Resources/TileSets/";
 	static const char* RACCON_FILE = "../Zeldish/Resources/TileSets/RacoonCharacter.png";
 
-	static const float SPEED = 5.0f;
+	static const float SPEED = 20.0f;
 
 	static const float FRAME_TIME = 1.2f;
 	static const int FRAME_COUNT = 3;

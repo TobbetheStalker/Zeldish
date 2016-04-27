@@ -28,6 +28,9 @@ int Entity::Initialize(std::string texturePath)
 	this->height = EntityLib::ENTITY_HEIGHT;
 	this->spriteRect = sf::IntRect(0, 0, EntityLib::ENTITY_WIDTH, EntityLib::ENTITY_HEIGHT);
 
+	this->myLastDirection = EntityLib::Direction::DOWN;
+	this->myDirection = EntityLib::Direction::NONE;
+
 	this->drawTexture.loadFromFile(fullPath);
 	//this->drawTexture.loadFromFile("../Zeldish/Resources/TileSets/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
@@ -109,6 +112,8 @@ void Entity::SetSpriteWidth(int width)
 
 void Entity::SetDirection(EntityLib::Direction direction)
 {
+	if(this->myDirection != EntityLib::Direction::NONE)
+		this->myLastDirection = this->myDirection;
 	this->myDirection = direction;
 }
 
@@ -168,6 +173,11 @@ EntityLib::Direction Entity::GetDirection()
 	return this->myDirection;
 }
 
+EntityLib::Direction Entity::GetLastDirection()
+{
+	return this->myLastDirection;
+}
+
 #pragma endregion setters & getters
 
 int Entity::Update(float dTime)
@@ -216,9 +226,9 @@ int Entity::UpdateSprite(float dTime)
 	this->mySprite.setPosition(sf::Vector2f(sX, sY));
 
 	//Update animation time
-	this->animationTime = (this->animationTime + dTime);
+	this->animationTime = (this->animationTime + dTime * this->speed / EntityLib::SPEED);
 	//Apply animation bounds
-	if (this->animationTime >= EntityLib::ANIMATION_LIMIT)
+	while (this->animationTime >= EntityLib::ANIMATION_LIMIT)
 		this->animationTime -= EntityLib::ANIMATION_LIMIT;
 	//Calculate animation frame
 	int frame = this->animationTime / EntityLib::FRAME_TIME;
@@ -226,10 +236,12 @@ int Entity::UpdateSprite(float dTime)
 	if (this->myDirection != EntityLib::Direction::NONE)
 		this->spriteRect.left = frame * EntityLib::ENTITY_WIDTH;
 	else
-		this->spriteRect.left = EntityLib::ENTITY_WIDTH;
+		this->spriteRect.left = EntityLib::ENTITY_WIDTH * 1;
 	//Calculate the animation type to be used
 	if (this->myDirection != EntityLib::Direction::NONE)
 		this->animationType = this->myDirection;
+	else
+		this->animationType = this->myLastDirection;
 	//Do Safety correction
 	if (this->animationType < 0 || this->animationType > EntityLib::Direction::NONE)
 		this->animationType = 0;
@@ -500,6 +512,19 @@ int entity_getDirection(lua_State* ls)
 	return 1;
 }
 
+
+int entity_getLastDirection(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	int direction = 4;
+	if (entity)
+	{
+		direction = entity->GetLastDirection();
+	}
+	lua_pushinteger(ls, direction);
+	return 1;
+}
+
 int entity_getSpeed(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
@@ -578,6 +603,7 @@ void RegisterEntity(lua_State * ls)
 		{ "GetSpriteWidth",	entity_getSpriteWidth },
 		{ "GetSpriteHeight",entity_getSpriteHeight },
 		{ "GetDirection",	entity_getDirection },
+		{ "GetLastDirection",entity_getLastDirection },
 		{ "GetSpeed",		entity_getSpeed },
 		{ "__gc",			entity_destroy },
 		{ NULL, NULL }

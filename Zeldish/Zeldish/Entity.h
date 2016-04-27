@@ -19,7 +19,7 @@ protected:
 	BoundingVolume boundingBox;
 	sf::Texture drawTexture;
 	sf::Sprite mySprite;
-	EntityLib::Direction lastDirection;
+	EntityLib::Direction myLastDirection;
 	EntityLib::Direction myDirection;
 public:
 	Entity();
@@ -54,6 +54,7 @@ public:
 	int GetSpriteHeight();
 	float GetSpeed();
 	EntityLib::Direction GetDirection();
+	EntityLib::Direction GetLastDirection();
 #pragma endregion getters & setters
 
 	virtual int Update(float dTIme);
@@ -104,6 +105,8 @@ int entity_getSpriteWidth(lua_State* ls);
 int entity_getSpriteHeight(lua_State* ls);
 
 int entity_getDirection(lua_State* ls);
+
+int entity_getLastDirection(lua_State* ls);
 		   
 int entity_getSpeed(lua_State* ls);
 

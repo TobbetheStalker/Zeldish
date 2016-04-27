@@ -117,8 +117,12 @@ function region.SpawnProjectile(original)
 			projectile[1]:SetHeight(20)
 			projectile[1]:SetSpriteWidth(20)
 			projectile[1]:SetSpriteHeight(20)
-			projectile[1]:SetDirection(original:GetDirection())
-			projectile[1]:SetSpeed(1000)
+			spawnDirection = original:GetDirection();
+			if spawnDirection ==  directionNone then
+				spawnDirection = original:GetLastDirection()
+			end
+			projectile[1]:SetDirection(spawnDirection)
+			projectile[1]:SetSpeed(10)
 			print("[LUA] created projectile[1]")
 
 			projectile[2] = true;
@@ -245,7 +249,7 @@ function region.Create()
 	region.player:SetWidth(20)
 	region.player:SetHeight(20)
 	region.player:SetDirection(4)
-	region.player:SetSpeed(40)
+	region.player:SetSpeed(60)
 
 	for pIndex = 1, 100, 1 do
 		tempP = Entity:New()
