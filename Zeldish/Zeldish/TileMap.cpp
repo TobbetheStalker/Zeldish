@@ -6,7 +6,7 @@ TileMap::TileMap()
 
 TileMap::~TileMap()
 {
-
+	
 }
 
 
