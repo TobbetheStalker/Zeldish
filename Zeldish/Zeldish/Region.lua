@@ -1,15 +1,79 @@
 region = {}
 ai = require("AI")
 
-function region.Update()
-	if Input.IsPressed(36) == 1 then
+keyW =		22
+keyA =		0
+keyS =		18
+keyD =		3
+keySpace =	57
+keyEscape =	36
+
+directionDown =		0
+directionLeft =		1
+directionRight =	2
+directionUp =		3
+directionNone =		4
+
+function region.Update(deltaTime)
+	if Input.IsPressed(keyEscape) == 1 then
 		gameState = 0
 	end
-	if Input.IsPressed(57) == 1 then
+	if Input.IsPressed(keySpace) == 1 then
 		region.LoadTileMaps(2)
 	end
 
 	ai.Update(region.player, region.enemies);
+
+	region.HandlePlayerInput()
+	region.player:Update(deltaTime);
+	
+	for i = 1, #region.enemies do
+		region.enemies[i]:Update(deltaTime)
+	end
+
+end
+
+function region.HandlePlayerInput()
+	--extract the input
+	down = Input.IsDown(keyS) 
+	left = Input.IsDown(keyA) 
+	right = Input.IsDown(keyD) 
+	up = Input.IsDown(keyW)
+	none = down + left + right + up
+	newDirection = 0
+
+	--do the input logic
+	if none == 0 or none > 1 then
+		--no key was pressed or to many keys was pressed
+		newDirection = directionNone
+	else
+		--one single key was pressed
+		if down == 1 then
+			newDirection = directionDown
+			--if Input.IsPressed(keyS) == 1 then
+				--region.player:SetDirection(newDirection)
+			--end
+		end
+		if left == 1 then
+			newDirection = directionLeft
+			--if Input.IsPressed(keyA) == 1 then
+				--region.player:SetDirection(newDirection)
+			--end
+		end
+		if right == 1 then
+			newDirection = directionRight
+			--if Input.IsPressed(keyD) == 1 then
+				--region.player:SetDirection(newDirection)
+			--end
+		end
+		if up == 1 then
+			newDirection = directionUp
+			--if Input.IsPressed(keyW) == 1 then
+				--region.player:SetDirection(newDirection)
+			--end
+		end
+	end
+	region.player:SetDirection(newDirection)
 
 end
 
@@ -19,6 +83,7 @@ function region.LoadCollisionMap()
 end
 
 function region.LoadTileMaps(level)
+
 	--Load TileMap
 	region.tileMapBackground = TileMap.New()
 	region.tileMapForeground = TileMap.New()
@@ -49,10 +114,16 @@ function region.LoadTileMaps(level)
 
 end
 
+
 function region.Draw()
 	--Draw tileMap
 	region.tileMapBackground:Draw()
 	region.player:Draw()
+	
+	for i = 1, #region.enemies do
+		region.enemies[i]:Draw()
+	end
+
 	region.tileMapForeground:Draw()
 end
 
@@ -110,11 +181,13 @@ function region.Create()
 	region.LoadCollisionMap()
 	region.player = Entity.New()
 	region.enemy = Entity.New()
-	region.enemy:SetPos(100, 100);
-	region.enemies = {region.enemy};
-	region.player:Initialize()
+	region.enemy:Initialize("LinkCharacter.png")
+	region.enemy:SetPos(320, 320);
+	region.enemies = {region.enemy}
+	region.player:Initialize("RacoonCharacter.png")
 	region.player:SetPos(64, 64)
-
+	region.player:SetDirection(4)
+	region.player:SetSpeed(40)
 end
 
 return region

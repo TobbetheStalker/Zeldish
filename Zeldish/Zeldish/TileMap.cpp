@@ -6,7 +6,7 @@ TileMap::TileMap()
 
 TileMap::~TileMap()
 {
-
+	
 }
 
 
@@ -60,7 +60,19 @@ bool TileMap::load(const std::string & tileSet, sf::Vector2u tileSize, const int
 				quad[2].texCoords = sf::Vector2f((tu + 1) * tileSize.x, (tv + 1) * tileSize.y);	//Uper Left
 				quad[3].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);	//Uper Left
 			}
+			else {
+				//Find the tiles position
+				int tu = tileNr % (this->tileSet.getSize().x / tileSize.x);
+				int tv = tileNr / (this->tileSet.getSize().x / tileSize.x);
 
+				//Get the pointer to the current tile's quad
+				sf::Vertex* quad = &this->vertices[(i + j *width) * 4];
+
+				quad[0].position = sf::Vector2f(0.0f, 0.0f);
+				quad[1].position = sf::Vector2f(0.0f, 0.0f);
+				quad[2].position = sf::Vector2f(0.0f, 0.0f);
+				quad[3].position = sf::Vector2f(0.0f, 0.0f);
+			}
 		}
 
 	}

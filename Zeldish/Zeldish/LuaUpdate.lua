@@ -8,7 +8,7 @@ function InitMenu ()
 	
 end
 
-function Update()
+function Update(deltaTime)
 	
 	if gameState == -1 then
 		return 0
@@ -16,7 +16,7 @@ function Update()
 		UpdateMenu()
 		menu:Draw()	
 	elseif gameState == 1 then
-		region.Update()
+		region.Update(deltaTime)
 		region.Draw()
 	elseif gameState == 2 then
 		editor.Update()
@@ -33,7 +33,7 @@ function UpdateMenu ()
 	if Input.IsPressed(74) == 1 then
 		menu:Select(1)
 	end
-	if Input.IsPressed(58) == 1 then
+	if Input.IsPressed(58) == 1 or Input.IsPressed(57) == 1 then
 		selected = menu:GetSelected()
 		if selected == 0 then
 			gameState = 1

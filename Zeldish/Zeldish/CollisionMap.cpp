@@ -42,6 +42,9 @@ bool CollisionMap::Load(std::string filename)
 		return false;
 	}
 	else {
+		if (this->tiles) {
+			delete[] this->tiles;
+		}
 		readFile >> this->width;
 		readFile >> this->height;
 
@@ -76,7 +79,7 @@ bool CollisionMap::Save(std::string filename)
 		return false;
 	}
 	else {
-		writeFile << this->width << " " << this->height << "\r\n";
+		writeFile << this->width << " " << this->height << " \r\n";
 
 		for (int i = 0; i < this->height; i++) {
 
@@ -273,7 +276,7 @@ int collisionMap_get(lua_State* ls)
 	int value = collisionMapPtr->getTile(indexX, indexY);
 	lua_pushinteger(ls, value);
 	
-	return 0;
+	return 1;
 }
 
 int collisionMap_checkCollision(lua_State* ls)

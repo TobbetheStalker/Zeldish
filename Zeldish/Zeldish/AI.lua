@@ -18,17 +18,17 @@ function ai.MoveEnemy(player, enemy)
 	playerX, playerY = player:GetPos()
 
 	-- X movement
-	if playerX < enemyX then
-		enemy:SetPos(enemyX - 10, enemyY)
-	elseif playerX > enemyX then
-		enemy:SetPos(enemyX + 10, enemyY)
+	if playerX < enemyX and not player:Intersect(enemy) then
+		enemy:SetPos(enemyX - 1, enemyY)
+	elseif playerX > enemyX and not player:Intersect(enemy) then
+		enemy:SetPos(enemyX + 1, enemyY)
 	end
 
 	-- Y movement
-	if playerY < enemyY then
-		enemy:SetPos(enemyX, enemyY - 10)
-	elseif playerY > enemyY then
-		enemy:SetPos(enemyX, enemyY + 10)
+	if playerY < enemyY and false ==player:Intersect(enemy) then
+		enemy:SetPos(enemyX, enemyY - 1)
+	elseif playerY > enemyY and not player:Intersect(enemy) then
+		enemy:SetPos(enemyX, enemyY + 1)
 	end
 
 end 
