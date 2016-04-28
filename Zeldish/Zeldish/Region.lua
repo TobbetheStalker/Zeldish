@@ -24,7 +24,7 @@ region.regionHeight = 32 * 20
 MAP_SIZE_X = 32
 MAP_SIZE_Y = 32
 
-function region.CheckParticles()
+function region.CheckProjectiles()
 	for key, projectile in pairs(region.projectiles) do
 		if projectile[2] == true then
 			--check if we should deactivate them or do something
@@ -35,6 +35,7 @@ function region.CheckParticles()
 			end
 			--second check is against the collision map
 			--third check is against the other entities
+
 		end
 	end
 end
@@ -55,7 +56,7 @@ function region.Update(deltaTime)
 	HandlePlayerInput()
 	
 	--Check if we should kill / deactivate any particles
-	region.CheckParticles()
+	region.CheckProjectiles()
 
 	--Update the player
 	region.player:Update(deltaTime);
