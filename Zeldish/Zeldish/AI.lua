@@ -7,8 +7,10 @@ end
 function ai.Update(player, entities)
 	
 	for i = 1, #entities do
-		MoveEnemy(player, entities[i])
-
+		--If the enemy intersects the player, correct the enemy instead of following the player
+		if not PlayerEnemyCollision(player, entities[i]) then
+			MoveEnemy(player, entities[i])
+		end
 	end
 
 end
@@ -46,25 +48,26 @@ end
 
 function PlayerEnemyCollision(player, enemy)
 
+	result = false
 	enemyX, enemyY = enemy:GetPos();
 	playerX, playerY = player:GetPos()
 
 	difX = enemyX - playerX
 	difY = enemyY - playerY
 
-	if difX <= 20 and difY <= 20 then
-		
-		if enemy:Intersects(player) then
-			
-			if math.abs(difX) < math.abs(difY) then	--X is smaller
+	if difX <= 200 and difY <= 200 then
+
+		if enemy:Intersects(player) == true then
+			result = true
+			if math.abs(difX) <= math.abs(difY) then	--X is smaller
 				
 				if difX < 0 then
 					enemy:SetDirection(2)
 				else
 					enemy:SetDirection(1)
 				end
-			else
-				if difY < 0 then	-- Y is smaller
+			else	-- Y is smaller
+				if difY < 0 then	
 					enemy:SetDirection(0)	-- Down
 				else
 					enemy:SetDirection(3) --Up
@@ -73,7 +76,7 @@ function PlayerEnemyCollision(player, enemy)
 		end		
 	end
 
-
+	return result
 end
 
 
