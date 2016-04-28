@@ -37,12 +37,17 @@ function region.CheckProjectiles()
 			foundProjectileCnt = foundProjectileCnt + 1
 			--check if we should deactivate them or do something
 			--First check is if outside of screen
-			x, y = projectile[1]:GetPos()
-			if x + projectile[1]:GetWidth() < 0 or y + projectile[1]:GetHeight() < 0 or x > region.regionWidth or y > region.regionHeight then
+			--x, y = projectile[1]:GetPos()
+			--if x + projectile[1]:GetWidth() < 0 or y + projectile[1]:GetHeight() < 0 or x > region.regionWidth or y > region.regionHeight then
+				--projectile[2] = false
+				--region.projectileCnt = region.projectileCnt - 1
+			--end
+			--second check is against the collision map
+			result, dX, dY = region.collisionMap:CheckCollision(projectile[1])
+			if result == true then
 				projectile[2] = false
 				region.projectileCnt = region.projectileCnt - 1
 			end
-			--second check is against the collision map
 			--third check is against the other entities
 			local foundEnemyCnt = 0
 			for enemyKey, enemy in pairs(region.enemies) do
