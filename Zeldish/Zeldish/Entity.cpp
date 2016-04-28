@@ -623,7 +623,7 @@ int entity_Intersects(lua_State* ls)
 	Entity* entity = checkEntity(ls, 1);
 	Entity* other = checkEntity(ls, 2);
 	int result = 0;
-	if (entity)
+	if (entity && other)
 	{
 		result = entity->Intersects(other);
 	}
