@@ -84,18 +84,18 @@ int BoundingVolume::GetHeight()
 //0 if outside, 1 if intersection, 2 if contained
 int BoundingVolume::CheckAgainst(BoundingVolume * other)
 {
-	int result = 1;
+	bool result = false;
 
 	if (this->m_x > other->m_x + other->m_width || this->m_x + this->m_width < other->m_x ||
 		this->m_y > other->m_y + other->m_height || this->m_y + this->m_height < other->m_y)
 	{
 		//False
-		result = 0;
+		result = false;
 	}
 	else
 	{
 		//Intersection
-		result = 1;
+		result = true;
 		//Add check for containing
 	}
 

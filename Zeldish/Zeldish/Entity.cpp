@@ -40,12 +40,8 @@ int Entity::Initialize(std::string texturePath)
 	//this->drawTexture.loadFromFile("../Zeldish/Resources/TileSets/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
 	this->mySprite.setTextureRect(this->spriteRect);
-	this->boundingBox.Initialize(this->x, this->y, this->width, this->height);
 
-	//Do the boundingbox setup
-	this->boundingBox.SetWidth(EntityLib::ENTITY_WIDTH);
-	this->boundingBox.SetHeight(EntityLib::ENTITY_HEIGHT);
-	this->boundingBox.SetPosition(0, 0);
+	this->boundingBox.Initialize(this->x, this->y, this->width, this->height);
 
 	return result;
 }
@@ -290,9 +286,13 @@ int Entity::UpdateSprite(float dTime)
 
 int Entity::Intersects(Entity * other)
 {
-	int result = 0;
+	bool result = false;
 
 	result = this->boundingBox.CheckAgainst(&other->boundingBox);
+
+	if (result == true) {
+		int i = 0;
+	}
 
 	return result;
 }
@@ -627,12 +627,13 @@ int entity_Intersects(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	Entity* other = checkEntity(ls, 2);
-	int result = 0;
-	if (entity && other)
+
+	bool result = false;
+	if (entity)
 	{
 		result = entity->Intersects(other);
 	}
-	lua_pushinteger(ls, result);
+	lua_pushboolean(ls, result);
 
 	return 1;
 }
