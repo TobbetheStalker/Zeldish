@@ -35,6 +35,7 @@ int Entity::Initialize(std::string texturePath)
 	//this->drawTexture.loadFromFile("../Zeldish/Resources/TileSets/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
 	this->mySprite.setTextureRect(this->spriteRect);
+	this->boundingBox.Initialize(this->x, this->y, this->width, this->height);
 
 	//Do the boundingbox setup
 	this->boundingBox.SetWidth(EntityLib::ENTITY_WIDTH);
