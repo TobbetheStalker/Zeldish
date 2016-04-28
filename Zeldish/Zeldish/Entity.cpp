@@ -5,6 +5,7 @@
 Entity::Entity()
 {
 	this->x = this->y = this->width = this->height = this->animationType = 0;
+	this->health = this->damage = 0;
 	this->animationTime = this->speed = 0.0f;
 	this->boundingBox = BoundingVolume();
 }
@@ -15,10 +16,14 @@ Entity::~Entity()
 
 int Entity::Initialize(std::string texturePath)
 {
+	int result = 0;
 	//Convert texture path to the full resource path
 	std::string fullPath = EntityLib::TILESETS_DIRECTORY;
 	fullPath += texturePath;
-	int result = 0;
+
+	this->health = 10;
+	this->damage = 10;
+
 	this->speed = EntityLib::SPEED;
 	this->animationTime = 0.0f;
 	this->animationType = EntityLib::DOWN;
@@ -53,6 +58,7 @@ void Entity::Shutdown()
 
 void Entity::SetX(float x)
 {
+	this->boundingBox.ApplyPosition(x, 0);
 }
 
 void Entity::SetSpriteX(int x)
@@ -62,6 +68,7 @@ void Entity::SetSpriteX(int x)
 
 void Entity::SetY(float y)
 {
+	this->boundingBox.ApplyPosition(0, y);
 }
 
 void Entity::SetSpriteY(int y)
@@ -123,6 +130,16 @@ void Entity::SetSpeed(float speed)
 	this->speed = speed;
 }
 
+void Entity::SetHealth(int health)
+{
+	this->health = health;
+}
+
+void Entity::SetDamage(int damage)
+{
+	this->damage = damage;
+}
+
 
 int Entity::GetX()
 {
@@ -167,6 +184,16 @@ int Entity::GetSpriteHeight()
 float Entity::GetSpeed()
 {
 	return this->speed;
+}
+
+int Entity::GetHealth()
+{
+	return this->health;
+}
+
+int Entity::GetDamage()
+{
+	return this->damage;
 }
 
 EntityLib::Direction Entity::GetDirection()
@@ -420,6 +447,22 @@ int entity_setSpeed(lua_State* ls)
 	return 0;
 }
 
+int entity_setHealth(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	if (entity)
+		entity->SetHealth(lua_tointeger(ls, 2));
+	return 0;
+}
+
+int entity_setDamage(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	if (entity)
+		entity->SetDamage(lua_tointeger(ls, 2));
+	return 0;
+}
+
 int entity_getPos(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
@@ -543,6 +586,33 @@ int entity_getSpeed(lua_State* ls)
 	return 1;
 }
 
+
+int entity_getHealth(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	float health = -1.0f;
+	if (entity)
+	{
+		health = entity->GetHealth();
+	}
+	lua_pushinteger(ls, health);
+	return 1;
+}
+
+int entity_getDamage(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	float damage = -1.0f;
+	if (entity)
+	{
+		damage = entity->GetDamage();
+	}
+	lua_pushinteger(ls, damage);
+	return 1;
+}
+
+
+
 int entity_update(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
@@ -558,7 +628,7 @@ int entity_Intersects(lua_State* ls)
 	Entity* entity = checkEntity(ls, 1);
 	Entity* other = checkEntity(ls, 2);
 	int result = 0;
-	if (entity)
+	if (entity && other)
 	{
 		result = entity->Intersects(other);
 	}
@@ -598,6 +668,8 @@ void RegisterEntity(lua_State * ls)
 		{ "SetSpriteHeight",entity_setSpriteHeight },
 		{ "SetDirection",	entity_setDirection },
 		{ "SetSpeed",		entity_setSpeed },
+		{ "SetHealth",		entity_setHealth },
+		{ "SetDamage",		entity_setDamage },
 		//Applied setters
 		{ "ApplyPos",		entity_applyPos },
 		{ "ApplySpritePos",	entity_applySpritePos },
@@ -611,6 +683,8 @@ void RegisterEntity(lua_State * ls)
 		{ "GetDirection",	entity_getDirection },
 		{ "GetLastDirection",entity_getLastDirection },
 		{ "GetSpeed",		entity_getSpeed },
+		{ "GetHealth",		entity_getHealth },
+		{ "GetDamage",		entity_getDamage },
 		{ "__gc",			entity_destroy },
 		{ NULL, NULL }
 	};

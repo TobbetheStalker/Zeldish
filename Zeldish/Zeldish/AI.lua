@@ -4,13 +4,18 @@ function ai.Create()
 	
 end
 
-function ai.Update(player, entities)
-	
-	for i = 1, #entities do
-		ai.MoveEnemy(player, entities[i])
-
+function ai.Update(player, entities, regionCnt)
+	local foundEnemyCnt = 0
+	for key, enemy in pairs(entities) do
+		if foundEnemyCnt > regionCnt - 1 then
+			break
+		end
+		if enemy[2] then
+			foundEnemyCnt = foundEnemyCnt + 1
+			--print("[LUA] Drawing enemy")
+			ai.MoveEnemy(player, enemy[1])
+		end
 	end
-
 end
 
 function ai.MoveEnemy(player, enemy)

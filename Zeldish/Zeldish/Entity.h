@@ -16,6 +16,9 @@ protected:
 	int animationWidth;
 	sf::IntRect spriteRect;
 
+	int health;
+	int damage;
+
 	BoundingVolume boundingBox;
 	sf::Texture drawTexture;
 	sf::Sprite mySprite;
@@ -43,6 +46,8 @@ public:
 	void SetSpriteWidth(int width);
 	void SetDirection(EntityLib::Direction direction);
 	void SetSpeed(float speed);
+	void SetHealth(int health);
+	void SetDamage(int damage);
 
 	int GetX();
 	int GetY();
@@ -53,6 +58,8 @@ public:
 	int GetSpriteWidth();
 	int GetSpriteHeight();
 	float GetSpeed();
+	int GetHealth();
+	int GetDamage();
 	EntityLib::Direction GetDirection();
 	EntityLib::Direction GetLastDirection();
 
@@ -97,6 +104,11 @@ int entity_setDirection(lua_State* ls);
 
 int entity_setSpeed(lua_State* ls);
 
+int entity_setHealth(lua_State* ls);
+int entity_setDamage(lua_State* ls);
+
+
+
 int entity_getPos(lua_State* ls);
 int entity_getSpritePos(lua_State* ls);
 
@@ -111,6 +123,10 @@ int entity_getDirection(lua_State* ls);
 int entity_getLastDirection(lua_State* ls);
 		   
 int entity_getSpeed(lua_State* ls);
+
+int entity_getHealth(lua_State* ls);
+int entity_getDamage(lua_State* ls);
+
 
 int entity_update(lua_State* ls);
 

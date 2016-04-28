@@ -3,6 +3,9 @@ ai = require("AI")
 
 --region has [projectileMetatable][bool active]
 region.projectiles = {}
+region.projectileCnt = 0
+region.enemies = {}
+region.enemyCnt = 0
 
 keyW =		22
 keyA =		0
@@ -24,17 +27,48 @@ region.regionHeight = 32 * 20
 MAP_SIZE_X = 32
 MAP_SIZE_Y = 32
 
-function region.CheckParticles()
-	for key, projectile in pairs(region.projectiles) do
+function region.CheckProjectiles()
+	local foundProjectileCnt = 0
+	for projectileKey, projectile in pairs(region.projectiles) do
+		if foundProjectileCnt > region.projectileCnt - 1 then
+			break
+		end
 		if projectile[2] == true then
+			foundProjectileCnt = foundProjectileCnt + 1
 			--check if we should deactivate them or do something
 			--First check is if outside of screen
 			x, y = projectile[1]:GetPos()
 			if x + projectile[1]:GetWidth() < 0 or y + projectile[1]:GetHeight() < 0 or x > region.regionWidth or y > region.regionHeight then
 				projectile[2] = false
+				region.projectileCnt = region.projectileCnt - 1
 			end
 			--second check is against the collision map
 			--third check is against the other entities
+			local foundEnemyCnt = 0
+			for enemyKey, enemy in pairs(region.enemies) do
+				if projectile[2] == false or foundEnemyCnt > region.enemyCnt - 1 then
+					break;
+				end
+				--If active enemy
+				if enemy[2] then
+					foundEnemyCnt = foundEnemyCnt + 1
+					if projectile[1]:Intersects(enemy[1]) > 0 then
+						newProjectilHealth = projectile[1]:GetHealth() - enemy[1]:GetDamage()
+						projectile[1]:SetHealth(newProjectilHealth)
+						newEnemyHealth = enemy[1]:GetHealth() - projectile[1]:GetDamage()
+						enemy[1]:SetHealth(newEnemyHealth)
+						if newProjectilHealth < 1 then
+							projectile[2] = false
+							region.projectileCnt = region.projectileCnt - 1
+						end
+						if newEnemyHealth < 1 then
+							enemy[2] = false
+							region.enemyCnt = region.enemyCnt - 1;
+						end
+						print("Enemy [" .. enemyKey .. "] has [" .. newEnemyHealth .. "] health left after taking [" .. projectile[1]:GetDamage() .. "] damage from Projectile[" .. projectileKey .. "]")
+					end
+				end
+			end
 		end
 	end
 end
@@ -50,12 +84,13 @@ function region.Update(deltaTime)
 		LoadMap(region.currLevel)
 	end
 
-	ai.Update(region.player, region.enemies);
 
 	HandlePlayerInput()
+
+	ai.Update(region.player, region.enemies, region.enemyCnt);
 	
 	--Check if we should kill / deactivate any particles
-	region.CheckParticles()
+	region.CheckProjectiles()
 
 	--Update the player
 	result, dX, dY = region.collisionMap:CheckCollision(region.player)
@@ -63,11 +98,13 @@ function region.Update(deltaTime)
 		region.player:ApplyPos(dX, dY)
 	end
 	region.player:Update(deltaTime);
-	
-	for i = 1, #region.enemies do
-		region.enemies[i]:Update(deltaTime)
-	end
 
+	--Update the active enemies
+	for key, enemy in pairs(region.enemies) do
+		if enemy[2] then
+			enemy[1]:Update(deltaTime)
+		end
+	end
 
 	--Update the active particles
 	for key, projectile in pairs(region.projectiles) do
@@ -119,7 +156,7 @@ function HandlePlayerInput()
 	end
 	region.player:SetDirection(newDirection)
 
-	if Input.IsDown(keyFire) == 1 then
+	if Input.IsPressed(keyFire) == 1 then
 		--Spawn Projectile
 		region.SpawnProjectile(region.player)
 	end
@@ -127,6 +164,7 @@ function HandlePlayerInput()
 end
 
 function region.SpawnProjectile(original)
+	foundPos = 0
 	for key, projectile in pairs(region.projectiles) do
 		if projectile[2] == false then
 			foundPos = key
@@ -140,21 +178,24 @@ function region.SpawnProjectile(original)
 			projectile[1]:SetHeight(20)
 			projectile[1]:SetSpriteWidth(20)
 			projectile[1]:SetSpriteHeight(20)
+			projectile[1]:SetHealth(1)
+			projectile[1]:SetDamage(original:GetDamage())
 			spawnDirection = original:GetDirection();
 			if spawnDirection ==  directionNone then
 				spawnDirection = original:GetLastDirection()
 			end
 			projectile[1]:SetDirection(spawnDirection)
 			projectile[1]:SetSpeed(80)
-			print("[LUA] created projectile[1]")
+			print("[LUA] created projectile[" .. key .. "]")
 
 			projectile[2] = true;
+			region.projectileCnt = region.projectileCnt + 1
 			print("adding entity")
 			break
 		end
 	end
 	if foundPos == 0 then
-		print("[LUA] Resourcepool overload")
+		print("[LUA] Projectile resource-pool overload")
 	end
 end
 
@@ -190,8 +231,11 @@ function region.Draw()
 	--projectile, active = region.projectiles[1], region.projectiles[2]
 	--print(projectile .. " " .. active)
 
-	for i = 1, #region.enemies do
-		region.enemies[i]:Draw()
+	for key, enemy in pairs(region.enemies) do
+		if enemy[2] then
+			--print("[LUA] Drawing enemy")
+			enemy[1]:Draw()
+		end
 	end
 
 	for key, adTemp in pairs(region.projectiles) do
@@ -206,6 +250,19 @@ function region.Draw()
 end
 
 function region.Create()
+
+	for pIndex = 1, 300, 1 do
+		tempP = Entity:New()
+		tempP:Initialize("Fireball.png");
+		region.projectiles[pIndex] = {tempP, false}
+	end
+
+	for enemyIndex = 1, 50, 1 do
+		tempE = Entity:New()
+		tempE:Initialize("LinkCharacter.png")
+		region.enemies[enemyIndex] = {tempE, false}
+	end
+
 	region.tileMapBackground = TileMap.New()
 	region.tileMapForeground = TileMap.New()
 	region.collisionMap = CollisionMap.New()
@@ -223,11 +280,6 @@ function region.Create()
 	region.player:SetDirection(4)
 	region.player:SetSpeed(100)
 
-	for pIndex = 1, 300, 1 do
-		tempP = Entity:New()
-		tempP:Initialize("Fireball.png");
-		region.projectiles[pIndex] = {tempP, false}
-	end
 
 end
 
@@ -248,26 +300,67 @@ function LoadMaps(level)
 		region.mapF[i] = file:read("*number")
 	end
 
+	for key, temp in pairs(region.projectiles) do
+		temp[2] = false
+	end
+	region.projectileCnt = 0
+
 	file:close()
 end
 
 function LoadEntityMap(level)
 	file = assert(io.open("Resources/Maps/level" .. level .. "E.txt", "r"))
+	
+	--Reset all enemies to deactivated to begin with
+	for key, enemy in pairs(region.enemies) do
+		enemy[2] = false
+	end
+	region.enemyCnt = 0
 
-	region.enemies = {}
 
 	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
 		local tempValue = file:read("*number")
 		if tempValue ~= -1 then
 			if tempValue == 0 then
-				enemy = Entity.New()
-				enemy:Initialize("LinkCharacter.png")
-				local x = ((i-1) % MAP_SIZE_X) * 20
-				local y = ((i-1) / MAP_SIZE_X) * 20
-				enemy:SetPos(x, y);
-				enemy:SetSpeed(40)
+				--Go through our enemy resource pool and look for an inactive position
+				
+				foundPos = 0
+				for key, enemy in pairs(region.enemies) do
+					if enemy[2] == false then
+						foundPos = key
+						local x = ((i-1) % MAP_SIZE_X) * 20
+						local y = ((i-1) / MAP_SIZE_X) * 20
+						--The projectile is inactive
+						--Push yourself to its place in the list
+						print(x .. " " .. y)
+						--enemy[1]:Initialize("LinkCharacter.png")
+						enemy[1]:SetPos(x, y)
+						--enemy[1]:SetWidth(20)
+						--enemy[1]:SetHeight(20)
+						--enemy[1]:SetSpriteWidth(20)
+						--enemy[1]:SetSpriteHeight(20)
+						enemy[1]:SetHealth(20)
+						print("Health of enemy = " .. enemy[1]:GetHealth())
+						enemy[1]:SetDamage(5)
+						enemy[1]:SetDirection(directionNone)
+						enemy[1]:SetSpeed(40)
+						print("[LUA] created enemy at[" .. key .. "]")
+						enemy[2] = true;
+						region.enemyCnt = region.enemyCnt + 1;
+						break
+					end
+				end
+				if foundPos == 0 then
+					print("[LUA] Enemy resource-pool overload")
+				end
 
-				table.insert(region.enemies, enemy)
+
+				--for key, enemy in pairs(region.enemies) do
+					--if enemy[2] == false then
+						--enemy[1]:SetSpeed(40)
+						--enemy[2] = true;
+					--end
+				--end
 			end
 		end
 	end
