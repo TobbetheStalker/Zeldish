@@ -142,8 +142,8 @@ bool CollisionMap::checkCollision(Entity* entity, int& correctionX, int& correct
 
 	int minX = x;
 	int minY = y;
-	int maxX = (x + 20);
-	int maxY = (y + 20);
+	int maxX = (x + width);
+	int maxY = (y + height);
 
 	int tileX = (minX+1) / 20;
 	int tileY = (minY+1) / 20;
