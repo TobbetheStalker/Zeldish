@@ -7,8 +7,10 @@ keyW =		22
 keyA =		0
 keyS =		18
 keyD =		3
+keyM =		12
 keySpace =	57
 keyEscape =	36
+keyFire =	keySpace
 
 directionDown =		0
 directionLeft =		1
@@ -40,16 +42,17 @@ function region.Update(deltaTime)
 	if Input.IsPressed(keyEscape) == 1 then
 		gameState = 0
 	end
-	if Input.IsPressed(keySpace) == 1 then
+	if Input.IsPressed(keyM) == 1 then
 		region.LoadTileMaps(2)
 	end
 	region.HandlePlayerInput()
 	
+	--Check if we should kill / deactivate any particles
+	region.CheckParticles()
+
 	--Update the player
 	region.player:Update(deltaTime);
 
-	--Check if we should kill / deactivate any particles
-	region.CheckParticles()
 
 	--Update the active particles
 	for key, projectile in pairs(region.projectiles) do
