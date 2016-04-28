@@ -123,6 +123,7 @@ function HandlePlayerInput()
 end
 
 function region.SpawnProjectile(original)
+	foundPos = 0
 	for key, projectile in pairs(region.projectiles) do
 		if projectile[2] == false then
 			foundPos = key
