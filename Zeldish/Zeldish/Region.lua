@@ -218,6 +218,19 @@ function region.Draw()
 end
 
 function region.Create()
+
+	for pIndex = 1, 300, 1 do
+		tempP = Entity:New()
+		tempP:Initialize("Fireball.png");
+		region.projectiles[pIndex] = {tempP, false}
+	end
+
+	for enemyIndex = 1, 100, 1 do
+		tempE = Entity:New()
+		tempE:Initialize("LinkCharacter.png")
+		region.enemies[enemyIndex] = {tempE, false}
+	end
+
 	region.tileMapBackground = TileMap.New()
 	region.tileMapForeground = TileMap.New()
 	region.collisionMap = CollisionMap.New()
@@ -235,17 +248,6 @@ function region.Create()
 	region.player:SetDirection(4)
 	region.player:SetSpeed(100)
 
-	for pIndex = 1, 300, 1 do
-		tempP = Entity:New()
-		tempP:Initialize("Fireball.png");
-		region.projectiles[pIndex] = {tempP, false}
-	end
-
-	for enemyIndex = 1, 100, 1 do
-		tempE = Entity:New()
-		tempE:Initialize("LinkCharacter.png")
-		region.enemies[enemyIndex] = {tempE, false}
-	end
 
 end
 
@@ -271,6 +273,11 @@ end
 
 function LoadEntityMap(level)
 	file = assert(io.open("Resources/Maps/level" .. level .. "E.txt", "r"))
+	
+	--Reset all enemies to deactivated to begin with
+	for key, enemy in pairs(region.enemies) do
+		enemy[2] = false
+	end
 
 
 	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
@@ -309,7 +316,7 @@ function LoadEntityMap(level)
 				end
 
 
-				for key, enemy in pairs(region.projectiles) do
+				for key, enemy in pairs(region.enemies) do
 					if enemy[2] == false then
 						enemy[1]:SetSpeed(40)
 						enemy[2] = true;
