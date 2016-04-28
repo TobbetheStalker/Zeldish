@@ -9,7 +9,6 @@ Entity::Entity()
 	this->boundingBox = BoundingVolume();
 }
 
-
 Entity::~Entity()
 {
 }
@@ -27,12 +26,16 @@ int Entity::Initialize(std::string texturePath)
 	this->y = 0;
 	this->width = EntityLib::ENTITY_WIDTH;
 	this->height = EntityLib::ENTITY_HEIGHT;
-	this->spriteRect = sf::IntRect(0, 0, EntityLib::PLAYER_WIDTH, EntityLib::PLAYER_HEIGHT);
+	this->spriteRect = sf::IntRect(0, 0, EntityLib::ENTITY_WIDTH, EntityLib::ENTITY_HEIGHT);
+
+	this->myLastDirection = EntityLib::Direction::DOWN;
+	this->myDirection = EntityLib::Direction::NONE;
 
 	this->drawTexture.loadFromFile(fullPath);
 	//this->drawTexture.loadFromFile("../Zeldish/Resources/TileSets/RacoonCharacter.png");
 	this->mySprite.setTexture(drawTexture);
 	this->mySprite.setTextureRect(this->spriteRect);
+	this->boundingBox.Initialize(this->x, this->y, this->width, this->height);
 
 	//Do the boundingbox setup
 	this->boundingBox.SetWidth(EntityLib::ENTITY_WIDTH);
@@ -110,6 +113,8 @@ void Entity::SetSpriteWidth(int width)
 
 void Entity::SetDirection(EntityLib::Direction direction)
 {
+	if(this->myDirection != EntityLib::Direction::NONE)
+		this->myLastDirection = this->myDirection;
 	this->myDirection = direction;
 }
 
@@ -169,6 +174,11 @@ EntityLib::Direction Entity::GetDirection()
 	return this->myDirection;
 }
 
+EntityLib::Direction Entity::GetLastDirection()
+{
+	return this->myLastDirection;
+}
+
 #pragma endregion setters & getters
 
 int Entity::Update(float dTime)
@@ -217,9 +227,9 @@ int Entity::UpdateSprite(float dTime)
 	this->mySprite.setPosition(sf::Vector2f(sX, sY));
 
 	//Update animation time
-	this->animationTime = (this->animationTime + dTime);
+	this->animationTime = (this->animationTime + dTime * this->speed / EntityLib::SPEED);
 	//Apply animation bounds
-	if (this->animationTime >= EntityLib::ANIMATION_LIMIT)
+	while (this->animationTime >= EntityLib::ANIMATION_LIMIT)
 		this->animationTime -= EntityLib::ANIMATION_LIMIT;
 	//Calculate animation frame
 	int frame = this->animationTime / EntityLib::FRAME_TIME;
@@ -227,10 +237,12 @@ int Entity::UpdateSprite(float dTime)
 	if (this->myDirection != EntityLib::Direction::NONE)
 		this->spriteRect.left = frame * EntityLib::ENTITY_WIDTH;
 	else
-		this->spriteRect.left = EntityLib::ENTITY_WIDTH;
+		this->spriteRect.left = EntityLib::ENTITY_WIDTH * 1;
 	//Calculate the animation type to be used
 	if (this->myDirection != EntityLib::Direction::NONE)
 		this->animationType = this->myDirection;
+	else
+		this->animationType = this->myLastDirection;
 	//Do Safety correction
 	if (this->animationType < 0 || this->animationType > EntityLib::Direction::NONE)
 		this->animationType = 0;
@@ -239,6 +251,16 @@ int Entity::UpdateSprite(float dTime)
 	//And finally set our animation to be the one displayed
 	this->mySprite.setTextureRect(this->spriteRect);
 
+	this->mySprite.setScale(sf::Vector2f(float(this->width) / EntityLib::ENTITY_WIDTH, float(this->height) / EntityLib::ENTITY_HEIGHT));
+
+	return result;
+}
+
+int Entity::Intersects(Entity * other)
+{
+	int result = 0;
+
+	result = this->boundingBox.CheckAgainst(&other->boundingBox);
 
 	return result;
 }
@@ -346,7 +368,7 @@ int entity_setWidth(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+		entity->SetWidth(lua_tonumber(ls, 2));
 
 	return 0;
 }
@@ -355,7 +377,7 @@ int entity_setHeight(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if(entity)
-		entity->SetPos(lua_tonumber(ls, 2), lua_tonumber(ls, 3));
+		entity->SetHeight(lua_tonumber(ls, 2));
 
 	return 0;
 }
@@ -364,7 +386,7 @@ int entity_setSpriteWidth(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if (entity)
-		entity->SetSpritePos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetSpriteWidth(lua_tointeger(ls, 2));
 
 	return 0;
 }
@@ -373,7 +395,7 @@ int entity_setSpriteHeight(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
 	if (entity)
-		entity->SetSpritePos(lua_tointeger(ls, 2), lua_tointeger(ls, 3));
+		entity->SetSpriteHeight(lua_tointeger(ls, 2));
 	return 0;
 }
 
@@ -491,6 +513,19 @@ int entity_getDirection(lua_State* ls)
 	return 1;
 }
 
+
+int entity_getLastDirection(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	int direction = 4;
+	if (entity)
+	{
+		direction = entity->GetLastDirection();
+	}
+	lua_pushinteger(ls, direction);
+	return 1;
+}
+
 int entity_getSpeed(lua_State* ls)
 {
 	Entity* entity = checkEntity(ls, 1);
@@ -513,6 +548,20 @@ int entity_update(lua_State* ls)
 	return 0;
 }
 
+int entity_Intersects(lua_State* ls)
+{
+	Entity* entity = checkEntity(ls, 1);
+	Entity* other = checkEntity(ls, 2);
+	int result = 0;
+	if (entity)
+	{
+		result = entity->Intersects(other);
+	}
+	lua_pushinteger(ls, result);
+
+	return 1;
+}
+
 void RegisterEntity(lua_State * ls)
 {
 	// Create a luaL metatable. This metatable is not 
@@ -526,9 +575,16 @@ void RegisterEntity(lua_State * ls)
 
 	luaL_Reg sEntityRegs[] =
 	{
+		//Constructor and initialiser
 		{ "New",			entity_create },
 		{ "Initialize",		entity_initialize },
+		//Drawable entity function
 		{ "Draw",			entity_draw },
+		//Runs internal logic
+		{ "Update",			entity_update },
+		//Functions
+		{ "Intersects",		entity_Intersects },
+		//setters
 		{ "SetPos",			entity_setPos },
 		{ "SetSpritePos",	entity_setSpritePos },
 		{ "SetWidth",		entity_setWidth },
@@ -537,8 +593,10 @@ void RegisterEntity(lua_State * ls)
 		{ "SetSpriteHeight",entity_setSpriteHeight },
 		{ "SetDirection",	entity_setDirection },
 		{ "SetSpeed",		entity_setSpeed },
+		//Applied setters
 		{ "ApplyPos",		entity_applyPos },
 		{ "ApplySpritePos",	entity_applySpritePos },
+		//Getters
 		{ "GetPos",			entity_getPos },
 		{ "GetWidth",		entity_getWidth },
 		{ "GetHeight",		entity_getHeight },
@@ -546,8 +604,8 @@ void RegisterEntity(lua_State * ls)
 		{ "GetSpriteWidth",	entity_getSpriteWidth },
 		{ "GetSpriteHeight",entity_getSpriteHeight },
 		{ "GetDirection",	entity_getDirection },
+		{ "GetLastDirection",entity_getLastDirection },
 		{ "GetSpeed",		entity_getSpeed },
-		{ "Update",			entity_update },
 		{ "__gc",			entity_destroy },
 		{ NULL, NULL }
 	};

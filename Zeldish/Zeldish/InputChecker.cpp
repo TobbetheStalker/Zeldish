@@ -6,6 +6,10 @@ InputChecker::InputChecker()
 		this->keys[i] = false;
 		this->oldKeys[i] = false;
 	}
+	this->leftMouse = false;
+	this->rightMouse = false;
+	this->oldLeftMouse = false;
+	this->oldRightMouse = false;
 }
 
 InputChecker::~InputChecker()
@@ -23,6 +27,8 @@ void InputChecker::UpdateInput()
 	for (int i = 0; i < 200; i++) {
 		this->oldKeys[i] = this->keys[i];
 	}
+	this->oldLeftMouse = this->leftMouse;
+	this->oldRightMouse = this->rightMouse;
 }
 
 void InputChecker::SetKeyPressed(int keyCode)
@@ -50,6 +56,46 @@ int InputChecker::CheckKeyDown(int keyCode)
 int InputChecker::CheckKeyReleased(int keyCode)
 {
 	return this->oldKeys[keyCode] && !this->keys[keyCode];
+}
+
+int InputChecker::GetMouseX()
+{
+	return sf::Mouse::getPosition(*window).x;
+}
+
+int InputChecker::GetMouseY()
+{
+	return sf::Mouse::getPosition(*window).y;
+}
+
+void InputChecker::SetLeftMousePressed()
+{
+	this->leftMouse = true;
+}
+
+void InputChecker::SetLeftMouseReleased()
+{
+	this->leftMouse = false;
+}
+
+int InputChecker::CheckLeftMousePressed()
+{
+	return !this->oldLeftMouse && this->leftMouse;
+}
+
+void InputChecker::SetRightMousePressed()
+{
+	this->rightMouse = true;
+}
+
+void InputChecker::SetRightMouseReleased()
+{
+	this->rightMouse = false;
+}
+
+int InputChecker::CheckRightMousePressed()
+{
+	return !this->oldRightMouse && this->rightMouse;
 }
 
 void InputChecker::ReleaseInstance()
@@ -112,6 +158,35 @@ int input_checkkeyreleased(lua_State* ls)
 
 	return 1;
 }
+
+int input_getmouseposx(lua_State* ls)
+{
+	lua_pushinteger(ls, InputChecker::Instance().GetMouseX());
+
+	return 1;
+}
+
+int input_getmouseposy(lua_State* ls)
+{
+	lua_pushinteger(ls, InputChecker::Instance().GetMouseY());
+
+	return 1;
+}
+
+int input_checkleftmousepressed(lua_State* ls) 
+{
+	lua_pushinteger(ls, InputChecker::Instance().CheckLeftMousePressed());
+
+	return 1;
+}
+
+int input_checkrightmousepressed(lua_State* ls)
+{
+	lua_pushinteger(ls, InputChecker::Instance().CheckRightMousePressed());
+
+	return 1;
+}
+
 int input_destroy(lua_State* ls) 
 {
 	InputChecker::Instance().ReleaseInstance();
@@ -135,6 +210,10 @@ void RegisterInputChecker(lua_State * ls)
 		{ "IsPressed",		input_checkkeypressed },
 		{ "IsDown",			input_checkkeydown },
 		{ "IsReleased",		input_checkkeyreleased },
+		{ "GetMousePosX",	input_getmouseposx },
+		{ "GetMousePosY",	input_getmouseposy },
+		{ "IsLeftMousePressed",	input_checkleftmousepressed },
+		{ "IsRightMousePressed",	input_checkrightmousepressed },
 		/*{ "Print",			menu_print },
 		{ "Jump",			menu_jump },
 		{ "SetPosition",	menu_setPosition },*/

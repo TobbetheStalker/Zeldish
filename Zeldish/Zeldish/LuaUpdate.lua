@@ -1,5 +1,12 @@
 gameState = 0
 
+keyW =		22
+keyA =		0
+keyS =		18
+keyD =		3
+keySpace =	57
+keyEscape =	36
+
 function InitMenu ()
 	--create menu
 	menu = Menu.New()
@@ -18,6 +25,9 @@ function Update(deltaTime)
 	elseif gameState == 1 then
 		region.Update(deltaTime)
 		region.Draw()
+	elseif gameState == 2 then
+		editor.Update()
+		editor.Draw()
 	end
 
 	return 1
@@ -36,6 +46,10 @@ function UpdateMenu ()
 			gameState = 1
 			region = require("Region")
 			region.Create()
+		elseif selected == 1 then
+			gameState = 2
+			editor = require("LevelEditor")
+			editor.CreateEmpty()
 		elseif selected == 2 then
 			gameState = -1
 		end
