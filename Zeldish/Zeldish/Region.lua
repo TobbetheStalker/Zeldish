@@ -3,6 +3,7 @@ ai = require("AI")
 
 --region has [projectileMetatable][bool active]
 region.projectiles = {}
+region.enemies = {}
 
 keyW =		22
 keyA =		0
@@ -35,7 +36,12 @@ function region.CheckProjectiles()
 			end
 			--second check is against the collision map
 			--third check is against the other entities
-
+			for key, enemy in pairs(region.enemies) do
+				if projectile[1]:Intersects(enemy) > 0 then
+					projectile[1]:SetHealth(projectile[1]:GetHealth() - enemy:GetDamage())
+					enemy:SetHealth(enemy:GetHealth() - projectile[1]:GetDamage())
+				end
+			end
 		end
 	end
 end
@@ -51,20 +57,23 @@ function region.Update(deltaTime)
 		LoadMap(region.currLevel)
 	end
 
-	ai.Update(region.player, region.enemies);
 
 	HandlePlayerInput()
+
+	ai.Update(region.player, region.enemies);
 	
 	--Check if we should kill / deactivate any particles
 	region.CheckProjectiles()
 
 	--Update the player
 	region.player:Update(deltaTime);
-	
-	for i = 1, #region.enemies do
-		region.enemies[i]:Update(deltaTime)
-	end
 
+	--Update the active enemies
+	for key, enemy in pairs(region.enemies) do
+		if enemy[2] then
+			enemy[1]:Update(deltaTime)
+		end
+	end
 
 	--Update the active particles
 	for key, projectile in pairs(region.projectiles) do
@@ -154,7 +163,7 @@ function region.SpawnProjectile(original)
 		end
 	end
 	if foundPos == 0 then
-		print("[LUA] Resourcepool overload")
+		print("[LUA] Projectile resource-pool overload")
 	end
 end
 
@@ -190,8 +199,11 @@ function region.Draw()
 	--projectile, active = region.projectiles[1], region.projectiles[2]
 	--print(projectile .. " " .. active)
 
-	for i = 1, #region.enemies do
-		region.enemies[i]:Draw()
+	for key, enemy in pairs(region.enemies) do
+		if enemy[2] then
+			--print("[LUA] Drawing enemy")
+			enemy[1]:Draw()
+		end
 	end
 
 	for key, adTemp in pairs(region.projectiles) do
@@ -229,6 +241,12 @@ function region.Create()
 		region.projectiles[pIndex] = {tempP, false}
 	end
 
+	for enemyIndex = 1, 100, 1 do
+		tempE = Entity:New()
+		tempE:Initialize("LinkCharacter.png")
+		region.enemies[enemyIndex] = {tempE, false}
+	end
+
 end
 
 function LoadMaps(level)
@@ -254,20 +272,49 @@ end
 function LoadEntityMap(level)
 	file = assert(io.open("Resources/Maps/level" .. level .. "E.txt", "r"))
 
-	region.enemies = {}
 
 	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
 		local tempValue = file:read("*number")
 		if tempValue ~= -1 then
 			if tempValue == 0 then
-				enemy = Entity.New()
-				enemy:Initialize("LinkCharacter.png")
-				local x = ((i-1) % MAP_SIZE_X) * 20
-				local y = ((i-1) / MAP_SIZE_X) * 20
-				enemy:SetPos(x, y);
-				enemy:SetSpeed(40)
+				--Go through our enemy resource pool and look for an inactive position
+				
+				foundPos = 0
+				for key, enemy in pairs(region.enemies) do
+					if enemy[2] == false then
+						foundPos = key
+						local x = ((i-1) % MAP_SIZE_X) * 20
+						local y = ((i-1) / MAP_SIZE_X) * 20
+						--The projectile is inactive
+						--Push yourself to its place in the list
+						print(x .. " " .. y)
+						enemy[1]:Initialize("LinkCharacter.png")
+						enemy[1]:SetPos(x, y)
+						--enemy[1]:SetWidth(20)
+						--enemy[1]:SetHeight(20)
+						--enemy[1]:SetSpriteWidth(20)
+						--enemy[1]:SetSpriteHeight(20)
+						enemy[1]:SetHealth(20)
+						enemy[1]:SetDamage(5)
+						enemy[1]:SetDirection(directionNone)
+						enemy[1]:SetSpeed(40)
+						print("[LUA] created enemy at[" .. key .. "]")
+						enemy[2] = true;
 
-				table.insert(region.enemies, enemy)
+						break
+					end
+				end
+				if foundPos == 0 then
+					print("[LUA] Enemy resource-pool overload")
+				end
+
+
+				for key, enemy in pairs(region.projectiles) do
+					if enemy[2] == false then
+						enemy[1]:SetSpeed(40)
+						enemy[2] = true;
+					end
+				end
 			end
 		end
 	end

@@ -6,11 +6,12 @@ end
 
 function ai.Update(player, entities)
 	
-	for i = 1, #entities do
-		ai.MoveEnemy(player, entities[i])
-
+	for key, enemy in pairs(entities) do
+		if enemy[2] then
+			--print("[LUA] Drawing enemy")
+			ai.MoveEnemy(player, enemy[1])
+		end
 	end
-
 end
 
 function ai.MoveEnemy(player, enemy)
