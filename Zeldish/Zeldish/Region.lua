@@ -136,13 +136,15 @@ function region.SpawnProjectile(original)
 			projectile[1]:SetHeight(20)
 			projectile[1]:SetSpriteWidth(20)
 			projectile[1]:SetSpriteHeight(20)
+			projectile[1]:SetHealth(1)
+			projectile[1]:SetDamage(original:GetDamage())
 			spawnDirection = original:GetDirection();
 			if spawnDirection ==  directionNone then
 				spawnDirection = original:GetLastDirection()
 			end
 			projectile[1]:SetDirection(spawnDirection)
 			projectile[1]:SetSpeed(80)
-			print("[LUA] created projectile[1]")
+			print("[LUA] created projectile[" .. key .. "]")
 
 			projectile[2] = true;
 			print("adding entity")
