@@ -107,9 +107,9 @@ void CollisionMap::setTile(int value, int indexX, int indexY)
 	this->tiles[(indexY * this->width) + indexX] = value;
 }
 
-bool CollisionMap::checkCollision(BoundingVolume* bv, int& correctionX, int& correctionY)
+bool CollisionMap::checkCollision(Entity* entity, int& correctionX, int& correctionY)
 {
-	bool result = true;
+	bool result = false;
 	
 	float x, y;
 	int width, height;
@@ -117,59 +117,107 @@ bool CollisionMap::checkCollision(BoundingVolume* bv, int& correctionX, int& cor
 	float totalX = 0;
 	float totalY = 0;
 
+	BoundingVolume* bv = entity->GetBoundingVolume();
+
 	bv->GetPosition(x,y);
 	width = bv->GetWidth();
 	height = bv->GetHeight();
 
 	//Return if we are out of bounds
-	if (x < 0 || x > 640 - width || y < 0 || y > 640 - height) {
+	if ((x < 0 || x > 640 - width) || (y < 0 || y > 640 - height)) {
 		if (x < 0)
 			correctionX = 0 - x;
 		
-		if (x > 640 - width)
+		else if (x > 640 - width)
 			correctionX = 640 - (x + width);
 		
 		if (y < 0)
 			correctionY = 0 - y;
 
-		if (y > 640 - height)
+		else if (y > 640 - height)
 			correctionY = 640 - (y + height);
 
 		return true;
 	}
 
-	//Calculate the tile that the position is in
-	int startTileX = (x / 20);
-	int startTileY = (y / 20);
-	int endTileX = (x + width / 20);
-	int endTileY = (y + height / 20);
+	int minX = x;
+	int minY = y;
+	int maxX = (x + 20);
+	int maxY = (y + 20);
 
-	//Loop through all tiles that the volume intersects 
-	for (int i = startTileY; i <= startTileY; i++) {
-		for (int j = startTileX; j <= endTileX; j++) {
+	int tileX = (minX+1) / 20;
+	int tileY = (minY+1) / 20;
 
-			//check if the tile is not free
-			if (!this->tiles[(i * this->width) + j] == 0) {
-				result = true;
-				
-				difX = ((x + width) / 2) - (j + 10);
-				difY = ((y + height) / 2) - (i + 10);
+	int tileMinX = 0;
+	int tileMaxX = 0;
+	int tileMinY = 0;
+	int tileMaxY = 0;
 
-				if (difX < difY) {
-					totalY += difY;
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 2; j++) {
+			if (this->tiles[(tileY + j) * this->width + (tileX + i)] != 0) {
+				tileMinX = (tileX + i) * 20;
+				tileMaxX = tileMinX + 20;
+				tileMinY = (tileY + j) * 20;
+				tileMaxY = tileMinY + 20;
+				if (!(minX > tileMaxX || maxX < tileMinX ||
+					minY > tileMaxY || maxY < tileMinY)) {
+					result = true;
+					int bestX = std::min(std::abs(minX - tileMaxX), std::abs(tileMinX - maxX));
+					int bestY = std::min(std::abs(minY - tileMaxY), std::abs(tileMinY - maxY));
+					if (bestX < bestY) {
+						if (std::abs(minX - tileMaxX) < std::abs(tileMinX - maxX)) {
+							correctionX += std::abs(minX - tileMaxX);
+						}
+						else {
+							correctionX += std::abs(tileMinX - maxX) * -1;
+						}
+					}
+					else {
+						if (std::abs(minY - tileMaxY) < std::abs(tileMinY - maxY)) {
+							correctionY += std::abs(minY - tileMaxY);
+						}
+						else {
+							correctionY += std::abs(tileMinY - maxY) * -1;
+						}
+					}
 				}
-				else{
-					totalX += difX;
-				}
-
 			}
-
 		}
-
 	}
 
-	correctionX = totalX;
-	correctionY = totalY;
+	////Calculate the tile that the position is in
+	//int startTileX = (x / 20);
+	//int startTileY = (y / 20);
+	//int endTileX = (x + width / 20);
+	//int endTileY = (y + height / 20);
+
+	////Loop through all tiles that the volume intersects 
+	//for (int i = startTileY; i <= endTileY; i++) {
+	//	for (int j = startTileX; j <= endTileX; j++) {
+
+	//		//check if the tile is not free
+	//		if (!this->tiles[(i * this->width) + j] == 0) {
+	//			result = true;
+	//			
+	//			difX = ((x + width) / 2) - (j + 10);
+	//			difY = ((y + height) / 2) - (i + 10);
+
+	//			if (difX < difY) {
+	//				totalY += difY;
+	//			}
+	//			else{
+	//				totalX += difX;
+	//			}
+
+	//		}
+
+	//	}
+
+	//}
+
+	//correctionX = totalX;
+	//correctionY = totalY;
 
 
 	return result;
@@ -282,13 +330,13 @@ int collisionMap_get(lua_State* ls)
 int collisionMap_checkCollision(lua_State* ls)
 {
 	CollisionMap* collisionMapPtr = checkCollisionMap(ls, 1);
-	BoundingVolume* bvPtr = checkBoundingVolume(ls, 2);
+	Entity* entityPtr = checkEntity(ls, 2);
 
 	int x = 0;
 	int y = 0;
 	bool result = false;
 
-	result = collisionMapPtr->checkCollision(bvPtr, x, y);
+	result = collisionMapPtr->checkCollision(entityPtr, x, y);
 
 	lua_pushboolean(ls, result);
 	lua_pushinteger(ls, x);

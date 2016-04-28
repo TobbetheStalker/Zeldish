@@ -93,6 +93,10 @@ function region.Update(deltaTime)
 	region.CheckProjectiles()
 
 	--Update the player
+	result, dX, dY = region.collisionMap:CheckCollision(region.player)
+	if result == true then
+		region.player:ApplyPos(dX, dY)
+	end
 	region.player:Update(deltaTime);
 
 	--Update the active enemies

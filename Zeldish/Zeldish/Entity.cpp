@@ -206,6 +206,11 @@ EntityLib::Direction Entity::GetLastDirection()
 	return this->myLastDirection;
 }
 
+BoundingVolume * Entity::GetBoundingVolume()
+{
+	return &this->boundingBox;
+}
+
 #pragma endregion setters & getters
 
 int Entity::Update(float dTime)
