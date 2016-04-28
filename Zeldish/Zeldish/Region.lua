@@ -1,4 +1,5 @@
 region = {}
+ai = require("AI")
 
 directionDown =		0
 directionLeft =		1
@@ -9,21 +10,32 @@ directionNone =		4
 MAP_SIZE_X = 32
 MAP_SIZE_Y = 32
 
+NR_OF_MAPS = 3
+
 function region.Update(deltaTime)
 	if Input.IsPressed(keyEscape) == 1 then
 		gameState = 0
 	end
 	if Input.IsPressed(keySpace) == 1 then
-		region.LoadTileMaps(2)
+		region.currLevel = region.currLevel + 1
+		region.currLevel = math.min(region.currLevel, NR_OF_MAPS)
+		LoadMap(region.currLevel)
 	end
-	region.HandlePlayerInput()
+
+	ai.Update(region.player, region.enemies);
+
+	HandlePlayerInput()
 	
 	--Update the player
 	region.player:Update(deltaTime);
+	
+	for i = 1, #region.enemies do
+		region.enemies[i]:Update(deltaTime)
+	end
 
 end
 
-function region.HandlePlayerInput()
+function HandlePlayerInput()
 	--extract the input
 	down = Input.IsDown(keyS) 
 	left = Input.IsDown(keyA) 
@@ -72,7 +84,7 @@ function LoadCollisionMap(map)
 	region.collisionMap:Load(map)
 end
 
-function region.LoadTileMaps(level)
+function LoadMap(level)
 	--tiles size in pixels
 	tileSizeX = 16
 	tileSizeY = 16
@@ -87,6 +99,8 @@ function region.LoadTileMaps(level)
 	region.tileMapForeground:Load("town_tiles2.png", tileSizeX, tileSizeY, MAP_SIZE_X, MAP_SIZE_Y, region.mapF)
 
 	LoadCollisionMap("level"..level)
+
+	LoadEntityMap(level)
 end
 
 
@@ -94,6 +108,11 @@ function region.Draw()
 	--Draw tileMap
 	region.tileMapBackground:Draw()
 	region.player:Draw()
+	
+	for i = 1, #region.enemies do
+		region.enemies[i]:Draw()
+	end
+
 	region.tileMapForeground:Draw()
 end
 
@@ -103,7 +122,8 @@ function region.Create()
 	region.collisionMap = CollisionMap.New()
 	region.mapB = {}
 	region.mapF = {}
-	region.LoadTileMaps(1)
+	region.currLevel = 1
+	LoadMap(region.currLevel)
 	region.player = Entity.New()
 	region.player:Initialize("RacoonCharacter.png")
 	region.player:SetPos(100, 100)
@@ -112,11 +132,13 @@ function region.Create()
 	region.player:SetWidth(20)
 	region.player:SetHeight(20)
 	region.player:SetDirection(4)
-	region.player:SetSpeed(40)
+	region.player:SetSpeed(100)
 
 	region.projectiles = {}
 	region.activeProjectiles = {}
 	region.projectileCnt = 1
+
+	
 end
 
 function LoadMaps(level)
@@ -134,6 +156,30 @@ function LoadMaps(level)
 
 	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
 		region.mapF[i] = file:read("*number")
+	end
+
+	file:close()
+end
+
+function LoadEntityMap(level)
+	file = assert(io.open("Resources/Maps/level" .. level .. "E.txt", "r"))
+
+	region.enemies = {}
+
+	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+		local tempValue = file:read("*number")
+		if tempValue ~= -1 then
+			if tempValue == 0 then
+				enemy = Entity.New()
+				enemy:Initialize("LinkCharacter.png")
+				local x = ((i-1) % MAP_SIZE_X) * 20
+				local y = ((i-1) / MAP_SIZE_X) * 20
+				enemy:SetPos(x, y);
+				enemy:SetSpeed(40)
+
+				table.insert(region.enemies, enemy)
+			end
+		end
 	end
 
 	file:close()
