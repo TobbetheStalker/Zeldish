@@ -588,7 +588,7 @@ int entity_getHealth(lua_State* ls)
 	float health = -1.0f;
 	if (entity)
 	{
-		health = entity->GetHeight();
+		health = entity->GetHealth();
 	}
 	lua_pushinteger(ls, health);
 	return 1;
