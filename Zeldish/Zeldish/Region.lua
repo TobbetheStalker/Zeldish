@@ -52,7 +52,7 @@ function region.CheckProjectiles()
 				--If active enemy
 				if enemy[2] then
 					foundEnemyCnt = foundEnemyCnt + 1
-					if projectile[1]:Intersects(enemy[1]) > 0 then
+					if projectile[1]:Intersects(enemy[1]) == true then
 						newProjectilHealth = projectile[1]:GetHealth() - enemy[1]:GetDamage()
 						projectile[1]:SetHealth(newProjectilHealth)
 						newEnemyHealth = enemy[1]:GetHealth() - projectile[1]:GetDamage()
