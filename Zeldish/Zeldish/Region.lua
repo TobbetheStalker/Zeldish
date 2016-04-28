@@ -58,6 +58,10 @@ function region.Update(deltaTime)
 	region.CheckParticles()
 
 	--Update the player
+	result, dX, dY = region.collisionMap:CheckCollision(region.player)
+	if result == true then
+		region.player:ApplyPos(dX, dY)
+	end
 	region.player:Update(deltaTime);
 	
 	for i = 1, #region.enemies do

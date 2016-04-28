@@ -7,7 +7,8 @@
 #include "SFML\Graphics.hpp"
 #include "lua.hpp"
 #include "WindowLib.h"
-#include "BoundingVolume.h"
+#include "Entity.h"
+#include <math.h>
 
 class CollisionMap : public sf::Transformable
 {
@@ -27,7 +28,7 @@ public:
 	bool Save(std::string filename);
 	int getTile(int indexX, int indexY);
 	void setTile(int value, int indexX, int indexY);
-	bool checkCollision(BoundingVolume* bv, int& correctionX, int& correctionY);
+	bool checkCollision(Entity* entity, int& correctionX, int& correctionY);
 
 };
 int collisionMap_create(lua_State* ls);

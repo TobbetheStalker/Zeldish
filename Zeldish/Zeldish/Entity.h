@@ -55,6 +55,8 @@ public:
 	float GetSpeed();
 	EntityLib::Direction GetDirection();
 	EntityLib::Direction GetLastDirection();
+
+	BoundingVolume* GetBoundingVolume();
 #pragma endregion getters & setters
 
 	virtual int Update(float dTIme);
