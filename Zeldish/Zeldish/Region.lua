@@ -1,13 +1,40 @@
 region = {}
 
+--region has [projectileMetatable][bool active]
+region.projectiles = {}
+
+keyW =		22
+keyA =		0
+keyS =		18
+keyD =		3
+keySpace =	57
+keyEscape =	36
+
 directionDown =		0
 directionLeft =		1
 directionRight =	2
 directionUp =		3
 directionNone =		4
 
+region.regionWidth = 32 * 20
+region.regionHeight = 32 * 20
 MAP_SIZE_X = 32
 MAP_SIZE_Y = 32
+
+function region.CheckParticles()
+	for key, projectile in pairs(region.projectiles) do
+		if projectile[2] == true then
+			--check if we should deactivate them or do something
+			--First check is if outside of screen
+			x, y = projectile[1]:GetPos()
+			if x + projectile[1]:GetWidth() < 0 or y + projectile[1]:GetHeight() < 0 or x > region.regionWidth or y > region.regionHeight then
+				projectile[2] = false
+			end
+			--second check is against the collision map
+			--third check is against the other entities
+		end
+	end
+end
 
 function region.Update(deltaTime)
 	if Input.IsPressed(keyEscape) == 1 then
@@ -21,6 +48,15 @@ function region.Update(deltaTime)
 	--Update the player
 	region.player:Update(deltaTime);
 
+	--Check if we should kill / deactivate any particles
+	region.CheckParticles()
+
+	--Update the active particles
+	for key, projectile in pairs(region.projectiles) do
+		if projectile[2] then
+			projectile[1]:Update(deltaTime)
+		end
+	end
 end
 
 function region.HandlePlayerInput()
@@ -65,6 +101,43 @@ function region.HandlePlayerInput()
 	end
 	region.player:SetDirection(newDirection)
 
+	if Input.IsLeftMousePressed() == 1 then
+		--Spawn Projectile
+		region.SpawnProjectile(region.player)
+	end
+
+end
+
+function region.SpawnProjectile(original)
+	for key, projectile in pairs(region.projectiles) do
+		if projectile[2] == false then
+			foundPos = key
+			--The projectile is inactive
+			--Push yourself to its place in the list
+			x, y = original:GetPos()
+			print(x .. " " .. y)
+			projectile[1]:Initialize("FireBall.png");
+			projectile[1]:SetPos(x, y)
+			projectile[1]:SetWidth(20)
+			projectile[1]:SetHeight(20)
+			projectile[1]:SetSpriteWidth(20)
+			projectile[1]:SetSpriteHeight(20)
+			spawnDirection = original:GetDirection();
+			if spawnDirection ==  directionNone then
+				spawnDirection = original:GetLastDirection()
+			end
+			projectile[1]:SetDirection(spawnDirection)
+			projectile[1]:SetSpeed(60)
+			print("[LUA] created projectile[1]")
+
+			projectile[2] = true;
+			print("adding entity")
+			break
+		end
+	end
+	if foundPos == 0 then
+		print("[LUA] Resourcepool overload")
+	end
 end
 
 function LoadCollisionMap(map)
@@ -94,6 +167,15 @@ function region.Draw()
 	--Draw tileMap
 	region.tileMapBackground:Draw()
 	region.player:Draw()
+	--projectile, active = region.projectiles[1], region.projectiles[2]
+	--print(projectile .. " " .. active)
+	for key, adTemp in pairs(region.projectiles) do
+		if adTemp[2] then
+			--print("[LUA] Drawing projectile")
+			adTemp[1]:Draw()
+		end
+	end
+
 	region.tileMapForeground:Draw()
 end
 
@@ -112,11 +194,14 @@ function region.Create()
 	region.player:SetWidth(20)
 	region.player:SetHeight(20)
 	region.player:SetDirection(4)
-	region.player:SetSpeed(40)
+	region.player:SetSpeed(60)
 
-	region.projectiles = {}
-	region.activeProjectiles = {}
-	region.projectileCnt = 1
+	for pIndex = 1, 100, 1 do
+		tempP = Entity:New()
+		tempP:Initialize("Fireball.png");
+		region.projectiles[pIndex] = {tempP, false}
+	end
+
 end
 
 function LoadMaps(level)
