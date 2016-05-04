@@ -18,7 +18,7 @@ function editor.Update()
 		elseif editor.tileInfo == 2 then
 			tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
 			print("[LUA] Mouse tile pos; X: " .. tilePos[1] .. ", Y: " .. tilePos[2])
-			if tilePos[2] < 1 and tilePos[1] < 4 then
+			if tilePos[2] < 1 and tilePos[1] < 2 then
 				editor.activeTile = tilePos[1] 
 			end
 			editor.tileInfo = 0
@@ -134,6 +134,8 @@ function editor.CreateEmpty()
 	editor.tileInfo = 1
 	editor.activeTile = 0
 	editor.playerSpawn = 0
+	print("\nWelcome to Zeldish level editor!\nYou can switch working layer with num keys 1-4.\n1: Background\n2: Entities\n3: Foreground\n4: Collision")
+	print("\nSpace will open tile picker, pressing space again while hovering over the wanted tile will select it.\nLeft mouse button will place tile, right mouse button removes.\n")
 end
 
 function ChangeTile(x, y, button)
@@ -146,11 +148,16 @@ function ChangeTile(x, y, button)
 		print("[LUA] Changed tile in background")
 	elseif editor.workingLayer == 1 then
 		if button == 1 then 
-			if editor.activeTile == 0 and editor.playerSpawn == 1 then
-				print("You already have a player spawn!")
+			if editor.activeTile == 0 and editor.playerSpawn ~= 0 then
+				editor.mapE[editor.playerSpawn] = -1
+				editor.playerSpawn = y * MAP_SIZE_X + x + 1
+				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
 			elseif editor.activeTile == 0 and editor.playerSpawn == 0 then
 				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
-				editor.playerSpawn = 1
+				editor.playerSpawn = y * MAP_SIZE_X + x + 1
+			elseif editor.mapE[y * MAP_SIZE_X + x + 1] == 0 then
+				editor.playerSpawn = 0
+				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
 			else
 				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
 			end
@@ -290,6 +297,9 @@ function Load()
 
 	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
 		editor.mapE[i] = file:read("*number")
+		if editor.mapE[i] == 0 then
+			editor.playerSpawn = i
+		end
 	end
 	file:close()
 
@@ -297,35 +307,39 @@ function Load()
 end
 
 function Save()
-	io.stdout:write("Enter the filename to save maps to: ")
-	local filename = io.stdin:read()
+	if editor.playerSpawn == 0 then
+		print("You need a player spawn to save! (The raccoon enitiy)")
+	else
+		io.stdout:write("Enter the filename to save maps to: ")
+		local filename = io.stdin:read()
 
-	local file = assert(io.open("Resources/Maps/" .. filename .. "B.txt", "w"))
-	file:write(MAP_SIZE_X .. " ")
-	file:write(MAP_SIZE_Y .. " ")
+		local file = assert(io.open("Resources/Maps/" .. filename .. "B.txt", "w"))
+		file:write(MAP_SIZE_X .. " ")
+		file:write(MAP_SIZE_Y .. " ")
 
-	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
-		 file:write(editor.mapB[i] .. " ")
+		for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+			 file:write(editor.mapB[i] .. " ")
+		end
+		file:close()
+
+		file = assert(io.open("Resources/Maps/" .. filename .. "F.txt", "w"))
+
+		for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+			 file:write(editor.mapF[i] .. " ")
+		end
+		file:close()
+
+		editor.collisionMap:Save(filename)
+
+		file = assert(io.open("Resources/Maps/" .. filename .. "E.txt", "w"))
+
+		for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+			 file:write(editor.mapE[i] .. " ")
+		end
+		file:close()
+
+		io.stdout:write("Maps saved as: " .. filename .. "\n")
 	end
-	file:close()
-
-	file = assert(io.open("Resources/Maps/" .. filename .. "F.txt", "w"))
-
-	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
-		 file:write(editor.mapF[i] .. " ")
-	end
-	file:close()
-
-	editor.collisionMap:Save(filename)
-
-	file = assert(io.open("Resources/Maps/" .. filename .. "E.txt", "w"))
-
-	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
-		 file:write(editor.mapE[i] .. " ")
-	end
-	file:close()
-
-	io.stdout:write("Maps saved as: " .. filename .. "\n")
 end
 
 function MapPosToTile(x, y)

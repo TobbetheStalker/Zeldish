@@ -137,7 +137,7 @@ bool CollisionMap::checkCollision(Entity* entity, int& correctionX, int& correct
 		else if (y > 640 - height)
 			correctionY = 640 - (y + height);
 
-		return true;
+		result = true;
 	}
 
 	int minX = x;
