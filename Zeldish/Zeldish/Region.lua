@@ -136,7 +136,7 @@ function region.Update(deltaTime)
 
 	HandlePlayerInput()
 
-	ai.Update(region.player, region.enemies, region.enemyCnt);
+	ai.Update(region.player, region.enemies, region.enemyCnt, region.collisionMap);
 	
 	--Check if we should kill / deactivate any particles
 	region.CheckProjectiles()
