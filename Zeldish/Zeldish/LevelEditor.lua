@@ -299,35 +299,39 @@ function Load()
 end
 
 function Save()
-	io.stdout:write("Enter the filename to save maps to: ")
-	local filename = io.stdin:read()
+	if editor.playerSpawn == 0 then
+		print("You need a player spawn to save! (The raccoon enitiy)")
+	else
+		io.stdout:write("Enter the filename to save maps to: ")
+		local filename = io.stdin:read()
 
-	local file = assert(io.open("Resources/Maps/" .. filename .. "B.txt", "w"))
-	file:write(MAP_SIZE_X .. " ")
-	file:write(MAP_SIZE_Y .. " ")
+		local file = assert(io.open("Resources/Maps/" .. filename .. "B.txt", "w"))
+		file:write(MAP_SIZE_X .. " ")
+		file:write(MAP_SIZE_Y .. " ")
 
-	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
-		 file:write(editor.mapB[i] .. " ")
+		for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+			 file:write(editor.mapB[i] .. " ")
+		end
+		file:close()
+
+		file = assert(io.open("Resources/Maps/" .. filename .. "F.txt", "w"))
+
+		for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+			 file:write(editor.mapF[i] .. " ")
+		end
+		file:close()
+
+		editor.collisionMap:Save(filename)
+
+		file = assert(io.open("Resources/Maps/" .. filename .. "E.txt", "w"))
+
+		for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
+			 file:write(editor.mapE[i] .. " ")
+		end
+		file:close()
+
+		io.stdout:write("Maps saved as: " .. filename .. "\n")
 	end
-	file:close()
-
-	file = assert(io.open("Resources/Maps/" .. filename .. "F.txt", "w"))
-
-	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
-		 file:write(editor.mapF[i] .. " ")
-	end
-	file:close()
-
-	editor.collisionMap:Save(filename)
-
-	file = assert(io.open("Resources/Maps/" .. filename .. "E.txt", "w"))
-
-	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
-		 file:write(editor.mapE[i] .. " ")
-	end
-	file:close()
-
-	io.stdout:write("Maps saved as: " .. filename .. "\n")
 end
 
 function MapPosToTile(x, y)
