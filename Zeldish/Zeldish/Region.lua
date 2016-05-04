@@ -26,6 +26,7 @@ region.regionWidth = 32 * 20
 region.regionHeight = 32 * 20
 MAP_SIZE_X = 32
 MAP_SIZE_Y = 32
+NR_OF_MAPS = 3 
 
 function region.CheckProjectiles()
 	local foundProjectileCnt = 0
@@ -77,7 +78,6 @@ function region.CheckProjectiles()
 		end
 	end
 end
-NR_OF_MAPS = 3
 
 function region.Update(deltaTime)
 	if Input.IsPressed(keyEscape) == 1 then
