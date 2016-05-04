@@ -294,6 +294,9 @@ function Load()
 
 	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
 		editor.mapE[i] = file:read("*number")
+		if editor.mapE[i] == 0 then
+			editor.playerSpawn = i
+		end
 	end
 	file:close()
 
