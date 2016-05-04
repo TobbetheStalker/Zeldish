@@ -104,7 +104,7 @@ function region.CheckEnemies()
 					region.enemyCnt = region.enemyCnt - 1;
 				end
 				print("Enemy [" .. enemyKey .. "] has [" .. newEnemyHealth .. "] health left after taking [" .. region.player:GetDamage() .. "] damage from the Player")
-				print("Player and Enemy[" .. enemyKey .. "] has [" .. newPlayerHealth .. "] after engaging in potentionally mortal combat. \nRemember to not do this at home kids, these Entities are trained professionals!")
+				print("Player and Enemy[" .. enemyKey .. "] has [" .. newPlayerHealth .. "] after engaging in potentionally mortal combat.")
 			end
 		end
 	end
