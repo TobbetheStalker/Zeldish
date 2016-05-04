@@ -1,8 +1,8 @@
 ai = {}
 
-function ai.Update(player, entities, regionCnt)
+function ai.Update(player, enemies, regionCnt)
 	local foundEnemyCnt = 0
-	for key, enemy in pairs(entities) do
+	for key, enemy in pairs(enemies) do
 		if foundEnemyCnt > regionCnt - 1 then
 			break
 		end

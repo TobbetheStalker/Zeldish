@@ -6,6 +6,7 @@ region.projectiles = {}
 region.projectileCnt = 0
 region.enemies = {}
 region.enemyCnt = 0
+region.playerDied = false
 
 keyW =		22
 keyA =		0
@@ -44,7 +45,7 @@ function region.CheckProjectiles()
 				--region.projectileCnt = region.projectileCnt - 1
 			--end
 			--second check is against the collision map
-			result, dX, dY = region.collisionMap:CheckCollision(projectile[1])
+			local result, dX, dY = region.collisionMap:CheckCollision(projectile[1])
 			if result == true then
 				projectile[2] = false
 				region.projectileCnt = region.projectileCnt - 1
@@ -59,9 +60,9 @@ function region.CheckProjectiles()
 				if enemy[2] then
 					foundEnemyCnt = foundEnemyCnt + 1
 					if projectile[1]:Intersects(enemy[1]) == true then
-						newProjectilHealth = projectile[1]:GetHealth() - enemy[1]:GetDamage()
+						local newProjectilHealth = projectile[1]:GetHealth() - enemy[1]:GetDamage()
 						projectile[1]:SetHealth(newProjectilHealth)
-						newEnemyHealth = enemy[1]:GetHealth() - projectile[1]:GetDamage()
+						local newEnemyHealth = enemy[1]:GetHealth() - projectile[1]:GetDamage()
 						enemy[1]:SetHealth(newEnemyHealth)
 						if newProjectilHealth < 1 then
 							projectile[2] = false
@@ -79,6 +80,45 @@ function region.CheckProjectiles()
 	end
 end
 
+function region.CheckEnemies()
+	local foundEnemyCnt = 0
+	for enemyKey, enemy in pairs(region.enemies) do
+		if foundEnemyCnt > region.enemyCnt or region.playerDied then
+			break
+		end
+		if enemy[2] then
+			-- If we found an enemy, increment our found enemy counter
+			foundEnemyCnt = foundEnemyCnt + 1
+
+			--check if we should deactivate them or do something
+
+			--second check is against the collision map
+			local result, dX, dY = region.collisionMap:CheckCollision(enemy[1])
+			if result then
+				enemy[1]:ApplyPos(dX, dY)
+			end
+
+			--Third check is against the player
+			if region.player:Intersects(enemy[1]) == true then
+			--If the player DID intersect with the enemy
+				local newPlayerHealth = region.player:GetHealth() - enemy[1]:GetDamage()
+				region.player:SetHealth(newPlayerHealth)
+				local newEnemyHealth = enemy[1]:GetHealth() - region.player:GetDamage()
+				enemy[1]:SetHealth(newEnemyHealth)
+				if newPlayerHealth < 1 then
+					region.playerDied = true
+				end
+				if newEnemyHealth < 1 then
+					enemy[2] = false
+					region.enemyCnt = region.enemyCnt - 1;
+				end
+				print("Enemy [" .. enemyKey .. "] has [" .. newEnemyHealth .. "] health left after taking [" .. region.player:GetDamage() .. "] damage from the Player")
+				print("Player and Enemy[" .. enemyKey .. "] has [" .. newPlayerHealth .. "] after engaging in potentionally mortal combat.")
+			end
+		end
+	end
+end
+
 function region.Update(deltaTime)
 	if Input.IsPressed(keyEscape) == 1 then
 		gameState = 0
@@ -89,6 +129,10 @@ function region.Update(deltaTime)
 		LoadMap(region.currLevel)
 	end
 
+	if region.playerDied then
+		gameState = 0
+	end
+
 
 	HandlePlayerInput()
 
@@ -96,13 +140,18 @@ function region.Update(deltaTime)
 	
 	--Check if we should kill / deactivate any particles
 	region.CheckProjectiles()
+	region.CheckEnemies()
 
-	--Update the player
-	result, dX, dY = region.collisionMap:CheckCollision(region.player)
+
+
+	--Apply the collisionMap check to the player
+	local result, dX, dY = region.collisionMap:CheckCollision(region.player)
 	if result == true then
 		region.player:ApplyPos(dX, dY)
 	end
+	--Update the player
 	region.player:Update(deltaTime);
+
 
 	--Update the active enemies
 	for key, enemy in pairs(region.enemies) do
@@ -120,19 +169,22 @@ function region.Update(deltaTime)
 
 	if region.enemyCnt == 0 then
 		region.currLevel = region.currLevel + 1
-		region.currLevel = math.min(region.currLevel, NR_OF_MAPS)
-		LoadMap(region.currLevel)
+		if region.currLevel > NR_OF_MAPS then
+			gameState = 0
+		else
+			LoadMap(region.currLevel)
+		end
 	end
 end
 
 function HandlePlayerInput()
 	--extract the input
-	down = Input.IsDown(keyS) 
-	left = Input.IsDown(keyA) 
-	right = Input.IsDown(keyD) 
-	up = Input.IsDown(keyW)
-	none = down + left + right + up
-	newDirection = 0
+	local down = Input.IsDown(keyS) 
+	local left = Input.IsDown(keyA) 
+	local right = Input.IsDown(keyD) 
+	local up = Input.IsDown(keyW)
+	local none = down + left + right + up
+	local newDirection = 0
 
 	--do the input logic
 	if none == 0 or none > 1 then
@@ -281,7 +333,9 @@ function region.Create()
 	region.mapF = {}
 	region.currLevel = 1
 	region.player = Entity.New()
+	region.playerDied = false
 	region.player:Initialize("RacoonCharacter.png")
+	region.player:SetHealth(30)
 	region.player:SetPos(100, 100)
 	region.player:SetSpriteWidth(20)
 	region.player:SetSpriteHeight(20)
