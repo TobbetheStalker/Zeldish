@@ -1,6 +1,6 @@
 ai = {}
 
-function ai.Update(player, enemies, regionCnt, collisionMap)
+function ai.Update(player, enemies, regionCnt)
 	local foundEnemyCnt = 0
 	for key, enemy in pairs(enemies) do
 		if foundEnemyCnt > regionCnt - 1 then
@@ -14,10 +14,6 @@ function ai.Update(player, enemies, regionCnt, collisionMap)
 			end
 		end
 	end
-end
-
-function Pathfinding(player, enemy, collisionMap)
-	
 end
 
 function MoveEnemy(player, enemy)
