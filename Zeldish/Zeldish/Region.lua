@@ -117,6 +117,12 @@ function region.Update(deltaTime)
 			projectile[1]:Update(deltaTime)
 		end
 	end
+
+	if region.enemyCnt == 0 then
+		region.currLevel = region.currLevel + 1
+		region.currLevel = math.min(region.currLevel, NR_OF_MAPS)
+		LoadMap(region.currLevel)
+	end
 end
 
 function HandlePlayerInput()
@@ -274,7 +280,6 @@ function region.Create()
 	region.mapB = {}
 	region.mapF = {}
 	region.currLevel = 1
-	LoadMap(region.currLevel)
 	region.player = Entity.New()
 	region.player:Initialize("RacoonCharacter.png")
 	region.player:SetPos(100, 100)
@@ -284,8 +289,7 @@ function region.Create()
 	region.player:SetHeight(20)
 	region.player:SetDirection(4)
 	region.player:SetSpeed(100)
-
-
+	LoadMap(region.currLevel)
 end
 
 function LoadMaps(level)
@@ -326,7 +330,7 @@ function LoadEntityMap(level)
 	for i = 1, MAP_SIZE_X * MAP_SIZE_Y do
 		local tempValue = file:read("*number")
 		if tempValue ~= -1 then
-			if tempValue == 0 then
+			if tempValue == 1 then
 				--Go through our enemy resource pool and look for an inactive position
 				
 				foundPos = 0
@@ -366,6 +370,10 @@ function LoadEntityMap(level)
 						--enemy[2] = true;
 					--end
 				--end
+			elseif tempValue == 0 then
+				local x = ((i-1) % MAP_SIZE_X) * 20
+				local y = ((i-1) / MAP_SIZE_X) * 20
+				region.player:SetPos(x, y)
 			end
 		end
 	end

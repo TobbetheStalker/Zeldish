@@ -133,6 +133,7 @@ function editor.CreateEmpty()
 	editor.workingLayer = 0 --0: Background, 1: Entities, 2: Foreground, 3: Collision
 	editor.tileInfo = 1
 	editor.activeTile = 0
+	editor.playerSpawn = 0
 end
 
 function ChangeTile(x, y, button)
@@ -144,15 +145,25 @@ function ChangeTile(x, y, button)
 		end
 		print("[LUA] Changed tile in background")
 	elseif editor.workingLayer == 1 then
-		if button == 1 then
-			editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile;
+		if button == 1 then 
+			if editor.activeTile == 0 and editor.playerSpawn == 1 then
+				print("You already have a player spawn!")
+			elseif editor.activeTile == 0 and editor.playerSpawn == 0 then
+				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
+				editor.playerSpawn = 1
+			else
+				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
+			end
 		else
+			if editor.mapE[y * MAP_SIZE_X + x + 1] == 0 then
+				editor.playerSpawn = 0
+			end
 			editor.mapE[y * MAP_SIZE_X + x + 1] = -1;
 		end
 		print("[LUA] Changed tile in entities")
 	elseif editor.workingLayer == 2 then
 		if button == 1 then
-			editor.mapF[y * MAP_SIZE_X + x + 1] = editor.activeTile;
+			editor.mapF[y * MAP_SIZE_X + x + 1] = editor.activeTile
 		else
 			editor.mapF[y * MAP_SIZE_X + x + 1] = -1;
 		end
