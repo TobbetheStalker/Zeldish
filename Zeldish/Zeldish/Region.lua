@@ -89,6 +89,16 @@ function region.CheckEnemies()
 		if enemy[2] then
 			-- If we found an enemy, increment our found enemy counter
 			foundEnemyCnt = foundEnemyCnt + 1
+
+			--check if we should deactivate them or do something
+
+			--second check is against the collision map
+			local result, dX, dY = region.collisionMap:CheckCollision(enemy[1])
+			if result then
+				enemy[1]:ApplyPos(dX, dY)
+			end
+
+			--Third check is against the player
 			if region.player:Intersects(enemy[1]) == true then
 			--If the player DID intersect with the enemy
 				local newPlayerHealth = region.player:GetHealth() - enemy[1]:GetDamage()
@@ -132,12 +142,16 @@ function region.Update(deltaTime)
 	region.CheckProjectiles()
 	region.CheckEnemies()
 
-	--Update the player
-	result, dX, dY = region.collisionMap:CheckCollision(region.player)
+
+
+	--Apply the collisionMap check to the player
+	local result, dX, dY = region.collisionMap:CheckCollision(region.player)
 	if result == true then
 		region.player:ApplyPos(dX, dY)
 	end
+	--Update the player
 	region.player:Update(deltaTime);
+
 
 	--Update the active enemies
 	for key, enemy in pairs(region.enemies) do
@@ -155,8 +169,11 @@ function region.Update(deltaTime)
 
 	if region.enemyCnt == 0 then
 		region.currLevel = region.currLevel + 1
-		region.currLevel = math.min(region.currLevel, NR_OF_MAPS)
-		LoadMap(region.currLevel)
+		if region.currLevel > NR_OF_MAPS then
+			gameState = 0
+		else
+			LoadMap(region.currLevel)
+		end
 	end
 end
 
