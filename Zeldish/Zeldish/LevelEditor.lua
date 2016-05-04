@@ -134,6 +134,8 @@ function editor.CreateEmpty()
 	editor.tileInfo = 1
 	editor.activeTile = 0
 	editor.playerSpawn = 0
+	print("\nWelcome to Zeldish level editor!\nYou can switch working layer with num keys 1-4.\n1: Background\n2: Entities\n3: Foreground\n4: Collision")
+	print("\nSpace will open tile picker, pressing space again while hovering over the wanted tile will select it.\nLeft mouse button will place tile, right mouse button removes.\n")
 end
 
 function ChangeTile(x, y, button)
