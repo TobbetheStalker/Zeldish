@@ -26,7 +26,7 @@ region.regionWidth = 32 * 20
 region.regionHeight = 32 * 20
 MAP_SIZE_X = 32
 MAP_SIZE_Y = 32
-NR_OF_MAPS = 3
+NR_OF_MAPS = 3 
 
 function region.CheckProjectiles()
 	local foundProjectileCnt = 0

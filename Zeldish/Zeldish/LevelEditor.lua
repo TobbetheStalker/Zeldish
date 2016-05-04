@@ -18,7 +18,7 @@ function editor.Update()
 		elseif editor.tileInfo == 2 then
 			tilePos = MapPosToTile(Input.GetMousePosX(), Input.GetMousePosY())
 			print("[LUA] Mouse tile pos; X: " .. tilePos[1] .. ", Y: " .. tilePos[2])
-			if tilePos[2] < 1 and tilePos[1] < 4 then
+			if tilePos[2] < 1 and tilePos[1] < 2 then
 				editor.activeTile = tilePos[1] 
 			end
 			editor.tileInfo = 0
@@ -155,6 +155,9 @@ function ChangeTile(x, y, button)
 			elseif editor.activeTile == 0 and editor.playerSpawn == 0 then
 				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
 				editor.playerSpawn = y * MAP_SIZE_X + x + 1
+			elseif editor.mapE[y * MAP_SIZE_X + x + 1] == 0 then
+				editor.playerSpawn = 0
+				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
 			else
 				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
 			end
