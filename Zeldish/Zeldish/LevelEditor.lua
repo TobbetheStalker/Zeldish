@@ -148,11 +148,13 @@ function ChangeTile(x, y, button)
 		print("[LUA] Changed tile in background")
 	elseif editor.workingLayer == 1 then
 		if button == 1 then 
-			if editor.activeTile == 0 and editor.playerSpawn == 1 then
-				print("You already have a player spawn!")
+			if editor.activeTile == 0 and editor.playerSpawn ~= 0 then
+				editor.mapE[editor.playerSpawn] = -1
+				editor.playerSpawn = y * MAP_SIZE_X + x + 1
+				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
 			elseif editor.activeTile == 0 and editor.playerSpawn == 0 then
 				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
-				editor.playerSpawn = 1
+				editor.playerSpawn = y * MAP_SIZE_X + x + 1
 			else
 				editor.mapE[y * MAP_SIZE_X + x + 1] = editor.activeTile
 			end
